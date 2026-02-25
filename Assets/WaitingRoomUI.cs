@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
+
 public class WaitingRoomUI : MonoBehaviour
 {
     private bool rolesAssigned = false;
@@ -103,8 +104,10 @@ public class WaitingRoomUI : MonoBehaviour
                 if (nameSlots[i] != null) nameSlots[i].text = name;
             }
 
-            // ✅ THIS PART MUST BE INSIDE THIS METHOD
-            if (current == max)
+            // ✅ ONLY start if host pressed Start Match
+            if (lobby.Data != null &&
+                lobby.Data.ContainsKey("matchStarted") &&
+                lobby.Data["matchStarted"].Value == "true")
             {
                 var session = AppSession.Instance;
 
@@ -117,7 +120,7 @@ public class WaitingRoomUI : MonoBehaviour
                 if (!sceneLoaded)
                 {
                     sceneLoaded = true;
-                    LoadMyRoleScene(lobby);   // 👈 lobby exists here
+                    LoadMyRoleScene(lobby);
                 }
             }
         }
@@ -210,5 +213,29 @@ public class WaitingRoomUI : MonoBehaviour
                 return;
             }
         }
+    }
+    
+    public async void OnStartMatchClicked()
+    {
+        var session = AppSession.Instance;
+        if (session == null || !session.isHost) return;
+
+        Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
+
+        // 1️⃣ Assign roles
+        await AssignRoles(lobby);
+
+        // 2️⃣ Update lobby data → match started
+        var updateOptions = new UpdateLobbyOptions
+        {
+            Data = new Dictionary<string, DataObject>
+            {
+                { "matchStarted", new DataObject(DataObject.VisibilityOptions.Public, "true") }
+            }
+        };
+
+        await LobbyService.Instance.UpdateLobbyAsync(session.lobbyId, updateOptions);
+
+        Debug.Log("Match Started!");
     }
 }

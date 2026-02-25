@@ -89,11 +89,9 @@ public class WaitingRoomUI : MonoBehaviour
             int current = lobby.Players != null ? lobby.Players.Count : 0;
             int max = lobby.MaxPlayers;
 
-            // حدّث الستاتس
             if (statusText != null)
                 statusText.text = $"({current}/{max})";
 
-            // حدّث الأسماء
             ClearSlots();
 
             if (lobby.Players == null || nameSlots == null) return;
@@ -105,30 +103,27 @@ public class WaitingRoomUI : MonoBehaviour
                 if (nameSlots[i] != null) nameSlots[i].text = name;
             }
 
-            // Debug خفيف
-            // Debug.Log($"WaitingRoomUI Refresh: {current}/{max}");
+            // ✅ THIS PART MUST BE INSIDE THIS METHOD
+            if (current == max)
+            {
+                var session = AppSession.Instance;
+
+                if (session != null && session.isHost && !rolesAssigned)
+                {
+                    rolesAssigned = true;
+                    await AssignRoles(lobby);
+                }
+
+                if (!sceneLoaded)
+                {
+                    sceneLoaded = true;
+                    LoadMyRoleScene(lobby);   // 👈 lobby exists here
+                }
+            }
         }
         catch (LobbyServiceException e)
         {
             Debug.LogError("GetLobbyAsync failed: " + e);
-        }
-        
-        // ✅ If lobby full → assign roles (host only)
-        if (current == max)
-        {
-            var session = AppSession.Instance;
-
-            if (session != null && session.isHost && !rolesAssigned)
-            {
-                rolesAssigned = true;
-                await AssignRoles(lobby);
-            }
-
-            if (!sceneLoaded)
-            {
-                sceneLoaded = true;
-                await LoadMyRoleScene(lobby);
-            }
         }
     }
 
@@ -192,12 +187,13 @@ public class WaitingRoomUI : MonoBehaviour
         Debug.Log("Roles Assigned Successfully");
     }
     
-    private async Task LoadMyRoleScene(Lobby lobby)
+    private void LoadMyRoleScene(Lobby lobby)
     {
         var session = AppSession.Instance;
         if (session == null) return;
 
-        string myPlayerId = Unity.Services.Authentication.AuthenticationService.Instance.PlayerId;
+        string myPlayerId =
+            Unity.Services.Authentication.AuthenticationService.Instance.PlayerId;
 
         foreach (Player p in lobby.Players)
         {
@@ -205,8 +201,6 @@ public class WaitingRoomUI : MonoBehaviour
             {
                 string role = p.Data["role"].Value;
                 session.myRole = role;
-
-                Debug.Log("My Role: " + role);
 
                 if (role == "Ice")
                     SceneManager.LoadScene("IceScene");

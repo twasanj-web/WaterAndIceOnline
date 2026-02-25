@@ -6,13 +6,14 @@ using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 public class JoinLobbyByCodeUI : MonoBehaviour
 {
     [Header("UI")]
-    public TMP_InputField codeInput;   // حقل إدخال الكود
-    public TMP_Text errorText;         // اختياري: نص للأخطاء
+    public TMP_InputField codeInput;
+    public TMP_Text errorText;
 
     private bool isJoining;
 
@@ -45,33 +46,44 @@ public class JoinLobbyByCodeUI : MonoBehaviour
         try
         {
             if (errorText != null) errorText.text = "";
-
-            if (codeInput == null)
-            {
-                Debug.LogError("codeInput not assigned!");
-                return;
-            }
+            if (codeInput == null) return;
 
             string code = codeInput.text.Trim().ToUpper();
             if (string.IsNullOrWhiteSpace(code))
             {
-                ShowError("اكتبي/اكتب الكود أولاً");
+                ShowError("اكتب/ي الكود أولاً");
                 return;
             }
 
-            Debug.Log("Joining lobby with code: " + code);
+            var session = AppSession.Instance;
+            string playerName = (session != null && !string.IsNullOrWhiteSpace(session.playerName))
+                ? session.playerName.Trim()
+                : "Player";
 
-            Lobby joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
+            Debug.Log($"Joining lobby with code: {code} | name={playerName}");
+
+            // ✅ نرسل اسم اللاعب مع طلب الانضمام
+            var joinOptions = new JoinLobbyByCodeOptions
+            {
+                Player = new Player
+                {
+                    Data = new Dictionary<string, PlayerDataObject>
+                    {
+                        { "name", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, playerName) }
+                    }
+                }
+            };
+
+            Lobby joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code, joinOptions);
 
             // خزني بيانات اللوبي في AppSession
-            var session = AppSession.Instance;
             if (session != null)
             {
                 session.isHost = false;
                 session.lobbyCode = code;
                 session.lobbyId = joinedLobby.Id;
 
-                // لو الهوست مخزنها في Data (زي كودك الحالي)
+                // خذي الإعدادات من Data
                 if (joinedLobby.Data != null)
                 {
                     if (joinedLobby.Data.ContainsKey("maxPlayers"))
@@ -82,13 +94,12 @@ public class JoinLobbyByCodeUI : MonoBehaviour
                 }
             }
 
-            // روحي لغرفة الانتظار
             SceneManager.LoadScene("WaitingRoom");
         }
         catch (LobbyServiceException e)
         {
             Debug.LogError("JoinLobbyByCode failed: " + e);
-            ShowError("الكود غير صحيح أو الغرفة مقفلة");
+            ShowError("الكود غير صحيح أو الغرفة ممتلئة/مقفلة");
         }
         finally
         {

@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class AppSession : MonoBehaviour
 {
+    
+    [Header("Role")]
+    public string myRole = "";   // "Water" or "Ice"
+    
     public static AppSession Instance { get; private set; }
 
     [Header("Player")]

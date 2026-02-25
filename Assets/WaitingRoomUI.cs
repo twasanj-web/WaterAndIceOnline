@@ -7,9 +7,14 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using System.Collections;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class WaitingRoomUI : MonoBehaviour
 {
+    private bool rolesAssigned = false;
+    private bool sceneLoaded = false;
+    
     [Header("UI")]
     public TMP_Text statusText;        // (1/3)
     public TMP_Text[] nameSlots;       // Name(1) ... Name(9)
@@ -107,6 +112,24 @@ public class WaitingRoomUI : MonoBehaviour
         {
             Debug.LogError("GetLobbyAsync failed: " + e);
         }
+        
+        // ✅ If lobby full → assign roles (host only)
+        if (current == max)
+        {
+            var session = AppSession.Instance;
+
+            if (session != null && session.isHost && !rolesAssigned)
+            {
+                rolesAssigned = true;
+                await AssignRoles(lobby);
+            }
+
+            if (!sceneLoaded)
+            {
+                sceneLoaded = true;
+                await LoadMyRoleScene(lobby);
+            }
+        }
     }
 
     private string GetPlayerName(Player p, int index)
@@ -117,5 +140,81 @@ public class WaitingRoomUI : MonoBehaviour
             if (!string.IsNullOrWhiteSpace(v)) return v.Trim();
         }
         return $"Player {index + 1}";
+    }
+    
+    private async Task AssignRoles(Lobby lobby)
+    {
+        int totalPlayers = lobby.Players.Count;
+
+        int iceCount = totalPlayers / 3;     // 3→1, 6→2, 9→3
+        int waterCount = totalPlayers - iceCount;
+
+        Debug.Log($"Assigning Roles: Water={waterCount}, Ice={iceCount}");
+
+        // Create role list
+        List<string> roles = new List<string>();
+
+        for (int i = 0; i < waterCount; i++)
+            roles.Add("Water");
+
+        for (int i = 0; i < iceCount; i++)
+            roles.Add("Ice");
+
+        // Shuffle roles
+        for (int i = 0; i < roles.Count; i++)
+        {
+            int randomIndex = Random.Range(i, roles.Count);
+            string temp = roles[i];
+            roles[i] = roles[randomIndex];
+            roles[randomIndex] = temp;
+        }
+
+        // Assign to players
+        for (int i = 0; i < lobby.Players.Count; i++)
+        {
+            string role = roles[i];
+
+            var updateOptions = new UpdatePlayerOptions
+            {
+                Data = new Dictionary<string, PlayerDataObject>
+                {
+                    { "role", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, role) }
+                }
+            };
+
+            await LobbyService.Instance.UpdatePlayerAsync(
+                lobby.Id,
+                lobby.Players[i].Id,
+                updateOptions
+            );
+        }
+
+        Debug.Log("Roles Assigned Successfully");
+    }
+    
+    private async Task LoadMyRoleScene(Lobby lobby)
+    {
+        var session = AppSession.Instance;
+        if (session == null) return;
+
+        string myPlayerId = Unity.Services.Authentication.AuthenticationService.Instance.PlayerId;
+
+        foreach (Player p in lobby.Players)
+        {
+            if (p.Id == myPlayerId && p.Data.ContainsKey("role"))
+            {
+                string role = p.Data["role"].Value;
+                session.myRole = role;
+
+                Debug.Log("My Role: " + role);
+
+                if (role == "Ice")
+                    SceneManager.LoadScene("IceScene");
+                else
+                    SceneManager.LoadScene("WaterScene");
+
+                return;
+            }
+        }
     }
 }

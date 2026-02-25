@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 7fb455d8d7ad34a6e8599da8ad7dd6dc
   - enabled: 1
+    path: Assets/Scenes/CreateRoomSettings.unity
+    guid: 05ad7f36a3b3846f496aa78662326bbb
+  - enabled: 1
     path: Assets/Scenes/ShareCode.unity
     guid: c8e195811753341f3b722bc37af63483
   - enabled: 1
@@ -21,8 +24,11 @@ EditorBuildSettings:
     path: Assets/Scenes/WaitingRoom.unity
     guid: 7db08fe46c3f1447b9b05c2f8b425630
   - enabled: 1
-    path: Assets/Scenes/CreateRoomSettings.unity
-    guid: 05ad7f36a3b3846f496aa78662326bbb
+    path: Assets/Scenes/WaterScene.unity
+    guid: 5ebdf9647d6594c8f9e0bab78f08f938
+  - enabled: 1
+    path: Assets/Scenes/IceScene.unity
+    guid: 14beea3d1bfa3488a9470c97a487ae63
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -2,9 +2,9 @@ using UnityEngine;
 
 public enum PlayerRole
 {
-    None,
-    Water,
-    Ice
+    None = 0,
+    Water = 1,
+    Ice = 2
 }
 
 public class AppSession : MonoBehaviour

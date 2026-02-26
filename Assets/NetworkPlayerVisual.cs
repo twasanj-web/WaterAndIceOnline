@@ -23,30 +23,33 @@ public class NetworkPlayerVisual : NetworkBehaviour
 
         if (IsOwner)
         {
-            int value = 0; // None
+            int value = 0;
             if (AppSession.Instance != null)
                 value = (int)AppSession.Instance.role;
+
+            // لو ما عنده دور، خلّيه Water مؤقتاً عشان يبان (للاختبار)
+            if (value == 0) value = 1;
 
             SetRoleServerRpc(value);
         }
     }
 
-    public override void OnNetworkDespawn()
-    {
-        roleIndex.OnValueChanged -= OnRoleChanged;
-    }
-
     [ServerRpc]
-    private void SetRoleServerRpc(int value)
+    void SetRoleServerRpc(int value)
     {
         roleIndex.Value = value;
     }
 
-    private void OnRoleChanged(int oldValue, int newValue)
+    void OnRoleChanged(int oldValue, int newValue)
     {
-        if (sr == null) sr = GetComponent<SpriteRenderer>();
+        if (sr == null) return;
 
-        if (newValue == 1) sr.sprite = waterSprite; // Water
-        else if (newValue == 2) sr.sprite = iceSprite; // Ice
+        if (newValue == 1) sr.sprite = waterSprite;
+        else if (newValue == 2) sr.sprite = iceSprite;
+        else
+        {
+            // fallback عشان يبان
+            sr.sprite = waterSprite != null ? waterSprite : sr.sprite;
+        }
     }
 }

@@ -5,6 +5,14 @@ public class TestStartNetwork : MonoBehaviour
 {
     void Start()
     {
-        NetworkManager.Singleton.StartHost();
+        if (NetworkManager.Singleton == null)
+        {
+            Debug.LogError("❌ No NetworkManager in scene!");
+            return;
+        }
+
+        Debug.Log("✅ Starting Host...");
+        bool ok = NetworkManager.Singleton.StartHost();
+        Debug.Log("StartHost result: " + ok);
     }
 }

@@ -35,9 +35,12 @@ public class JoinLobbyByCodeUI : MonoBehaviour
         {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
         }
+
+        var session = AppSession.Instance;
+        if (session != null)
+            session.playerId = AuthenticationService.Instance.PlayerId;
     }
 
-    // اربطيها بزر الصح ✅
     public async void JoinWithCode()
     {
         if (isJoining) return;
@@ -62,7 +65,6 @@ public class JoinLobbyByCodeUI : MonoBehaviour
 
             Debug.Log($"Joining lobby with code: {code} | name={playerName}");
 
-            // ✅ نرسل اسم اللاعب مع طلب الانضمام
             var joinOptions = new JoinLobbyByCodeOptions
             {
                 Player = new Player
@@ -76,14 +78,12 @@ public class JoinLobbyByCodeUI : MonoBehaviour
 
             Lobby joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code, joinOptions);
 
-            // خزني بيانات اللوبي في AppSession
             if (session != null)
             {
                 session.isHost = false;
                 session.lobbyCode = code;
                 session.lobbyId = joinedLobby.Id;
 
-                // خذي الإعدادات من Data
                 if (joinedLobby.Data != null)
                 {
                     if (joinedLobby.Data.ContainsKey("maxPlayers"))

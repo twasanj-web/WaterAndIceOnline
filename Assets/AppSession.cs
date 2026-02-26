@@ -1,11 +1,20 @@
 using UnityEngine;
 
+public enum PlayerRole
+{
+    None,
+    Water,
+    Ice
+}
+
 public class AppSession : MonoBehaviour
 {
     public static AppSession Instance { get; private set; }
 
     [Header("Player")]
     public string playerName = "Player";
+    public string playerId = "";        // Authentication PlayerId
+    public PlayerRole role = PlayerRole.None;
 
     [Header("Room Settings")]
     public int maxPlayers = 3;

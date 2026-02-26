@@ -59,6 +59,11 @@ public class MultiplayerManager : MonoBehaviour
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             Debug.Log("Signed in anonymously");
         }
+
+        // ✅ احفظي PlayerId في AppSession
+        var session = AppSession.Instance;
+        if (session != null)
+            session.playerId = AuthenticationService.Instance.PlayerId;
     }
 
     private async Task CreateLobbyAutomatically()
@@ -75,6 +80,7 @@ public class MultiplayerManager : MonoBehaviour
         try
         {
             var session = AppSession.Instance;
+
             string playerName = (session != null && !string.IsNullOrWhiteSpace(session.playerName))
                 ? session.playerName.Trim()
                 : "Player";
@@ -83,7 +89,7 @@ public class MultiplayerManager : MonoBehaviour
 
             string lobbyName = "WaterIce-" + Random.Range(1000, 9999);
 
-            // بيانات اللاعب (الهوست) داخل اللوبي
+            // ✅ بيانات اللاعب (الهوست) داخل اللوبي
             var playerData = new Dictionary<string, PlayerDataObject>
             {
                 { "name", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, playerName) }
@@ -92,7 +98,7 @@ public class MultiplayerManager : MonoBehaviour
             var lobbyOptions = new CreateLobbyOptions
             {
                 IsPrivate = true,
-                Player = new Player { Data = playerData }, // ✅ مهم: يرسل اسم الهوست من البداية
+                Player = new Player { Data = playerData }, // ✅ يرسل اسم الهوست من البداية
                 Data = new Dictionary<string, DataObject>
                 {
                     { "roundTime",  new DataObject(DataObject.VisibilityOptions.Public, roundTimeMinutes.ToString()) },

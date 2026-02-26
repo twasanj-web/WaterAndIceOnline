@@ -5,8 +5,10 @@ using Unity.Services.Core.Environments;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 public class WaitingRoomUI : MonoBehaviour
 {
@@ -18,10 +20,10 @@ public class WaitingRoomUI : MonoBehaviour
     public float refreshSeconds = 1.0f;
 
     private Coroutine pollRoutine;
+    private bool hasMovedToGame;
 
     private async void Start()
     {
-        // صفّر UI أولاً
         ClearSlots();
         if (statusText != null) statusText.text = "(0/0)";
 
@@ -62,6 +64,10 @@ public class WaitingRoomUI : MonoBehaviour
         {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
         }
+
+        // خزني PlayerId في السيشن
+        if (AppSession.Instance != null)
+            AppSession.Instance.playerId = AuthenticationService.Instance.PlayerId;
     }
 
     private IEnumerator PollLobby(string lobbyId)
@@ -84,29 +90,72 @@ public class WaitingRoomUI : MonoBehaviour
             int current = lobby.Players != null ? lobby.Players.Count : 0;
             int max = lobby.MaxPlayers;
 
-            // حدّث الستاتس
             if (statusText != null)
                 statusText.text = $"({current}/{max})";
 
-            // حدّث الأسماء
             ClearSlots();
 
-            if (lobby.Players == null || nameSlots == null) return;
-
-            int slotsCount = Mathf.Min(nameSlots.Length, lobby.Players.Count);
-            for (int i = 0; i < slotsCount; i++)
+            if (lobby.Players != null && nameSlots != null)
             {
-                string name = GetPlayerName(lobby.Players[i], i);
-                if (nameSlots[i] != null) nameSlots[i].text = name;
+                int slotsCount = Mathf.Min(nameSlots.Length, lobby.Players.Count);
+                for (int i = 0; i < slotsCount; i++)
+                {
+                    string name = GetPlayerName(lobby.Players[i], i);
+                    if (nameSlots[i] != null) nameSlots[i].text = name;
+                }
             }
 
-            // Debug خفيف
-            // Debug.Log($"WaitingRoomUI Refresh: {current}/{max}");
+            // ✅ لو اللعبة بدأت: حددي الدور وروحي GameMap
+            if (!hasMovedToGame && lobby.Data != null && lobby.Data.ContainsKey("state"))
+            {
+                string state = lobby.Data["state"].Value;
+                if (state == "started")
+                {
+                    hasMovedToGame = true;
+                    if (pollRoutine != null) StopCoroutine(pollRoutine);
+
+                    ApplyRoleAndGoToGame(lobby);
+                }
+            }
         }
         catch (LobbyServiceException e)
         {
             Debug.LogError("GetLobbyAsync failed: " + e);
         }
+    }
+
+    private void ApplyRoleAndGoToGame(Lobby lobby)
+    {
+        var session = AppSession.Instance;
+        if (session == null)
+        {
+            Debug.LogError("ApplyRoleAndGoToGame: AppSession is null");
+            return;
+        }
+
+        // اقرأ iceIds
+        HashSet<string> iceSet = new HashSet<string>();
+        if (lobby.Data != null && lobby.Data.ContainsKey("iceIds"))
+        {
+            string csv = lobby.Data["iceIds"].Value ?? "";
+            string[] parts = csv.Split(',');
+            foreach (var p in parts)
+            {
+                string id = p.Trim();
+                if (!string.IsNullOrWhiteSpace(id))
+                    iceSet.Add(id);
+            }
+        }
+
+        // حددي دوري حسب playerId
+        if (!string.IsNullOrWhiteSpace(session.playerId) && iceSet.Contains(session.playerId))
+            session.role = PlayerRole.Ice;
+        else
+            session.role = PlayerRole.Water;
+
+        Debug.Log($"Role decided => {session.role} | myId={session.playerId}");
+
+        SceneManager.LoadScene("GameMap");
     }
 
     private string GetPlayerName(Player p, int index)

@@ -280,6 +280,9 @@ public class RelayNetworkManager : MonoBehaviour
             return;
         }
 
+        // ✅✅ سطر التحقق المطلوب
+        Debug.Log("ConnectedClients = " + NetworkManager.Singleton.ConnectedClientsList.Count);
+
         Debug.Log("🚀 Loading game scene: " + gameSceneName);
         NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
     }

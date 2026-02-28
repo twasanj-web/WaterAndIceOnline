@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 using Unity.Netcode;
 
@@ -19,7 +18,8 @@ public class WaitingRoomStartGame : MonoBehaviour
     public string gameSceneName = "GameMap";
 
     [Header("Client Auto Join")]
-    public float clientRetrySeconds = 1f;
+    public float clientMinRetrySeconds = 2f;
+    public float clientMaxRetrySeconds = 8f;
 
     private bool isStarting;
     private Coroutine clientLoop;
@@ -41,7 +41,6 @@ public class WaitingRoomStartGame : MonoBehaviour
 
     private void Start()
     {
-        // الكلاينت يحاول يدخل تلقائياً (بدون ما يضغط شيء)
         var session = AppSession.Instance;
         if (session != null && !session.isHost)
         {
@@ -49,7 +48,7 @@ public class WaitingRoomStartGame : MonoBehaviour
         }
     }
 
-    // اربطيها بزر السهم ➜ OnClick
+    // اربطيها بزر السهم ➜ OnClick (هوست فقط)
     public async void OnArrowPressed()
     {
         if (isStarting) return;
@@ -83,7 +82,6 @@ public class WaitingRoomStartGame : MonoBehaviour
             }
 
             int iceCount = count / 3;
-
             List<string> ids = lobby.Players.Select(p => p.Id).ToList();
             List<string> iceIds = PickRandom(ids, iceCount);
             string iceCsv = string.Join(",", iceIds);
@@ -98,10 +96,10 @@ public class WaitingRoomStartGame : MonoBehaviour
 
             await LobbyService.Instance.UpdateLobbyAsync(session.lobbyId, new UpdateLobbyOptions { Data = data });
 
-            // 2) شغل Relay + StartHost
+            // 2) شغل Relay + StartHost (بدون تحميل سين هنا)
             if (RelayNetworkManager.Instance == null)
             {
-                Debug.LogError("❌ RelayNetworkManager.Instance is NULL (put it in scene)");
+                Debug.LogError("❌ RelayNetworkManager.Instance is NULL (حطي RelayNetworkManager في WaitingRoom)");
                 return;
             }
 
@@ -122,7 +120,7 @@ public class WaitingRoomStartGame : MonoBehaviour
 
     private IEnumerator HostLoadGameSceneWhenReady()
     {
-        float timeout = 10f;
+        float timeout = 12f;
         float t = 0f;
 
         while (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsHost && t < timeout)
@@ -139,25 +137,39 @@ public class WaitingRoomStartGame : MonoBehaviour
 
         if (!NetworkManager.Singleton.IsHost)
         {
-            Debug.LogError("❌ Host didn't start in time.");
+            Debug.LogError("❌ Host didn't start in time (Relay/Host failed).");
             yield break;
         }
 
-        NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
+        if (NetworkManager.Singleton.SceneManager == null)
+        {
+            Debug.LogError("❌ Netcode SceneManager is NULL. تأكدي Enable Scene Management مفعّل.");
+            yield break;
+        }
+
+        NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
         Debug.Log("✅ Host loading Game scene for everyone: " + gameSceneName);
     }
 
     private IEnumerator ClientAutoJoinLoop()
     {
-        // يكرر محاولة الانضمام للـ Relay إلى أن يصير Client
+        float wait = Mathf.Max(0.5f, clientMinRetrySeconds);
+
         while (NetworkManager.Singleton != null &&
                !NetworkManager.Singleton.IsClient &&
                !NetworkManager.Singleton.IsHost)
         {
             if (RelayNetworkManager.Instance != null)
+            {
                 RelayNetworkManager.Instance.ClientJoinRelayFromLobbyAndStartClient();
+            }
+            else
+            {
+                Debug.LogWarning("⏳ RelayNetworkManager.Instance is NULL (تأكدي موجود ومسوّي DontDestroyOnLoad)");
+            }
 
-            yield return new WaitForSeconds(clientRetrySeconds);
+            yield return new WaitForSeconds(wait);
+            wait = Mathf.Min(clientMaxRetrySeconds, wait + 1f);
         }
 
         Debug.Log("✅ Client started. Waiting for host to load scene...");

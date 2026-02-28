@@ -5,7 +5,6 @@ using Unity.Services.Core.Environments;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -105,16 +104,21 @@ public class WaitingRoomUI : MonoBehaviour
                 }
             }
 
-            // ✅ لو اللعبة بدأت: حددي الدور وروحي GameMap
+            // ✅ لو اللعبة بدأت: حددي الدور فقط (بدون نقل للـ GameMap)
             if (!hasMovedToGame && lobby.Data != null && lobby.Data.ContainsKey("state"))
             {
                 string state = lobby.Data["state"].Value;
                 if (state == "started")
                 {
                     hasMovedToGame = true;
-                    if (pollRoutine != null) StopCoroutine(pollRoutine);
 
-                    ApplyRoleAndGoToGame(lobby);
+                    if (pollRoutine != null)
+                        StopCoroutine(pollRoutine);
+
+                    ApplyRoleOnly(lobby);
+
+                    if (statusText != null)
+                        statusText.text = "جاري بدء اللعبة...";
                 }
             }
         }
@@ -124,12 +128,13 @@ public class WaitingRoomUI : MonoBehaviour
         }
     }
 
-    private void ApplyRoleAndGoToGame(Lobby lobby)
+    // ✅ فقط تحديد الدور (بدون LoadScene)
+    private void ApplyRoleOnly(Lobby lobby)
     {
         var session = AppSession.Instance;
         if (session == null)
         {
-            Debug.LogError("ApplyRoleAndGoToGame: AppSession is null");
+            Debug.LogError("ApplyRoleOnly: AppSession is null");
             return;
         }
 
@@ -138,8 +143,7 @@ public class WaitingRoomUI : MonoBehaviour
         if (lobby.Data != null && lobby.Data.ContainsKey("iceIds"))
         {
             string csv = lobby.Data["iceIds"].Value ?? "";
-            string[] parts = csv.Split(',');
-            foreach (var p in parts)
+            foreach (var p in csv.Split(','))
             {
                 string id = p.Trim();
                 if (!string.IsNullOrWhiteSpace(id))
@@ -154,8 +158,6 @@ public class WaitingRoomUI : MonoBehaviour
             session.role = PlayerRole.Water;
 
         Debug.Log($"Role decided => {session.role} | myId={session.playerId}");
-
-        SceneManager.LoadScene("GameMap");
     }
 
     private string GetPlayerName(Player p, int index)

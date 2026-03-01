@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,16 +17,18 @@ public class WaitingRoomStartGame : MonoBehaviour
     [Header("Netcode Scene Name")]
     public string gameSceneName = "GameMap";
 
-    [Header("Client Auto Join (خففنا الطلبات)")]
-    public float clientRetrySeconds = 5f;
+    [Header("Client Auto Join")]
+    public float clientMinRetrySeconds = 2f;
+    public float clientMaxRetrySeconds = 10f;
 
-    [Header("Host Wait For Players")]
-    public float hostWaitTimeoutSeconds = 25f;
+    [Header("Host wait clients")]
+    public float hostWaitClientsTimeout = 20f;   // كم ثانية ننتظر الكلاينت قبل نحمّل السين
+    public float hostWaitPollInterval = 0.5f;
 
     private bool isStarting;
     private Coroutine clientLoop;
 
-    private async Task InitServices()
+    private async System.Threading.Tasks.Task InitServices()
     {
         if (UnityServices.State != ServicesInitializationState.Initialized)
         {
@@ -38,23 +39,24 @@ public class WaitingRoomStartGame : MonoBehaviour
         if (!AuthenticationService.Instance.IsSignedIn)
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
-        var session = AppSession.Ensure();
-        session.playerId = AuthenticationService.Instance.PlayerId;
+        if (AppSession.Instance != null)
+            AppSession.Instance.playerId = AuthenticationService.Instance.PlayerId;
     }
 
     private void Start()
     {
-        var session = AppSession.Ensure();
-        Debug.Log("WaitingRoom Start: isHost=" + session.isHost + " lobbyId=" + session.lobbyId);
-
-        // ✅ الكلاينت يحاول يدخل Relay تلقائياً لكن كل 5 ثواني (بدون spam)
-        if (!session.isHost)
+        var session = AppSession.Instance;
+        if (session != null && !session.isHost)
+        {
             clientLoop = StartCoroutine(ClientAutoJoinLoop());
+        }
     }
 
-    // اربطيها بزر السهم (هوست فقط)
+    // اربطيها بزر السهم ➜ OnClick (هوست فقط)
     public async void OnArrowPressed()
     {
+        Debug.Log("🟦 Arrow Clicked -> OnArrowPressed called");
+
         if (isStarting) return;
         isStarting = true;
 
@@ -62,16 +64,16 @@ public class WaitingRoomStartGame : MonoBehaviour
         {
             await InitServices();
 
-            var session = AppSession.Ensure();
-            if (string.IsNullOrWhiteSpace(session.lobbyId))
+            var session = AppSession.Instance;
+            if (session == null || string.IsNullOrWhiteSpace(session.lobbyId))
             {
-                Debug.LogError("StartGame: lobbyId missing");
+                Debug.LogError("❌ StartGame: AppSession/lobbyId missing");
                 return;
             }
 
             if (!session.isHost)
             {
-                Debug.Log("⛔ StartGame: only host can start. isHost=" + session.isHost);
+                Debug.Log("⛔ StartGame: only host can start.");
                 return;
             }
 
@@ -79,18 +81,19 @@ public class WaitingRoomStartGame : MonoBehaviour
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
             int count = lobby.Players != null ? lobby.Players.Count : 0;
 
-            if (!(count == 3 || count == 6 || count == 9))
+            if (count <= 0)
             {
-                Debug.LogWarning($"StartGame: invalid player count = {count}. Must be 3/6/9");
+                Debug.LogError("❌ StartGame: lobby has no players?");
                 return;
             }
 
-            int iceCount = count / 3;
+            // مثال توزيع: ثلج = ثلث اللاعبين (3->1, 6->2, 9->3)
+            int iceCount = Mathf.Max(1, count / 3);
             List<string> ids = lobby.Players.Select(p => p.Id).ToList();
             List<string> iceIds = PickRandom(ids, iceCount);
             string iceCsv = string.Join(",", iceIds);
 
-            Debug.Log($"StartGame: count={count}, iceCount={iceCount}, iceIds={iceCsv}");
+            Debug.Log($"✅ Roles: count={count}, iceCount={iceCount}, iceIds={iceCsv}");
 
             var data = new Dictionary<string, DataObject>
             {
@@ -100,26 +103,59 @@ public class WaitingRoomStartGame : MonoBehaviour
 
             await LobbyService.Instance.UpdateLobbyAsync(session.lobbyId, new UpdateLobbyOptions { Data = data });
 
-            // 2) شغل Relay + Host
+            // 2) شغل Relay + StartHost
             if (RelayNetworkManager.Instance == null)
             {
-                Debug.LogError("❌ RelayNetworkManager.Instance is NULL");
+                Debug.LogError("❌ RelayNetworkManager.Instance is NULL (لازم يكون موجود في DontDestroyOnLoad)");
                 return;
             }
 
-            bool ok = await RelayNetworkManager.Instance.HostStartRelayAndHostAsync();
-            if (!ok)
+            bool hostOk = await RelayNetworkManager.Instance.HostStartRelayAndHostAsync();
+            if (!hostOk)
             {
-                Debug.LogError("❌ StartHost failed.");
+                Debug.LogError("❌ Failed to StartHost (Relay).");
                 return;
             }
 
-            // 3) انتظر اتصال الجميع قبل تحميل GameMap للجميع
-            StartCoroutine(HostWaitThenLoadScene(expectedPlayers: count));
+            // 3) انتظري العملاء يتصلون فعلاً (ConnectedClientsList)
+            int expectedPlayers = count; // عدد لاعبين اللوبي
+            Debug.Log($"⏳ Waiting clients... expected={expectedPlayers}");
+
+            float t = 0f;
+            while (t < hostWaitClientsTimeout)
+            {
+                if (NetworkManager.Singleton == null) break;
+
+                int connected = NetworkManager.Singleton.ConnectedClientsList.Count;
+                Debug.Log($"🔌 ConnectedClients = {connected} / {expectedPlayers}");
+
+                if (connected >= expectedPlayers)
+                    break;
+
+                await System.Threading.Tasks.Task.Delay((int)(hostWaitPollInterval * 1000));
+                t += hostWaitPollInterval;
+            }
+
+            int finalConnected = NetworkManager.Singleton != null ? NetworkManager.Singleton.ConnectedClientsList.Count : 0;
+            Debug.Log($"✅ Done waiting. ConnectedClients = {finalConnected} / {expectedPlayers}");
+
+            // 4) الآن حمّلي السين للجميع عبر Netcode
+            if (NetworkManager.Singleton.SceneManager == null)
+            {
+                Debug.LogError("❌ SceneManager is NULL. تأكدي Enable Scene Management ON.");
+                return;
+            }
+
+            Debug.Log("🚀 Loading game scene (for everyone): " + gameSceneName);
+            NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
         }
         catch (LobbyServiceException e)
         {
-            Debug.LogError("StartGame failed: " + e);
+            Debug.LogError("❌ StartGame Lobby error: " + e);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("❌ StartGame error: " + e);
         }
         finally
         {
@@ -127,63 +163,30 @@ public class WaitingRoomStartGame : MonoBehaviour
         }
     }
 
-    private IEnumerator HostWaitThenLoadScene(int expectedPlayers)
-    {
-        float t = 0f;
-        float nextLog = 0f;
-
-        Debug.Log("⏳ Waiting clients... expected=" + expectedPlayers);
-
-        while (t < hostWaitTimeoutSeconds)
-        {
-            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost)
-            {
-                int connected = NetworkManager.Singleton.ConnectedClientsList.Count; // يشمل الهوست
-                if (t >= nextLog)
-                {
-                    Debug.Log($"⏳ connected={connected}/{expectedPlayers}");
-                    nextLog = t + 1f;
-                }
-
-                if (connected >= expectedPlayers)
-                    break;
-            }
-
-            t += Time.deltaTime;
-            yield return null;
-        }
-
-        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsHost)
-        {
-            Debug.LogError("❌ Host not running, cannot load scene.");
-            yield break;
-        }
-
-        int finalConnected = NetworkManager.Singleton.ConnectedClientsList.Count;
-        Debug.Log("✅ ConnectedClients = " + finalConnected);
-
-        if (NetworkManager.Singleton.SceneManager == null)
-        {
-            Debug.LogError("❌ SceneManager is NULL. تأكدي Enable Scene Management ON.");
-            yield break;
-        }
-
-        Debug.Log("🚀 Loading game scene (for everyone): " + gameSceneName);
-        NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
-    }
-
     private IEnumerator ClientAutoJoinLoop()
     {
+        float wait = Mathf.Max(0.5f, clientMinRetrySeconds);
+
         while (NetworkManager.Singleton != null &&
                !NetworkManager.Singleton.IsClient &&
                !NetworkManager.Singleton.IsHost)
         {
             if (RelayNetworkManager.Instance != null)
             {
-                RelayNetworkManager.Instance.ClientJoinRelayFromLobbyAndStartClient();
+                // حاول مرة، إذا ما ضبط لا تسبّم لابي (عشان 429)
+                var task = RelayNetworkManager.Instance.ClientJoinRelayFromLobbyAndStartClientAsync();
+                while (!task.IsCompleted) yield return null;
+
+                bool ok = task.Result;
+                if (ok) break;
+            }
+            else
+            {
+                Debug.LogWarning("⏳ RelayNetworkManager.Instance is NULL (لازم DontDestroyOnLoad)");
             }
 
-            yield return new WaitForSeconds(clientRetrySeconds);
+            yield return new WaitForSeconds(wait);
+            wait = Mathf.Min(clientMaxRetrySeconds, wait + 1.5f);
         }
 
         Debug.Log("✅ Client started. Waiting for host to load scene...");

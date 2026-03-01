@@ -2,11 +2,15 @@ using UnityEngine;
 
 public class EnsureAppSession : MonoBehaviour
 {
-    public AppSession appSessionPrefab; // اسحبي prefab حق AppSession هنا
-
-    void Awake()
+    private void Awake()
     {
-        if (AppSession.Instance == null && appSessionPrefab != null)
-            Instantiate(appSessionPrefab);
+        // إذا فيه AppSession أصلاً (من DontDestroyOnLoad) خلاص
+        if (AppSession.Instance != null) return;
+
+        // إذا ما فيه، أنشئ واحد تلقائي
+        Debug.Log("⚠️ AppSession not found -> creating one automatically");
+        var go = new GameObject("AppSession (Auto)");
+        go.AddComponent<AppSession>();
+        // AppSession.Awake يسوي DontDestroyOnLoad
     }
 }

@@ -28,10 +28,6 @@ public class RelayNetworkManager : MonoBehaviour
     [Header("Netcode Scene Name")]
     public string gameSceneName = "GameMap";
 
-    [Header("Start Game Wait")]
-    [Tooltip("كم أنتظر لين يتصلون كل اللاعبين قبل ما أحمل GameMap")]
-    public float waitForPlayersTimeoutSeconds = 25f;
-
     private UnityTransport transport;
     private bool servicesReady;
 
@@ -40,18 +36,18 @@ public class RelayNetworkManager : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         if (NetworkManager.Singleton == null)
         {
-            Debug.LogError("❌ NetworkManager.Singleton is NULL. لازم يكون عندك NetworkManager موجود قبل هذا السكربت.");
+            Debug.LogError("❌ NetworkManager.Singleton is NULL. لازم يكون عندك NetworkManager موجود.");
             return;
         }
 
@@ -88,8 +84,8 @@ public class RelayNetworkManager : MonoBehaviour
         while (t < timeoutSeconds)
         {
             if (condition()) return true;
-            await Task.Delay(200);
-            t += 0.2f;
+            await Task.Delay(100);
+            t += 0.1f;
         }
         return condition();
     }
@@ -149,7 +145,8 @@ public class RelayNetworkManager : MonoBehaviour
             bool ok = NetworkManager.Singleton.StartHost();
             Debug.Log("✅ StartHost (Relay) result: " + ok);
 
-            return ok;
+            bool isHostNow = await WaitUntil(() => NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost, 8f);
+            return ok && isHostNow;
         }
         catch (Exception e)
         {
@@ -195,7 +192,20 @@ public class RelayNetworkManager : MonoBehaviour
                 return false;
             }
 
-            Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
+            Lobby lobby = null;
+
+            // ✅ حماية من Too Many Requests (RateLimit)
+            try
+            {
+                lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
+            }
+            catch (LobbyServiceException e)
+            {
+                // في بعض النسخ ما فيها Reason مضبوط، فنكتفي بالتأخير إذا جاء 429
+                Debug.LogWarning("⚠️ GetLobbyAsync failed (maybe rate limited): " + e.Message);
+                await Task.Delay(2000);
+                return false;
+            }
 
             if (lobby.Data == null || !lobby.Data.ContainsKey("relayJoinCode"))
             {
@@ -219,7 +229,16 @@ public class RelayNetworkManager : MonoBehaviour
             bool ok = NetworkManager.Singleton.StartClient();
             Debug.Log("✅ StartClient (Relay) result: " + ok);
 
-            return ok;
+            // ✅ انتظر اتصال فعلي
+            bool connected = await WaitUntil(() => NetworkManager.Singleton != null && NetworkManager.Singleton.IsConnectedClient, 10f);
+            if (!connected)
+            {
+                Debug.LogError("❌ Failed to connect to server.");
+                return false;
+            }
+
+            Debug.Log("✅ Client CONNECTED to host.");
+            return ok && connected;
         }
         catch (Exception e)
         {
@@ -238,77 +257,19 @@ public class RelayNetworkManager : MonoBehaviour
     }
 
     // =========================
-    // START GAME (Load Map) ✅ FIX: انتظر الكلاينتس
+    // START GAME (Load Map)
+    // (اختياري - الآن التحميل صار في WaitingRoomStartGame)
     // =========================
-    public async void StartGameAsHost()
+    public void StartGameAsHost()
     {
         if (NetworkManager.Singleton == null) return;
-
-        var session = AppSession.Instance;
-        if (session == null)
-        {
-            Debug.LogError("❌ AppSession غير موجود.");
-            return;
-        }
-
-        if (!session.isHost)
-        {
-            Debug.Log("⛔ StartGameAsHost: فقط الهوست يقدر يبدأ اللعبة.");
-            return;
-        }
-
-        // 1) تأكد الهوست شغّال
         if (!NetworkManager.Singleton.IsHost)
         {
-            Debug.Log("⚠️ Host not running yet. Starting Host Relay first...");
-            bool started = await HostStartRelayAndHostAsync();
-            if (!started)
-            {
-                Debug.LogError("❌ فشل StartHost. ما أقدر أبدأ اللعبة.");
-                return;
-            }
-
-            bool okHost = await WaitUntil(() => NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost, 8f);
-            if (!okHost)
-            {
-                Debug.LogError("❌ ما صار Host خلال الوقت المحدد.");
-                return;
-            }
-        }
-
-        // 2) انتظر لين يتصلون كل اللاعبين (مهم جدًا)
-        int expected = Mathf.Max(1, session.maxPlayers); // شامل الهوست
-        Debug.Log($"⏳ Waiting clients... expected={expected}");
-
-        bool allConnected = await WaitUntil(() =>
-        {
-            if (NetworkManager.Singleton == null) return false;
-            return NetworkManager.Singleton.ConnectedClientsList.Count >= expected;
-        }, waitForPlayersTimeoutSeconds);
-
-        Debug.Log("ConnectedClients = " + NetworkManager.Singleton.ConnectedClientsList.Count);
-
-        if (!allConnected)
-        {
-            Debug.LogWarning("⚠️ ما اكتمل اتصال كل اللاعبين قبل التايم آوت. (راح أحاول أبدأ بالمتصلين فقط)");
-            // تقدري هنا: ترجعين وتقولين "انتظروا" بدل ما تبدأ.
-            // return;
-        }
-
-        // 3) LoadScene عبر Netcode SceneManager
-        if (string.IsNullOrEmpty(gameSceneName))
-        {
-            Debug.LogError("❌ gameSceneName فاضي.");
+            Debug.Log("⛔ StartGameAsHost: فقط الهوست.");
             return;
         }
 
-        if (NetworkManager.Singleton.SceneManager == null)
-        {
-            Debug.LogError("❌ Netcode SceneManager is NULL. تأكدي Enable Scene Management ✅ ON.");
-            return;
-        }
-
-        Debug.Log("🚀 Loading game scene (for everyone): " + gameSceneName);
+        Debug.Log("🚀 Loading game scene: " + gameSceneName);
         NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
     }
 

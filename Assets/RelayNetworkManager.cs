@@ -28,6 +28,10 @@ public class RelayNetworkManager : MonoBehaviour
     [Header("Netcode Scene Name")]
     public string gameSceneName = "GameMap";
 
+    [Header("Start Game Wait")]
+    [Tooltip("كم أنتظر لين يتصلون كل اللاعبين قبل ما أحمل GameMap")]
+    public float waitForPlayersTimeoutSeconds = 25f;
+
     private UnityTransport transport;
     private bool servicesReady;
 
@@ -84,14 +88,14 @@ public class RelayNetworkManager : MonoBehaviour
         while (t < timeoutSeconds)
         {
             if (condition()) return true;
-            await Task.Delay(100);
-            t += 0.1f;
+            await Task.Delay(200);
+            t += 0.2f;
         }
         return condition();
     }
 
     // =========================
-    // HOST (Task version)
+    // HOST
     // =========================
     public async Task<bool> HostStartRelayAndHostAsync()
     {
@@ -158,14 +162,13 @@ public class RelayNetworkManager : MonoBehaviour
         }
     }
 
-    // Wrapper لو عندك أزرار/استدعاءات قديمة
     public async void HostStartRelayAndHost()
     {
         await HostStartRelayAndHostAsync();
     }
 
     // =========================
-    // CLIENT (Task version)
+    // CLIENT
     // =========================
     public async Task<bool> ClientJoinRelayFromLobbyAndStartClientAsync()
     {
@@ -235,7 +238,7 @@ public class RelayNetworkManager : MonoBehaviour
     }
 
     // =========================
-    // START GAME (Load Map)
+    // START GAME (Load Map) ✅ FIX: انتظر الكلاينتس
     // =========================
     public async void StartGameAsHost()
     {
@@ -254,7 +257,7 @@ public class RelayNetworkManager : MonoBehaviour
             return;
         }
 
-        // إذا الشبكة ما بدأت كهوست، نبدأها الآن
+        // 1) تأكد الهوست شغّال
         if (!NetworkManager.Singleton.IsHost)
         {
             Debug.Log("⚠️ Host not running yet. Starting Host Relay first...");
@@ -265,7 +268,6 @@ public class RelayNetworkManager : MonoBehaviour
                 return;
             }
 
-            // انتظر شوي لين يصير IsHost فعلاً
             bool okHost = await WaitUntil(() => NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost, 8f);
             if (!okHost)
             {
@@ -274,21 +276,44 @@ public class RelayNetworkManager : MonoBehaviour
             }
         }
 
+        // 2) انتظر لين يتصلون كل اللاعبين (مهم جدًا)
+        int expected = Mathf.Max(1, session.maxPlayers); // شامل الهوست
+        Debug.Log($"⏳ Waiting clients... expected={expected}");
+
+        bool allConnected = await WaitUntil(() =>
+        {
+            if (NetworkManager.Singleton == null) return false;
+            return NetworkManager.Singleton.ConnectedClientsList.Count >= expected;
+        }, waitForPlayersTimeoutSeconds);
+
+        Debug.Log("ConnectedClients = " + NetworkManager.Singleton.ConnectedClientsList.Count);
+
+        if (!allConnected)
+        {
+            Debug.LogWarning("⚠️ ما اكتمل اتصال كل اللاعبين قبل التايم آوت. (راح أحاول أبدأ بالمتصلين فقط)");
+            // تقدري هنا: ترجعين وتقولين "انتظروا" بدل ما تبدأ.
+            // return;
+        }
+
+        // 3) LoadScene عبر Netcode SceneManager
         if (string.IsNullOrEmpty(gameSceneName))
         {
             Debug.LogError("❌ gameSceneName فاضي.");
             return;
         }
 
-        // ✅✅ سطر التحقق المطلوب
-        Debug.Log("ConnectedClients = " + NetworkManager.Singleton.ConnectedClientsList.Count);
+        if (NetworkManager.Singleton.SceneManager == null)
+        {
+            Debug.LogError("❌ Netcode SceneManager is NULL. تأكدي Enable Scene Management ✅ ON.");
+            return;
+        }
 
-        Debug.Log("🚀 Loading game scene: " + gameSceneName);
+        Debug.Log("🚀 Loading game scene (for everyone): " + gameSceneName);
         NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
     }
 
     // =========================
-    // TRANSPORT CONFIG (Stable)
+    // TRANSPORT CONFIG
     // =========================
     private void ConfigureHostTransport(Allocation alloc)
     {
@@ -299,7 +324,7 @@ public class RelayNetworkManager : MonoBehaviour
             alloc.Key,
             alloc.ConnectionData,
             alloc.ConnectionData,
-            true // dtls
+            true
         );
     }
 
@@ -312,7 +337,7 @@ public class RelayNetworkManager : MonoBehaviour
             joinAlloc.Key,
             joinAlloc.ConnectionData,
             joinAlloc.HostConnectionData,
-            true // dtls
+            true
         );
     }
 }

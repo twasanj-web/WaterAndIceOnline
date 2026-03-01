@@ -2051,9 +2051,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 61255322}
-        m_TargetAssemblyTypeName: WaitingRoomStartButton, Assembly-CSharp
-        m_MethodName: OnStartButtonClicked
+      - m_Target: {fileID: 1976178992}
+        m_TargetAssemblyTypeName: WaitingRoomStartGame, Assembly-CSharp
+        m_MethodName: OnArrowPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2171,8 +2171,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   gameSceneName: GameMap
-  clientMinRetrySeconds: 2
-  clientMaxRetrySeconds: 8
+  clientRetrySeconds: 3
+  hostWaitTimeoutSeconds: 25
 --- !u!1 &2002813220
 GameObject:
   m_ObjectHideFlags: 0

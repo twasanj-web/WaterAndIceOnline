@@ -37,6 +37,13 @@ public class AppSession : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public static AppSession Ensure()
+    {
+        if (Instance != null) return Instance;
+        var go = new GameObject("AppSession");
+        return go.AddComponent<AppSession>();
+    }
+
     public void SetPlayerName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))

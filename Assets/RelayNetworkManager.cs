@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -25,29 +24,25 @@ public class RelayNetworkManager : MonoBehaviour
     [Tooltip("عدد الاتصالات (بدون الهوست). مثال: لو 3 لاعبين إجمالي => 2")]
     public int maxConnections = 2;
 
-    [Header("Netcode Scene Name")]
-    public string gameSceneName = "GameMap";
-
     private UnityTransport transport;
     private bool servicesReady;
-
     private bool hostStarting;
     private bool clientStarting;
 
     private void Awake()
     {
+        // Singleton
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         if (NetworkManager.Singleton == null)
         {
-            Debug.LogError("❌ NetworkManager.Singleton is NULL. لازم يكون عندك NetworkManager موجود.");
+            Debug.LogError("❌ NetworkManager.Singleton is NULL. لازم يكون NetworkManager موجود على نفس الاوبجكت (NetworkBootstrap).");
             return;
         }
 
@@ -72,22 +67,10 @@ public class RelayNetworkManager : MonoBehaviour
         if (!AuthenticationService.Instance.IsSignedIn)
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
-        if (AppSession.Instance != null)
-            AppSession.Instance.playerId = AuthenticationService.Instance.PlayerId;
+        var session = AppSession.Ensure();
+        session.playerId = AuthenticationService.Instance.PlayerId;
 
         servicesReady = true;
-    }
-
-    private async Task<bool> WaitUntil(Func<bool> condition, float timeoutSeconds)
-    {
-        float t = 0f;
-        while (t < timeoutSeconds)
-        {
-            if (condition()) return true;
-            await Task.Delay(100);
-            t += 0.1f;
-        }
-        return condition();
     }
 
     // =========================
@@ -111,10 +94,10 @@ public class RelayNetworkManager : MonoBehaviour
                 return NetworkManager.Singleton.IsHost;
             }
 
-            var session = AppSession.Instance;
-            if (session == null || string.IsNullOrEmpty(session.lobbyId))
+            var session = AppSession.Ensure();
+            if (string.IsNullOrEmpty(session.lobbyId))
             {
-                Debug.LogError("❌ Host: AppSession أو lobbyId ناقص.");
+                Debug.LogError("❌ Host: lobbyId ناقص.");
                 return false;
             }
 
@@ -130,8 +113,18 @@ public class RelayNetworkManager : MonoBehaviour
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(alloc.AllocationId);
             Debug.Log("✅ Relay JoinCode: " + joinCode);
 
-            ConfigureHostTransport(alloc);
+            // Configure transport
+            transport.SetRelayServerData(
+                alloc.RelayServer.IpV4,
+                (ushort)alloc.RelayServer.Port,
+                alloc.AllocationIdBytes,
+                alloc.Key,
+                alloc.ConnectionData,
+                alloc.ConnectionData,
+                true // dtls
+            );
 
+            // Save JoinCode in Lobby
             var data = new Dictionary<string, DataObject>
             {
                 { "relayJoinCode", new DataObject(DataObject.VisibilityOptions.Public, joinCode) }
@@ -144,9 +137,7 @@ public class RelayNetworkManager : MonoBehaviour
 
             bool ok = NetworkManager.Singleton.StartHost();
             Debug.Log("✅ StartHost (Relay) result: " + ok);
-
-            bool isHostNow = await WaitUntil(() => NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost, 8f);
-            return ok && isHostNow;
+            return ok;
         }
         catch (Exception e)
         {
@@ -185,27 +176,14 @@ public class RelayNetworkManager : MonoBehaviour
                 return NetworkManager.Singleton.IsClient;
             }
 
-            var session = AppSession.Instance;
-            if (session == null || string.IsNullOrEmpty(session.lobbyId))
+            var session = AppSession.Ensure();
+            if (string.IsNullOrEmpty(session.lobbyId))
             {
-                Debug.LogError("❌ Client: AppSession أو lobbyId ناقص.");
+                Debug.LogError("❌ Client: lobbyId ناقص.");
                 return false;
             }
 
-            Lobby lobby = null;
-
-            // ✅ حماية من Too Many Requests (RateLimit)
-            try
-            {
-                lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
-            }
-            catch (LobbyServiceException e)
-            {
-                // في بعض النسخ ما فيها Reason مضبوط، فنكتفي بالتأخير إذا جاء 429
-                Debug.LogWarning("⚠️ GetLobbyAsync failed (maybe rate limited): " + e.Message);
-                await Task.Delay(2000);
-                return false;
-            }
+            Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
 
             if (lobby.Data == null || !lobby.Data.ContainsKey("relayJoinCode"))
             {
@@ -224,21 +202,19 @@ public class RelayNetworkManager : MonoBehaviour
 
             JoinAllocation joinAlloc = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
-            ConfigureClientTransport(joinAlloc);
+            transport.SetRelayServerData(
+                joinAlloc.RelayServer.IpV4,
+                (ushort)joinAlloc.RelayServer.Port,
+                joinAlloc.AllocationIdBytes,
+                joinAlloc.Key,
+                joinAlloc.ConnectionData,
+                joinAlloc.HostConnectionData,
+                true // dtls
+            );
 
             bool ok = NetworkManager.Singleton.StartClient();
             Debug.Log("✅ StartClient (Relay) result: " + ok);
-
-            // ✅ انتظر اتصال فعلي
-            bool connected = await WaitUntil(() => NetworkManager.Singleton != null && NetworkManager.Singleton.IsConnectedClient, 10f);
-            if (!connected)
-            {
-                Debug.LogError("❌ Failed to connect to server.");
-                return false;
-            }
-
-            Debug.Log("✅ Client CONNECTED to host.");
-            return ok && connected;
+            return ok;
         }
         catch (Exception e)
         {
@@ -254,51 +230,5 @@ public class RelayNetworkManager : MonoBehaviour
     public async void ClientJoinRelayFromLobbyAndStartClient()
     {
         await ClientJoinRelayFromLobbyAndStartClientAsync();
-    }
-
-    // =========================
-    // START GAME (Load Map)
-    // (اختياري - الآن التحميل صار في WaitingRoomStartGame)
-    // =========================
-    public void StartGameAsHost()
-    {
-        if (NetworkManager.Singleton == null) return;
-        if (!NetworkManager.Singleton.IsHost)
-        {
-            Debug.Log("⛔ StartGameAsHost: فقط الهوست.");
-            return;
-        }
-
-        Debug.Log("🚀 Loading game scene: " + gameSceneName);
-        NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
-    }
-
-    // =========================
-    // TRANSPORT CONFIG
-    // =========================
-    private void ConfigureHostTransport(Allocation alloc)
-    {
-        transport.SetRelayServerData(
-            alloc.RelayServer.IpV4,
-            (ushort)alloc.RelayServer.Port,
-            alloc.AllocationIdBytes,
-            alloc.Key,
-            alloc.ConnectionData,
-            alloc.ConnectionData,
-            true
-        );
-    }
-
-    private void ConfigureClientTransport(JoinAllocation joinAlloc)
-    {
-        transport.SetRelayServerData(
-            joinAlloc.RelayServer.IpV4,
-            (ushort)joinAlloc.RelayServer.Port,
-            joinAlloc.AllocationIdBytes,
-            joinAlloc.Key,
-            joinAlloc.ConnectionData,
-            joinAlloc.HostConnectionData,
-            true
-        );
     }
 }

@@ -97,6 +97,24 @@ public class WaitingRoomStartGame : MonoBehaviour
             }
 
             bool ok = await RelayNetworkManager.Instance.HostStartRelayAndHostAsync();
+            // انتظر تأكيد أن الهوست شغال فعليًا
+            float timeout = 8f;
+            float timer = 0f;
+
+            while (!NetworkManager.Singleton.IsHost && timer < timeout)
+            {
+                await Task.Delay(200);
+                timer += 0.2f;
+            }
+
+            if (!NetworkManager.Singleton.IsHost)
+            {
+                Debug.LogError("❌ Host did not start in time.");
+                return;
+            }
+
+// انتظر ثانيتين عشان Relay يثبت نفسه
+            await Task.Delay(2000);
             if (!ok)
             {
                 Debug.LogError("❌ HostStartRelayAndHostAsync failed");

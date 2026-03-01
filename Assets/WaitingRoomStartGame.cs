@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,22 +31,33 @@ public class WaitingRoomStartGame : MonoBehaviour
 
     private async Task InitServices()
     {
+        Debug.Log("InitServices() ...");
+
         if (UnityServices.State != ServicesInitializationState.Initialized)
         {
             var options = new InitializationOptions().SetEnvironmentName("development");
             await UnityServices.InitializeAsync(options);
+            Debug.Log("UnityServices Initialized");
         }
 
         if (!AuthenticationService.Instance.IsSignedIn)
+        {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            Debug.Log("Signed in anonymously");
+        }
 
         if (AppSession.Instance != null)
+        {
             AppSession.Instance.playerId = AuthenticationService.Instance.PlayerId;
+            Debug.Log("Saved playerId to AppSession: " + AppSession.Instance.playerId);
+        }
     }
 
     private void Start()
     {
         var session = AppSession.Instance;
+        Debug.Log($"WaitingRoom Start: isHost={(session != null ? session.isHost : false)} lobbyId={(session != null ? session.lobbyId : "NULL")}");
+
         if (session != null && !session.isHost)
         {
             _clientLoop = StartCoroutine(ClientJoinLoop());
@@ -57,7 +69,7 @@ public class WaitingRoomStartGame : MonoBehaviour
     {
         Debug.Log("⬆️ Arrow Clicked -> OnArrowPressed called");
 
-        if (_starting) return;
+        if (_starting) { Debug.Log("OnArrowPressed: already starting"); return; }
         _starting = true;
 
         try
@@ -65,6 +77,8 @@ public class WaitingRoomStartGame : MonoBehaviour
             await InitServices();
 
             var session = AppSession.Instance;
+            Debug.Log($"Session: isHost={session?.isHost} lobbyId={session?.lobbyId} maxPlayers={session?.maxPlayers}");
+
             if (session == null || string.IsNullOrWhiteSpace(session.lobbyId))
             {
                 Debug.LogError("StartGame: AppSession/lobbyId missing");
@@ -78,8 +92,11 @@ public class WaitingRoomStartGame : MonoBehaviour
             }
 
             // 1) Get lobby and assign roles
+            Debug.Log("Fetching Lobby...");
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
+
             int count = lobby.Players != null ? lobby.Players.Count : 0;
+            Debug.Log("Lobby players count = " + count);
 
             if (!(count == 3 || count == 6 || count == 9))
             {
@@ -100,7 +117,9 @@ public class WaitingRoomStartGame : MonoBehaviour
                 { "iceIds", new DataObject(DataObject.VisibilityOptions.Public, iceCsv) }
             };
 
+            Debug.Log("Updating Lobby data (state + iceIds)...");
             await LobbyService.Instance.UpdateLobbyAsync(session.lobbyId, new UpdateLobbyOptions { Data = data });
+            Debug.Log("Lobby updated ✅");
 
             // 2) Start Host Relay
             if (RelayNetworkManager.Instance == null)
@@ -111,14 +130,17 @@ public class WaitingRoomStartGame : MonoBehaviour
 
             RelayNetworkManager.Instance.gameSceneName = gameSceneName;
 
+            Debug.Log("Starting Host Relay...");
             bool hostOk = await RelayNetworkManager.Instance.EnsureHostRunningAsync();
+            Debug.Log("EnsureHostRunningAsync result = " + hostOk);
+
             if (!hostOk)
             {
                 Debug.LogError("❌ Failed to start host.");
                 return;
             }
 
-            // 3) WAIT until clients really connected (ConnectedClientsList includes host too)
+            // 3) WAIT until clients connected
             int expected = session.maxPlayers; // مثال: 3
             Debug.Log($"⏳ Waiting clients... expected={expected}");
 
@@ -137,12 +159,12 @@ public class WaitingRoomStartGame : MonoBehaviour
             int finalConnected = NetworkManager.Singleton != null ? NetworkManager.Singleton.ConnectedClientsList.Count : 0;
             Debug.Log($"✅ Done waiting. ConnectedClients = {finalConnected} / {expected}");
 
-            // 4) Load GameMap for everyone عبر Netcode SceneManager
+            // 4) Load GameMap for everyone
             RelayNetworkManager.Instance.LoadGameSceneForEveryone();
         }
-        catch (LobbyServiceException e)
+        catch (Exception e) // ✅ هذا المهم
         {
-            Debug.LogError("StartGame failed: " + e);
+            Debug.LogError("❌ OnArrowPressed EXCEPTION: " + e);
         }
         finally
         {
@@ -154,7 +176,11 @@ public class WaitingRoomStartGame : MonoBehaviour
     {
         while (true)
         {
-            if (NetworkManager.Singleton == null) { yield return new WaitForSeconds(clientPollSeconds); continue; }
+            if (NetworkManager.Singleton == null)
+            {
+                yield return new WaitForSeconds(clientPollSeconds);
+                continue;
+            }
 
             if (NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsHost)
             {
@@ -164,7 +190,6 @@ public class WaitingRoomStartGame : MonoBehaviour
 
             if (RelayNetworkManager.Instance != null)
             {
-                // محاولة واحدة كل كم ثواني (خفيفة لتجنب 429)
                 _ = RelayNetworkManager.Instance.EnsureClientRunningFromLobbyAsync();
             }
 
@@ -179,7 +204,7 @@ public class WaitingRoomStartGame : MonoBehaviour
 
         for (int i = 0; i < count && list.Count > 0; i++)
         {
-            int idx = Random.Range(0, list.Count);
+            int idx = UnityEngine.Random.Range(0, list.Count);
             result.Add(list[idx]);
             list.RemoveAt(idx);
         }

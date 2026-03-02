@@ -1,171 +1,97 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using Unity.Netcode;
-
-using Unity.Services.Core;
-using Unity.Services.Core.Environments;
-using Unity.Services.Authentication;
+using TMPro;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Netcode;
+using UnityEngine.SceneManagement;
 
 public class WaitingRoomStartGame : MonoBehaviour
 {
-    [Header("Netcode Scene Name")]
-    public string gameSceneName = "GameMap";
+    public TMP_Text statusText;
+    public GameObject startButton; // السهم
 
-    [Header("Client Auto Join")]
-    public float clientRetrySeconds = 3f;
+    private Lobby currentLobby;
+    private float updateTimer = 0f;
+    private const float UPDATE_INTERVAL = 3f; // تحديث كل 3 ثوانٍ لتجنب حظر Unity
 
-    private bool isStarting;
-    private Coroutine clientLoop;
-
-    private async Task InitServices()
+    private async void Start()
     {
-        if (UnityServices.State != ServicesInitializationState.Initialized)
-        {
-            var options = new InitializationOptions().SetEnvironmentName("development");
-            await UnityServices.InitializeAsync(options);
-        }
-
-        if (!AuthenticationService.Instance.IsSignedIn)
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-
-        if (AppSession.Instance != null)
-            AppSession.Instance.playerId = AuthenticationService.Instance.PlayerId;
+        if (startButton != null) startButton.SetActive(false);
+        await RefreshLobby();
     }
 
-    private void Start()
+    private async void Update()
     {
-        var session = AppSession.Instance;
-        if (session != null && !session.isHost)
+        // تحديث دوري للوبي للتأكد من عدد اللاعبين
+        updateTimer += Time.deltaTime;
+        if (updateTimer >= UPDATE_INTERVAL)
         {
-            // ✅ جربي join مرة كل 3 ثواني فقط
-            clientLoop = StartCoroutine(ClientJoinLoop());
+            updateTimer = 0f;
+            await RefreshLobby();
+        }
+    }
+
+    private async Task RefreshLobby()
+    {
+        try
+        {
+            if (AppSession.Instance == null || string.IsNullOrEmpty(AppSession.Instance.lobbyId)) return;
+
+            currentLobby = await LobbyService.Instance.GetLobbyAsync(AppSession.Instance.lobbyId);
+            int currentCount = currentLobby.Players.Count;
+            int maxCount = AppSession.Instance.maxPlayers;
+
+            if (statusText != null)
+                statusText.text = $"ننتظر الباقين يدخلون... ({currentCount}/{maxCount})";
+
+            // إظهار السهم للهوست فقط إذا اكتمل العدد
+            if (AppSession.Instance.isHost && startButton != null)
+            {
+                startButton.SetActive(currentCount >= maxCount);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("Lobby Refresh Error: " + e.Message);
         }
     }
 
     public async void OnArrowPressed()
     {
-        Debug.Log("➡️ Arrow Clicked -> OnArrowPressed called");
+        // 1. التحقق من أن الضغط من طرف الهوست
+        if (!NetworkManager.Singleton.IsServer) return;
 
-        if (isStarting) return;
-        isStarting = true;
+        Debug.Log("Arrow Clicked -> Starting Role Assignment and Scene Load");
 
         try
         {
-            await InitServices();
+            // 2. توزيع الأدوار عشوائياً (اختيار لاعب واحد ليكون الثلج)
+            var players = currentLobby.Players;
+            int randomIndex = UnityEngine.Random.Range(0, players.Count);
+            string icePlayerId = players[randomIndex].Id;
 
-            var session = AppSession.Instance;
-            if (session == null || string.IsNullOrWhiteSpace(session.lobbyId))
+            // 3. تحديث بيانات اللوبي بالأدوار ليعرفها الجميع عند الانتقال
+            UpdateLobbyOptions options = new UpdateLobbyOptions
             {
-                Debug.LogError("StartGame: AppSession/lobbyId missing");
-                return;
-            }
-
-            if (!session.isHost)
-            {
-                Debug.Log("StartGame: only host can start.");
-                return;
-            }
-
-            // 1) توزيع الأدوار في اللوبي
-            Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
-            int count = lobby.Players != null ? lobby.Players.Count : 0;
-
-            int iceCount = Mathf.Max(1, count / 3);
-            List<string> ids = lobby.Players.Select(p => p.Id).ToList();
-            List<string> iceIds = PickRandom(ids, iceCount);
-            string iceCsv = string.Join(",", iceIds);
-
-            Debug.Log($"✅ Roles: count={count}, iceCount={iceCount}, iceIds={iceCsv}");
-
-            var data = new Dictionary<string, DataObject>
-            {
-                { "state",  new DataObject(DataObject.VisibilityOptions.Public, "started") },
-                { "iceIds", new DataObject(DataObject.VisibilityOptions.Public, iceCsv) }
+                Data = new Dictionary<string, DataObject> {
+                    { "iceIds", new DataObject(DataObject.VisibilityOptions.Public, icePlayerId) }
+                }
             };
-            await LobbyService.Instance.UpdateLobbyAsync(session.lobbyId, new UpdateLobbyOptions { Data = data });
+            await LobbyService.Instance.UpdateLobbyAsync(currentLobby.Id, options);
 
-            // 2) شغلي Relay Host
-            if (RelayNetworkManager.Instance == null)
-            {
-                Debug.LogError("❌ RelayNetworkManager.Instance is NULL");
-                return;
-            }
+            Debug.Log($"Role Assigned: Player {icePlayerId} is ICE. Loading Scene...");
 
-            bool ok = await RelayNetworkManager.Instance.HostStartRelayAndHostAsync();
-            // انتظر تأكيد أن الهوست شغال فعليًا
-            float timeout = 8f;
-            float timer = 0f;
-
-            while (!NetworkManager.Singleton.IsHost && timer < timeout)
-            {
-                await Task.Delay(200);
-                timer += 0.2f;
-            }
-
-            if (!NetworkManager.Singleton.IsHost)
-            {
-                Debug.LogError("❌ Host did not start in time.");
-                return;
-            }
-
-// انتظر ثانيتين عشان Relay يثبت نفسه
-            await Task.Delay(2000);
-            if (!ok)
-            {
-                Debug.LogError("❌ HostStartRelayAndHostAsync failed");
-                return;
-            }
-
-            // ✅ انتظر شوي عشان الكلاينت يلحق يتصل (حتى لو ما اكتمل)
-            await Task.Delay(1500);
-
-            // 3) حملي المشهد عبر Netcode SceneManager
-            RelayNetworkManager.Instance.gameSceneName = gameSceneName;
-            RelayNetworkManager.Instance.StartGameAsHost();
+            // 4. الانتقال للماب عبر الشبكة (هذا هو السر! سينقل الجميع معاً)
+            // تأكد أن اسم السين "GameMap" مضاف في الـ Build Settings
+            NetworkManager.Singleton.SceneManager.LoadScene("GameMap", LoadSceneMode.Single);
         }
-        catch (LobbyServiceException e)
+        catch (Exception e)
         {
-            Debug.LogError("StartGame failed: " + e);
+            Debug.LogError("Error during game start: " + e.Message);
         }
-        finally
-        {
-            isStarting = false;
-        }
-    }
-
-    private IEnumerator ClientJoinLoop()
-    {
-        while (NetworkManager.Singleton != null &&
-               !NetworkManager.Singleton.IsClient &&
-               !NetworkManager.Singleton.IsHost)
-        {
-            if (RelayNetworkManager.Instance != null)
-            {
-                RelayNetworkManager.Instance.ClientJoinRelayFromLobbyAndStartClient();
-            }
-
-            yield return new WaitForSeconds(clientRetrySeconds);
-        }
-
-        Debug.Log("✅ Client join loop stopped (client/host is running).");
-    }
-
-    private List<string> PickRandom(List<string> source, int count)
-    {
-        var list = new List<string>(source);
-        var result = new List<string>();
-
-        for (int i = 0; i < count && list.Count > 0; i++)
-        {
-            int idx = Random.Range(0, list.Count);
-            result.Add(list[idx]);
-            list.RemoveAt(idx);
-        }
-        return result;
     }
 }

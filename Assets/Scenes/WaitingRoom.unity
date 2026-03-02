@@ -2126,9 +2126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65d5121efee904b70aae8ce3cbeed152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  gameSceneName: GameMap
-  clientRetrySeconds: 3
-  hostWaitTimeoutSeconds: 25
+  statusText: {fileID: 2002813222}
+  startButton: {fileID: 1774113240}
 --- !u!1 &2002813220
 GameObject:
   m_ObjectHideFlags: 0

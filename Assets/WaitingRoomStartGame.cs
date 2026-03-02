@@ -8,108 +8,117 @@ using Unity.Services.Lobbies.Models;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
-public class WaitingRoomStartGame : MonoBehaviour
+public class WaitingRoomStartGame : NetworkBehaviour
 {
-    public TMP_Text statusText;
-    public GameObject startButton; 
+    public TMP_Text statusText; // الرقم الصغير (1/3)
+    public GameObject startButton; // السهم
 
-    private Lobby currentLobby;
-    private float updateTimer = 0f;
-    private const float UPDATE_INTERVAL = 6.0f; // تحديث كل 6 ثوانٍ (آمن جداً)
-    private bool isRefreshing = false;
+    private Lobby _currentLobby;
 
-    private async void Start()
+    private void Start()
     {
+        // إخفاء السهم في البداية لضمان عدم ظهوره قبل اكتمال العدد
         if (startButton != null) startButton.SetActive(false);
-        
-        // تحديث أولي عند الدخول
-        await RefreshLobby();
-    }
 
-    private async void Update()
-    {
-        // نحدث فقط إذا لم نكن في حالة "Refreshing" لتجنب تراكم الطلبات
-        if (isRefreshing) return;
+        // تحديث أولي للرقم
+        UpdateStatusText();
 
-        updateTimer += Time.deltaTime;
-        if (updateTimer >= UPDATE_INTERVAL)
+        // الاشتراك في أحداث دخول وخروج اللاعبين لتحديث الرقم لحظياً
+        if (NetworkManager.Singleton != null)
         {
-            updateTimer = 0f;
-            await RefreshLobby();
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientChanged;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientChanged;
         }
     }
 
-    private async Task RefreshLobby()
+    public override void OnDestroy()
     {
-        if (isRefreshing) return;
-        isRefreshing = true;
-
-        try
+        // إلغاء الاشتراك عند تدمير الكائن لمنع الأخطاء البرمجية
+        if (NetworkManager.Singleton != null)
         {
-            if (AppSession.Instance == null || string.IsNullOrEmpty(AppSession.Instance.lobbyId)) return;
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientChanged;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientChanged;
+        }
+        base.OnDestroy();
+    }
 
-            // جلب بيانات اللوبي
-            currentLobby = await LobbyService.Instance.GetLobbyAsync(AppSession.Instance.lobbyId);
+    private void OnClientChanged(ulong clientId)
+    {
+        // هذه الدالة ستعمل فوراً عند دخول أي لاعب جديد
+        UpdateStatusText();
+    }
+
+    private void UpdateStatusText()
+    {
+        if (NetworkManager.Singleton == null || statusText == null) return;
+
+        // جلب العدد الفعلي للمتصلين بالشبكة حالياً (بما في ذلك الهوست)
+        int netcodeCount = NetworkManager.Singleton.ConnectedClients.Count;
+        int maxCount = AppSession.Instance != null ? AppSession.Instance.maxPlayers : 3;
+
+        // إذا كان الهوست لم يبدأ بعد أو في لحظة البداية، نعتبره 1
+        if (netcodeCount == 0) netcodeCount = 1;
+
+        // تحديث النص بالرقم فقط (3/3)
+        statusText.text = $"({netcodeCount}/{maxCount})";
+
+        // التحقق من اكتمال العدد وإظهار السهم للهوست
+        if (netcodeCount >= maxCount)
+        {
+            Debug.Log($"<color=green>✅ العدد اكتمل ({netcodeCount}/{maxCount})!</color>");
             
-            // تحديث الواجهة بناءً على عدد اللاعبين المتصلين فعلياً في Netcode
-            // ملاحظة: NetworkManager.Singleton.ConnectedClients.Count يعطينا العدد الفعلي المتصل بالشبكة حالياً
-            int netcodeCount = NetworkManager.Singleton.ConnectedClients.Count;
-            int maxCount = AppSession.Instance.maxPlayers;
-
-            if (statusText != null)
-                statusText.text = $"ننتظر الباقين يدخلون... ({netcodeCount}/{maxCount})";
-
-            // إظهار السهم للهوست فقط إذا اكتمل العدد في Netcode
-            if (NetworkManager.Singleton.IsServer && startButton != null)
+            if (IsServer && startButton != null)
             {
-                startButton.SetActive(netcodeCount >= maxCount);
+                startButton.SetActive(true);
+                Debug.Log("<color=cyan>🚀 السهم تم تفعيله الآن للهوست.</color>");
+            }
+            else if (startButton == null)
+            {
+                Debug.LogError("❌ خطأ: لم يتم ربط 'Start Button' في الـ Inspector!");
             }
         }
-        catch (LobbyServiceException e) when (e.Reason == LobbyExceptionReason.RateLimited)
+        else
         {
-            // إذا حدث حظر، ننتظر وقتاً أطول
-            updateTimer = -5f; 
-            Debug.LogWarning("Rate limit hit, cooling down...");
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning("Lobby Refresh Error: " + e.Message);
-        }
-        finally
-        {
-            isRefreshing = false;
+            // إخفاء السهم إذا غادر أحد اللاعبين ونقص العدد عن المطلوب
+            if (startButton != null) startButton.SetActive(false);
         }
     }
 
     public async void OnArrowPressed()
     {
-        if (!NetworkManager.Singleton.IsServer) return;
+        if (!IsServer) return;
 
         try
         {
-            // اختيار الثلج عشوائياً من اللاعبين المتصلين حالياً
-            var connectedIds = NetworkManager.Singleton.ConnectedClientsIds;
-            int randomIndex = UnityEngine.Random.Range(0, connectedIds.Count);
-            ulong iceNetworkId = connectedIds[randomIndex];
-            
-            // ملاحظة: هنا نحتاج الـ PlayerId الخاص بـ Unity Services وليس NetworkId
-            // للتبسيط، سنعتمد على أن أول لاعب يدخل (الهوست) هو الثلج أو اختيار عشوائي بسيط
-            string icePlayerId = currentLobby.Players[randomIndex].Id;
+            Debug.Log("⌛ جاري توزيع الأدوار وبدء اللعبة...");
 
-            UpdateLobbyOptions options = new UpdateLobbyOptions
+            // جلب بيانات اللوبي مرة واحدة فقط عند الضغط لتوزيع الأدوار
+            if (AppSession.Instance != null && !string.IsNullOrEmpty(AppSession.Instance.lobbyId))
             {
-                Data = new Dictionary<string, DataObject> {
-                    { "iceIds", new DataObject(DataObject.VisibilityOptions.Public, icePlayerId) }
-                }
-            };
-            await LobbyService.Instance.UpdateLobbyAsync(currentLobby.Id, options);
+                _currentLobby = await LobbyService.Instance.GetLobbyAsync(AppSession.Instance.lobbyId);
+                
+                var players = _currentLobby.Players;
+                int randomIndex = UnityEngine.Random.Range(0, players.Count);
+                string icePlayerId = players[randomIndex].Id;
 
-            // الانتقال للماب عبر الشبكة
+                UpdateLobbyOptions options = new UpdateLobbyOptions
+                {
+                    Data = new Dictionary<string, DataObject> {
+                        { "iceIds", new DataObject(DataObject.VisibilityOptions.Public, icePlayerId) }
+                    }
+                };
+                await LobbyService.Instance.UpdateLobbyAsync(_currentLobby.Id, options);
+                Debug.Log($"✅ تم اختيار اللاعب {icePlayerId} ليكون الثلج.");
+            }
+
+            // الانتقال للماب لجميع اللاعبين عبر الشبكة
+            Debug.Log("🌍 جاري نقل جميع اللاعبين إلى مشهد الماب...");
             NetworkManager.Singleton.SceneManager.LoadScene("GameMap", LoadSceneMode.Single);
         }
         catch (Exception e)
         {
-            Debug.LogError("Error during game start: " + e.Message);
+            Debug.LogWarning("⚠️ حدث خطأ أثناء تحديث اللوبي، ولكن سنبدأ اللعبة على أي حال: " + e.Message);
+            NetworkManager.Singleton.SceneManager.LoadScene("GameMap", LoadSceneMode.Single);
         }
     }
 }

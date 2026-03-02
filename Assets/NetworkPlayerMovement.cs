@@ -14,12 +14,31 @@ public class NetworkPlayerMovement : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsOwner) return; // كل لاعب يتحكم في نفسه فقط
+        // ✅ CRITICAL: Only the owner can control their character
+        if (!IsOwner) 
+        {
+            return; // Other players' characters should NOT read input
+        }
 
+        // Only owner reads input
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
         Vector2 move = new Vector2(h, v).normalized;
-        rb.linearVelocity = move * speed;
+        
+        if (rb != null)
+        {
+            rb.linearVelocity = move * speed;
+        }
+    }
+
+    // Optional: Stop movement when despawned
+    public override void OnNetworkDespawn()
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+        base.OnNetworkDespawn();
     }
 }

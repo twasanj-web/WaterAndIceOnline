@@ -25,20 +25,29 @@ public class JoinLobbyByCodeUI : MonoBehaviour
 
     private async Task InitServices()
     {
-        if (UnityServices.State != ServicesInitializationState.Initialized)
+        try
         {
-            var options = new InitializationOptions().SetEnvironmentName("development");
-            await UnityServices.InitializeAsync(options);
-        }
+            if (UnityServices.State != ServicesInitializationState.Initialized)
+            {
+                var options = new InitializationOptions().SetEnvironmentName("development");
+                await UnityServices.InitializeAsync(options);
+                Debug.Log("✅ UnityServices initialized");
+            }
 
-        if (!AuthenticationService.Instance.IsSignedIn)
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                Debug.Log("✅ Signed in anonymously");
+            }
+
+            var session = AppSession.Instance;
+            if (session != null)
+                session.playerId = AuthenticationService.Instance.PlayerId;
+        }
+        catch (System.Exception e)
         {
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            Debug.LogError("InitServices failed: " + e);
         }
-
-        var session = AppSession.Instance;
-        if (session != null)
-            session.playerId = AuthenticationService.Instance.PlayerId;
     }
 
     public async void JoinWithCode()
@@ -54,7 +63,7 @@ public class JoinLobbyByCodeUI : MonoBehaviour
             string code = codeInput.text.Trim().ToUpper();
             if (string.IsNullOrWhiteSpace(code))
             {
-                ShowError("اكتب/ي الكود أولاً");
+                ShowError("Please enter the join code");
                 return;
             }
 
@@ -63,7 +72,7 @@ public class JoinLobbyByCodeUI : MonoBehaviour
                 ? session.playerName.Trim()
                 : "Player";
 
-            Debug.Log($"Joining lobby with code: {code} | name={playerName}");
+            Debug.Log($"🔄 Joining lobby with code: {code} | name={playerName}");
 
             var joinOptions = new JoinLobbyByCodeOptions
             {
@@ -94,12 +103,18 @@ public class JoinLobbyByCodeUI : MonoBehaviour
                 }
             }
 
+            Debug.Log("✅ Successfully joined lobby! Going to WaitingRoom...");
             SceneManager.LoadScene("WaitingRoom");
         }
         catch (LobbyServiceException e)
         {
             Debug.LogError("JoinLobbyByCode failed: " + e);
-            ShowError("الكود غير صحيح أو الغرفة ممتلئة/مقفلة");
+            ShowError("Invalid code or room is full/locked");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Error joining: " + e);
+            ShowError("Error: " + e.Message);
         }
         finally
         {
@@ -110,5 +125,6 @@ public class JoinLobbyByCodeUI : MonoBehaviour
     private void ShowError(string msg)
     {
         if (errorText != null) errorText.text = msg;
+        Debug.LogWarning(msg);
     }
 }

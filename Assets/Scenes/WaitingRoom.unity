@@ -1128,6 +1128,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 728935386}
+  - {fileID: 1774113241}
   - {fileID: 397101305}
   - {fileID: 1404514276}
   - {fileID: 1230165007}
@@ -1139,7 +1140,6 @@ RectTransform:
   - {fileID: 1173408283}
   - {fileID: 1047000183}
   - {fileID: 2002813221}
-  - {fileID: 1774113241}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2127,7 +2127,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65d5121efee904b70aae8ce3cbeed152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  ShowTopMostFoldoutHeaderGroup: 1
   statusText: {fileID: 2002813222}
   startButton: {fileID: 1774113240}
 --- !u!114 &1976178993

@@ -22,7 +22,7 @@ public class RelayNetworkManager : MonoBehaviour
     public static RelayNetworkManager Instance { get; private set; }
 
     [Header("Relay")]
-    [Tooltip("عدد الاتصالات (بدون الهوست). مثال: لو 3 لاعبين إجمالي => 2")]
+    [Tooltip("Number of connections (excluding host). Example: 3 players total => 2 connections")]
     public int maxConnections = 2;
 
     [Header("Netcode Scene Name")]
@@ -47,14 +47,14 @@ public class RelayNetworkManager : MonoBehaviour
 
         if (NetworkManager.Singleton == null)
         {
-            Debug.LogError("❌ NetworkManager.Singleton is NULL. لازم يكون عندك NetworkManager موجود قبل هذا السكربت.");
+            Debug.LogError("❌ NetworkManager.Singleton is NULL. You must have a NetworkManager in the scene.");
             return;
         }
 
         transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         if (transport == null)
         {
-            Debug.LogError("❌ UnityTransport غير موجود على نفس GameObject حق NetworkManager.");
+            Debug.LogError("❌ UnityTransport not found on NetworkManager GameObject.");
             return;
         }
     }
@@ -114,24 +114,26 @@ public class RelayNetworkManager : MonoBehaviour
             var session = AppSession.Instance;
             if (session == null || string.IsNullOrEmpty(session.lobbyId))
             {
-                Debug.LogError("❌ Host: AppSession أو lobbyId ناقص.");
+                Debug.LogError("❌ Host: AppSession or lobbyId is missing.");
                 return false;
             }
 
             if (!session.isHost)
             {
-                Debug.Log("⛔ HostStartRelayAndHost: هذا مو هوست.");
+                Debug.Log("⛔ HostStartRelayAndHost: This player is not the host.");
                 return false;
             }
 
             maxConnections = Mathf.Max(1, session.maxPlayers - 1);
+            Debug.Log($"🔧 Creating Relay allocation for {maxConnections} client connections");
 
             Allocation alloc = await RelayService.Instance.CreateAllocationAsync(maxConnections);
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(alloc.AllocationId);
-            Debug.Log("✅ Relay JoinCode: " + joinCode);
+            Debug.Log("✅ Relay JoinCode created: " + joinCode);
 
             ConfigureHostTransport(alloc);
 
+            // Update lobby with join code for clients
             var data = new Dictionary<string, DataObject>
             {
                 { "relayJoinCode", new DataObject(DataObject.VisibilityOptions.Public, joinCode) }
@@ -142,8 +144,9 @@ public class RelayNetworkManager : MonoBehaviour
                 new UpdateLobbyOptions { Data = data }
             );
 
+            Debug.Log("📡 Starting Netcode Host...");
             bool ok = NetworkManager.Singleton.StartHost();
-            Debug.Log("✅ StartHost (Relay) result: " + ok);
+            Debug.Log("✅ StartHost result: " + ok);
 
             return ok;
         }
@@ -158,7 +161,7 @@ public class RelayNetworkManager : MonoBehaviour
         }
     }
 
-    // Wrapper لو عندك أزرار/استدعاءات قديمة
+    // Wrapper for old code
     public async void HostStartRelayAndHost()
     {
         await HostStartRelayAndHostAsync();
@@ -188,33 +191,35 @@ public class RelayNetworkManager : MonoBehaviour
             var session = AppSession.Instance;
             if (session == null || string.IsNullOrEmpty(session.lobbyId))
             {
-                Debug.LogError("❌ Client: AppSession أو lobbyId ناقص.");
+                Debug.LogError("❌ Client: AppSession or lobbyId is missing.");
                 return false;
             }
 
+            Debug.Log("⏳ Client fetching lobby info...");
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
 
             if (lobby.Data == null || !lobby.Data.ContainsKey("relayJoinCode"))
             {
-                Debug.Log("⏳ relayJoinCode not ready yet.");
+                Debug.Log("⏳ relayJoinCode not ready yet in lobby data.");
                 return false;
             }
 
             string joinCode = lobby.Data["relayJoinCode"].Value;
             if (string.IsNullOrWhiteSpace(joinCode))
             {
-                Debug.Log("⏳ relayJoinCode empty.");
+                Debug.Log("⏳ relayJoinCode is empty.");
                 return false;
             }
 
-            Debug.Log("✅ Relay joinCode: " + joinCode);
+            Debug.Log("✅ Got Relay joinCode from lobby, joining allocation...");
 
             JoinAllocation joinAlloc = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
             ConfigureClientTransport(joinAlloc);
 
+            Debug.Log("📡 Starting Netcode Client...");
             bool ok = NetworkManager.Singleton.StartClient();
-            Debug.Log("✅ StartClient (Relay) result: " + ok);
+            Debug.Log("✅ StartClient result: " + ok);
 
             return ok;
         }
@@ -235,57 +240,7 @@ public class RelayNetworkManager : MonoBehaviour
     }
 
     // =========================
-    // START GAME (Load Map)
-    // =========================
-    public async void StartGameAsHost()
-    {
-        if (NetworkManager.Singleton == null) return;
-
-        var session = AppSession.Instance;
-        if (session == null)
-        {
-            Debug.LogError("❌ AppSession غير موجود.");
-            return;
-        }
-
-        if (!session.isHost)
-        {
-            Debug.Log("⛔ StartGameAsHost: فقط الهوست يقدر يبدأ اللعبة.");
-            return;
-        }
-
-        // إذا الشبكة ما بدأت كهوست، نبدأها الآن
-        if (!NetworkManager.Singleton.IsHost)
-        {
-            Debug.Log("⚠️ Host not running yet. Starting Host Relay first...");
-            bool started = await HostStartRelayAndHostAsync();
-            if (!started)
-            {
-                Debug.LogError("❌ فشل StartHost. ما أقدر أبدأ اللعبة.");
-                return;
-            }
-
-            // انتظر شوي لين يصير IsHost فعلاً
-            bool okHost = await WaitUntil(() => NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost, 8f);
-            if (!okHost)
-            {
-                Debug.LogError("❌ ما صار Host خلال الوقت المحدد.");
-                return;
-            }
-        }
-
-        if (string.IsNullOrEmpty(gameSceneName))
-        {
-            Debug.LogError("❌ gameSceneName فاضي.");
-            return;
-        }
-
-        Debug.Log("🚀 Loading game scene: " + gameSceneName);
-        NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
-    }
-
-    // =========================
-    // TRANSPORT CONFIG (Stable)
+    // TRANSPORT CONFIG
     // =========================
     private void ConfigureHostTransport(Allocation alloc)
     {
@@ -298,6 +253,7 @@ public class RelayNetworkManager : MonoBehaviour
             alloc.ConnectionData,
             true // dtls
         );
+        Debug.Log($"✅ Host transport configured: {alloc.RelayServer.IpV4}:{alloc.RelayServer.Port}");
     }
 
     private void ConfigureClientTransport(JoinAllocation joinAlloc)
@@ -311,5 +267,6 @@ public class RelayNetworkManager : MonoBehaviour
             joinAlloc.HostConnectionData,
             true // dtls
         );
+        Debug.Log($"✅ Client transport configured: {joinAlloc.RelayServer.IpV4}:{joinAlloc.RelayServer.Port}");
     }
 }

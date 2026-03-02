@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class WaitingRoomStartButton : MonoBehaviour
 {
-    // اربطيها في زر السهم OnClick
     public void OnStartButtonClicked()
     {
-        if (RelayNetworkManager.Instance == null)
+        Debug.Log("🎮 START button clicked");
+        
+        WaitingRoomStartGame waitingRoomStartGame = FindObjectOfType<WaitingRoomStartGame>();
+        if (waitingRoomStartGame != null)
         {
-            Debug.LogError("❌ RelayNetworkManager.Instance is NULL (تأكدي انه موجود في DontDestroyOnLoad).");
-            return;
+            waitingRoomStartGame.OnArrowPressed();
         }
-
-        RelayNetworkManager.Instance.StartGameAsHost();
+        else
+        {
+            Debug.LogError("❌ WaitingRoomStartGame not found in scene!");
+        }
     }
 }

@@ -8,22 +8,20 @@ using Unity.Services.Lobbies.Models;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
-public class WaitingRoomStartGame : NetworkBehaviour
+public class WaitingRoomStartGame : MonoBehaviour // عدنا لـ MonoBehaviour ليعمل فوراً
 {
-    public TMP_Text statusText; // الرقم الصغير (1/3)
-    public GameObject startButton; // السهم
+    public TMP_Text statusText; 
+    public GameObject startButton; 
 
     private Lobby _currentLobby;
 
     private void Start()
     {
-        // إخفاء السهم في البداية لضمان عدم ظهوره قبل اكتمال العدد
         if (startButton != null) startButton.SetActive(false);
 
-        // تحديث أولي للرقم
         UpdateStatusText();
 
-        // الاشتراك في أحداث دخول وخروج اللاعبين لتحديث الرقم لحظياً
+        // الاشتراك في أحداث الشبكة
         if (NetworkManager.Singleton != null)
         {
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientChanged;
@@ -31,20 +29,17 @@ public class WaitingRoomStartGame : NetworkBehaviour
         }
     }
 
-    public override void OnDestroy()
+    private void OnDestroy()
     {
-        // إلغاء الاشتراك عند تدمير الكائن لمنع الأخطاء البرمجية
         if (NetworkManager.Singleton != null)
         {
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientChanged;
             NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientChanged;
         }
-        base.OnDestroy();
     }
 
     private void OnClientChanged(ulong clientId)
     {
-        // هذه الدالة ستعمل فوراً عند دخول أي لاعب جديد
         UpdateStatusText();
     }
 
@@ -52,47 +47,37 @@ public class WaitingRoomStartGame : NetworkBehaviour
     {
         if (NetworkManager.Singleton == null || statusText == null) return;
 
-        // جلب العدد الفعلي للمتصلين بالشبكة حالياً (بما في ذلك الهوست)
         int netcodeCount = NetworkManager.Singleton.ConnectedClients.Count;
         int maxCount = AppSession.Instance != null ? AppSession.Instance.maxPlayers : 3;
 
-        // إذا كان الهوست لم يبدأ بعد أو في لحظة البداية، نعتبره 1
         if (netcodeCount == 0) netcodeCount = 1;
 
-        // تحديث النص بالرقم فقط (3/3)
         statusText.text = $"({netcodeCount}/{maxCount})";
 
-        // التحقق من اكتمال العدد وإظهار السهم للهوست
+        // التحقق من اكتمال العدد
         if (netcodeCount >= maxCount)
         {
             Debug.Log($"<color=green>✅ العدد اكتمل ({netcodeCount}/{maxCount})!</color>");
             
-            if (IsServer && startButton != null)
+            // الهوست فقط هو من يرى الزر
+            if (NetworkManager.Singleton.IsServer && startButton != null)
             {
                 startButton.SetActive(true);
                 Debug.Log("<color=cyan>🚀 السهم تم تفعيله الآن للهوست.</color>");
             }
-            else if (startButton == null)
-            {
-                Debug.LogError("❌ خطأ: لم يتم ربط 'Start Button' في الـ Inspector!");
-            }
         }
         else
         {
-            // إخفاء السهم إذا غادر أحد اللاعبين ونقص العدد عن المطلوب
             if (startButton != null) startButton.SetActive(false);
         }
     }
 
     public async void OnArrowPressed()
     {
-        if (!IsServer) return;
+        if (!NetworkManager.Singleton.IsServer) return;
 
         try
         {
-            Debug.Log("⌛ جاري توزيع الأدوار وبدء اللعبة...");
-
-            // جلب بيانات اللوبي مرة واحدة فقط عند الضغط لتوزيع الأدوار
             if (AppSession.Instance != null && !string.IsNullOrEmpty(AppSession.Instance.lobbyId))
             {
                 _currentLobby = await LobbyService.Instance.GetLobbyAsync(AppSession.Instance.lobbyId);
@@ -108,16 +93,14 @@ public class WaitingRoomStartGame : NetworkBehaviour
                     }
                 };
                 await LobbyService.Instance.UpdateLobbyAsync(_currentLobby.Id, options);
-                Debug.Log($"✅ تم اختيار اللاعب {icePlayerId} ليكون الثلج.");
             }
 
-            // الانتقال للماب لجميع اللاعبين عبر الشبكة
-            Debug.Log("🌍 جاري نقل جميع اللاعبين إلى مشهد الماب...");
+            // الانتقال للماب
             NetworkManager.Singleton.SceneManager.LoadScene("GameMap", LoadSceneMode.Single);
         }
         catch (Exception e)
         {
-            Debug.LogWarning("⚠️ حدث خطأ أثناء تحديث اللوبي، ولكن سنبدأ اللعبة على أي حال: " + e.Message);
+            Debug.LogWarning("⚠️ Error, starting anyway: " + e.Message);
             NetworkManager.Singleton.SceneManager.LoadScene("GameMap", LoadSceneMode.Single);
         }
     }

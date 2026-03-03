@@ -58,8 +58,8 @@ public class WaitingRoomStartGame : MonoBehaviour
                 return;
             }
 
-            Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
-            int count = lobby.Players != null ? lobby.Players.Count : 0;
+            // نستخدم العدد المخزن من الـ polling بدل استدعاء Lobby مرة ثانية
+            int count = session.currentPlayerCount;
 
             if (count < 2)
             {
@@ -70,6 +70,7 @@ public class WaitingRoomStartGame : MonoBehaviour
 
             // 1. اختر الثلج عشوائياً
             int iceCount = Mathf.Max(1, count / 3);
+            Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
             List<string> ids = lobby.Players.Select(p => p.Id).ToList();
             List<string> iceIds = PickRandom(ids, iceCount);
             string iceCsv = string.Join(",", iceIds);

@@ -26,7 +26,10 @@ public class AppSession : MonoBehaviour
     public bool isHost = false;
 
     [Header("Relay")]
-    public string relayJoinCode = "";   // يُخزَّن هنا ثم يُستخدم في GameMap
+    public string relayJoinCode = "";
+
+    [Header("Runtime")]
+    public int currentPlayerCount = 0;
 
     private void Awake()
     {

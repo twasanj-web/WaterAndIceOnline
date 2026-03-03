@@ -93,6 +93,10 @@ public class WaitingRoomUI : MonoBehaviour
             int current = lobby.Players != null ? lobby.Players.Count : 0;
             int max = lobby.MaxPlayers;
 
+            // حدّث عدد اللاعبين في AppSession
+            if (AppSession.Instance != null)
+                AppSession.Instance.currentPlayerCount = current;
+
             if (statusText != null)
                 statusText.text = $"({current}/{max})";
 
@@ -134,7 +138,6 @@ public class WaitingRoomUI : MonoBehaviour
             return;
         }
 
-        // 1. عيّن الدور
         HashSet<string> iceSet = new HashSet<string>();
         if (lobby.Data != null && lobby.Data.ContainsKey("iceIds"))
         {
@@ -153,7 +156,6 @@ public class WaitingRoomUI : MonoBehaviour
 
         Debug.Log($"Role decided => {session.role} | myId={session.playerId}");
 
-        // 2. خزّن relayCode في AppSession
         if (!session.isHost)
         {
             if (lobby.Data == null || !lobby.Data.ContainsKey("relayCode"))
@@ -165,7 +167,6 @@ public class WaitingRoomUI : MonoBehaviour
             Debug.Log($"Client: relayCode saved = {session.relayJoinCode}");
         }
 
-        // 3. سجّل event قبل تحميل السين
         Debug.Log("Moving to GameMap...");
         SceneManager.sceneLoaded += OnGameMapLoaded;
         SceneManager.LoadScene("GameMap");

@@ -2098,7 +2098,7 @@ MonoBehaviour:
   - {fileID: 456809692}
   - {fileID: 1013805553}
   - {fileID: 1173408284}
-  refreshSeconds: 1
+  refreshSeconds: 5
 --- !u!4 &1976178991
 Transform:
   m_ObjectHideFlags: 0

@@ -6,6 +6,8 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -95,13 +97,36 @@ public class WaitingRoomStartGame : MonoBehaviour
 
             Debug.Log($"StartGame: Host role={session.role}, loading GameMap...");
 
-            // 5. انتقل للماب — NetworkManager يبدأ هناك
+            // 5. سجّل event قبل تحميل السين
+            SceneManager.sceneLoaded += OnGameMapLoaded;
             SceneManager.LoadScene("GameMap");
         }
         catch (System.Exception e)
         {
             Debug.LogError("StartGame failed: " + e);
             isStarting = false;
+        }
+    }
+
+    private async void OnGameMapLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != "GameMap") return;
+        SceneManager.sceneLoaded -= OnGameMapLoaded;
+
+        var session = AppSession.Instance;
+        Debug.Log($"GameMap loaded! Starting HOST via Relay code={session.relayJoinCode}");
+
+        try
+        {
+            var joinAllocation = await RelayService.Instance.JoinAllocationAsync(session.relayJoinCode);
+            var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
+            NetworkManager.Singleton.StartHost();
+            Debug.Log("HOST started in GameMap!");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("OnGameMapLoaded HOST failed: " + e);
         }
     }
 

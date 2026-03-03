@@ -5,6 +5,10 @@ using Unity.Services.Core.Environments;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
@@ -104,7 +108,6 @@ public class WaitingRoomUI : MonoBehaviour
                 }
             }
 
-            // لو اللعبة بدأت
             if (!hasMovedToGame && lobby.Data != null && lobby.Data.ContainsKey("state"))
             {
                 string state = lobby.Data["state"].Value;
@@ -112,7 +115,6 @@ public class WaitingRoomUI : MonoBehaviour
                 {
                     hasMovedToGame = true;
                     if (pollRoutine != null) StopCoroutine(pollRoutine);
-
                     ApplyRoleAndGoToGame(lobby);
                 }
             }
@@ -151,7 +153,7 @@ public class WaitingRoomUI : MonoBehaviour
 
         Debug.Log($"Role decided => {session.role} | myId={session.playerId}");
 
-        // 2. خزّن relayCode في AppSession — NetworkStarter في GameMap سيبدأ الاتصال
+        // 2. خزّن relayCode في AppSession
         if (!session.isHost)
         {
             if (lobby.Data == null || !lobby.Data.ContainsKey("relayCode"))
@@ -159,14 +161,36 @@ public class WaitingRoomUI : MonoBehaviour
                 Debug.LogError("ApplyRoleAndGoToGame: relayCode missing from lobby data!");
                 return;
             }
-
             session.relayJoinCode = lobby.Data["relayCode"].Value;
             Debug.Log($"Client: relayCode saved = {session.relayJoinCode}");
         }
 
-        // 3. انتقل للماب — NetworkStarter هناك سيبدأ Host أو Client
+        // 3. سجّل event قبل تحميل السين
         Debug.Log("Moving to GameMap...");
+        SceneManager.sceneLoaded += OnGameMapLoaded;
         SceneManager.LoadScene("GameMap");
+    }
+
+    private async void OnGameMapLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != "GameMap") return;
+        SceneManager.sceneLoaded -= OnGameMapLoaded;
+
+        var session = AppSession.Instance;
+        Debug.Log($"GameMap loaded! Starting CLIENT via Relay code={session.relayJoinCode}");
+
+        try
+        {
+            var joinAllocation = await RelayService.Instance.JoinAllocationAsync(session.relayJoinCode);
+            var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
+            NetworkManager.Singleton.StartClient();
+            Debug.Log("CLIENT started in GameMap!");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("OnGameMapLoaded CLIENT failed: " + e);
+        }
     }
 
     private string GetPlayerName(Player p, int index)

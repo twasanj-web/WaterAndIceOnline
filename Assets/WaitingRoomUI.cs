@@ -21,7 +21,7 @@ public class WaitingRoomUI : MonoBehaviour
     public TMP_Text[] nameSlots;
 
     [Header("Refresh")]
-    public float refreshSeconds = 1.0f;
+    public float refreshSeconds = 2.5f;
 
     private Coroutine pollRoutine;
     private bool hasMovedToGame;

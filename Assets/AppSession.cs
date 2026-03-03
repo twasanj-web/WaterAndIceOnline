@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Services.Relay.Models;
 
 public enum PlayerRole
 {
@@ -27,6 +28,7 @@ public class AppSession : MonoBehaviour
 
     [Header("Relay")]
     public string relayJoinCode = "";
+    public Allocation hostAllocation = null;
 
     [Header("Runtime")]
     public int currentPlayerCount = 0;

@@ -58,7 +58,6 @@ public class WaitingRoomStartGame : MonoBehaviour
                 return;
             }
 
-            // نستخدم العدد المخزن من الـ polling بدل استدعاء Lobby مرة ثانية
             int count = session.currentPlayerCount;
 
             if (count < 2)
@@ -75,9 +74,10 @@ public class WaitingRoomStartGame : MonoBehaviour
             List<string> iceIds = PickRandom(ids, iceCount);
             string iceCsv = string.Join(",", iceIds);
 
-            // 2. أنشئ Relay Allocation
+            // 2. أنشئ Relay Allocation وخزّنه في AppSession
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(count - 1);
             string relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            session.hostAllocation = allocation;
 
             Debug.Log($"StartGame: count={count}, iceCount={iceCount}, iceIds={iceCsv}, relayCode={relayJoinCode}");
 
@@ -109,18 +109,17 @@ public class WaitingRoomStartGame : MonoBehaviour
         }
     }
 
-    private async void OnGameMapLoaded(Scene scene, LoadSceneMode mode)
+    private void OnGameMapLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name != "GameMap") return;
         SceneManager.sceneLoaded -= OnGameMapLoaded;
 
         var session = AppSession.Instance;
-        Debug.Log($"GameMap loaded! Starting HOST via Relay code={session.relayJoinCode}");
+        Debug.Log($"GameMap loaded! Starting HOST via Relay allocation");
 
         try
         {
-            var joinAllocation = await RelayService.Instance.JoinAllocationAsync(session.relayJoinCode);
-            var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
+            var relayData = AllocationUtils.ToRelayServerData(session.hostAllocation, "dtls");
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
             NetworkManager.Singleton.StartHost();
             Debug.Log("HOST started in GameMap!");

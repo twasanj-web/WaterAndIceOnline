@@ -5,16 +5,20 @@ using Unity.Services.Core.Environments;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class WaitingRoomUI : MonoBehaviour
 {
     [Header("UI")]
-    public TMP_Text statusText;        // (1/3)
-    public TMP_Text[] nameSlots;       // Name(1) ... Name(9)
+    public TMP_Text statusText;
+    public TMP_Text[] nameSlots;
 
     [Header("Refresh")]
     public float refreshSeconds = 1.0f;
@@ -56,7 +60,7 @@ public class WaitingRoomUI : MonoBehaviour
     {
         if (UnityServices.State != ServicesInitializationState.Initialized)
         {
-            var options = new InitializationOptions().SetEnvironmentName("development");
+            var options = new InitializationOptions().SetEnvironmentName("production");
             await UnityServices.InitializeAsync(options);
         }
 
@@ -65,7 +69,6 @@ public class WaitingRoomUI : MonoBehaviour
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
         }
 
-        // خزني PlayerId في السيشن
         if (AppSession.Instance != null)
             AppSession.Instance.playerId = AuthenticationService.Instance.PlayerId;
     }
@@ -105,7 +108,7 @@ public class WaitingRoomUI : MonoBehaviour
                 }
             }
 
-            // ✅ لو اللعبة بدأت: حددي الدور وروحي GameMap
+            // لو اللعبة بدأت
             if (!hasMovedToGame && lobby.Data != null && lobby.Data.ContainsKey("state"))
             {
                 string state = lobby.Data["state"].Value;
@@ -114,7 +117,7 @@ public class WaitingRoomUI : MonoBehaviour
                     hasMovedToGame = true;
                     if (pollRoutine != null) StopCoroutine(pollRoutine);
 
-                    ApplyRoleAndGoToGame(lobby);
+                    await ApplyRoleAndGoToGame(lobby);
                 }
             }
         }
@@ -124,7 +127,7 @@ public class WaitingRoomUI : MonoBehaviour
         }
     }
 
-    private void ApplyRoleAndGoToGame(Lobby lobby)
+    private async Task ApplyRoleAndGoToGame(Lobby lobby)
     {
         var session = AppSession.Instance;
         if (session == null)
@@ -133,13 +136,12 @@ public class WaitingRoomUI : MonoBehaviour
             return;
         }
 
-        // اقرأ iceIds
+        // 1. عيّن الدور
         HashSet<string> iceSet = new HashSet<string>();
         if (lobby.Data != null && lobby.Data.ContainsKey("iceIds"))
         {
             string csv = lobby.Data["iceIds"].Value ?? "";
-            string[] parts = csv.Split(',');
-            foreach (var p in parts)
+            foreach (var p in csv.Split(','))
             {
                 string id = p.Trim();
                 if (!string.IsNullOrWhiteSpace(id))
@@ -147,14 +149,33 @@ public class WaitingRoomUI : MonoBehaviour
             }
         }
 
-        // حددي دوري حسب playerId
-        if (!string.IsNullOrWhiteSpace(session.playerId) && iceSet.Contains(session.playerId))
-            session.role = PlayerRole.Ice;
-        else
-            session.role = PlayerRole.Water;
+        session.role = (!string.IsNullOrWhiteSpace(session.playerId) && iceSet.Contains(session.playerId))
+            ? PlayerRole.Ice
+            : PlayerRole.Water;
 
         Debug.Log($"Role decided => {session.role} | myId={session.playerId}");
 
+        // 2. الهوست لا يحتاج Relay هنا (هو بدأه في WaitingRoomStartGame)
+        if (!session.isHost)
+        {
+            // اقرأ relayCode من اللوبي
+            if (lobby.Data == null || !lobby.Data.ContainsKey("relayCode"))
+            {
+                Debug.LogError("ApplyRoleAndGoToGame: relayCode missing from lobby data!");
+                return;
+            }
+
+            string relayCode = lobby.Data["relayCode"].Value;
+            Debug.Log($"Client joining Relay with code: {relayCode}");
+
+            // انضم للـ Relay
+            JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayCode);
+            var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
+            NetworkManager.Singleton.StartClient();
+        }
+
+        // 3. انتقل للماب
         SceneManager.LoadScene("GameMap");
     }
 

@@ -49,7 +49,7 @@ public class MultiplayerManager : MonoBehaviour
     {
         if (UnityServices.State != ServicesInitializationState.Initialized)
         {
-            var options = new InitializationOptions().SetEnvironmentName("development");
+            var options = new InitializationOptions().SetEnvironmentName("production");
             await UnityServices.InitializeAsync(options);
             Debug.Log("UnityServices Initialized (development)");
         }

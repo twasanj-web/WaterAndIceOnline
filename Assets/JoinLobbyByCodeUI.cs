@@ -27,7 +27,7 @@ public class JoinLobbyByCodeUI : MonoBehaviour
     {
         if (UnityServices.State != ServicesInitializationState.Initialized)
         {
-            var options = new InitializationOptions().SetEnvironmentName("development");
+            var options = new InitializationOptions().SetEnvironmentName("production");
             await UnityServices.InitializeAsync(options);
         }
 

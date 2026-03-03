@@ -12,9 +12,17 @@ public class NetworkPlayerMovement : NetworkBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            Camera.main.GetComponent<CameraFollow>()?.SetTarget(transform);
+        }
+    }
+
     private void FixedUpdate()
     {
-        if (!IsOwner) return; // كل لاعب يتحكم في نفسه فقط
+        if (!IsOwner) return;
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");

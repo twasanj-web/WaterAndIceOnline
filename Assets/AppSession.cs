@@ -13,7 +13,7 @@ public class AppSession : MonoBehaviour
 
     [Header("Player")]
     public string playerName = "Player";
-    public string playerId = "";        // Authentication PlayerId
+    public string playerId = "";
     public PlayerRole role = PlayerRole.None;
 
     [Header("Room Settings")]
@@ -24,6 +24,9 @@ public class AppSession : MonoBehaviour
     public string lobbyCode = "";
     public string lobbyId = "";
     public bool isHost = false;
+
+    [Header("Relay")]
+    public string relayJoinCode = "";   // يُخزَّن هنا ثم يُستخدم في GameMap
 
     private void Awake()
     {

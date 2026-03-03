@@ -6,8 +6,6 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
-using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,26 +45,29 @@ public class WaitingRoomStartGame : MonoBehaviour
             if (session == null || string.IsNullOrWhiteSpace(session.lobbyId))
             {
                 Debug.LogError("StartGame: AppSession/lobbyId missing");
+                isStarting = false;
                 return;
             }
 
             if (!session.isHost)
             {
                 Debug.Log("StartGame: only host can start.");
+                isStarting = false;
                 return;
             }
 
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
             int count = lobby.Players != null ? lobby.Players.Count : 0;
 
-            if (!(count == 3 || count == 6 || count == 9))
+            if (count < 2)
             {
-                Debug.LogWarning($"StartGame: invalid player count = {count}. Must be 3/6/9");
+                Debug.LogWarning($"StartGame: need at least 2 players, current = {count}");
+                isStarting = false;
                 return;
             }
 
             // 1. اختر الثلج عشوائياً
-            int iceCount = count / 3;
+            int iceCount = Mathf.Max(1, count / 3);
             List<string> ids = lobby.Players.Select(p => p.Id).ToList();
             List<string> iceIds = PickRandom(ids, iceCount);
             string iceCsv = string.Join(",", iceIds);
@@ -88,23 +89,18 @@ public class WaitingRoomStartGame : MonoBehaviour
                 }
             });
 
-            // 4. عيّن دور الهوست
+            // 4. عيّن دور الهوست وخزّن كود Relay
             session.role = iceCsv.Contains(session.playerId) ? PlayerRole.Ice : PlayerRole.Water;
+            session.relayJoinCode = relayJoinCode;
 
-            // 5. الهوست يبدأ عبر Relay
-            var relayData = AllocationUtils.ToRelayServerData(allocation, "dtls");
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
-            NetworkManager.Singleton.StartHost();
+            Debug.Log($"StartGame: Host role={session.role}, loading GameMap...");
 
-            // 6. انتقل للماب
+            // 5. انتقل للماب — NetworkManager يبدأ هناك
             SceneManager.LoadScene("GameMap");
         }
         catch (System.Exception e)
         {
             Debug.LogError("StartGame failed: " + e);
-        }
-        finally
-        {
             isStarting = false;
         }
     }

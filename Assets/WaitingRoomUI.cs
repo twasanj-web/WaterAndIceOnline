@@ -5,10 +5,6 @@ using Unity.Services.Core.Environments;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
-using Unity.Services.Relay;
-using Unity.Services.Relay.Models;
-using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
@@ -117,7 +113,7 @@ public class WaitingRoomUI : MonoBehaviour
                     hasMovedToGame = true;
                     if (pollRoutine != null) StopCoroutine(pollRoutine);
 
-                    await ApplyRoleAndGoToGame(lobby);
+                    ApplyRoleAndGoToGame(lobby);
                 }
             }
         }
@@ -127,7 +123,7 @@ public class WaitingRoomUI : MonoBehaviour
         }
     }
 
-    private async Task ApplyRoleAndGoToGame(Lobby lobby)
+    private void ApplyRoleAndGoToGame(Lobby lobby)
     {
         var session = AppSession.Instance;
         if (session == null)
@@ -155,27 +151,21 @@ public class WaitingRoomUI : MonoBehaviour
 
         Debug.Log($"Role decided => {session.role} | myId={session.playerId}");
 
-        // 2. الهوست لا يحتاج Relay هنا (هو بدأه في WaitingRoomStartGame)
+        // 2. خزّن relayCode في AppSession — NetworkStarter في GameMap سيبدأ الاتصال
         if (!session.isHost)
         {
-            // اقرأ relayCode من اللوبي
             if (lobby.Data == null || !lobby.Data.ContainsKey("relayCode"))
             {
                 Debug.LogError("ApplyRoleAndGoToGame: relayCode missing from lobby data!");
                 return;
             }
 
-            string relayCode = lobby.Data["relayCode"].Value;
-            Debug.Log($"Client joining Relay with code: {relayCode}");
-
-            // انضم للـ Relay
-            JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayCode);
-            var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
-            NetworkManager.Singleton.StartClient();
+            session.relayJoinCode = lobby.Data["relayCode"].Value;
+            Debug.Log($"Client: relayCode saved = {session.relayJoinCode}");
         }
 
-        // 3. انتقل للماب
+        // 3. انتقل للماب — NetworkStarter هناك سيبدأ Host أو Client
+        Debug.Log("Moving to GameMap...");
         SceneManager.LoadScene("GameMap");
     }
 

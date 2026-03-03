@@ -901,6 +901,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   playerName: Playerr
+  playerId: 
+  role: 0
   maxPlayers: 3
   roundTimeMinutes: 5
   lobbyCode: 
@@ -1986,8 +1988,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 816805817}
-        m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
+      - m_Target: {fileID: 1351216715}
+        m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
         m_MethodName: GoToJoinRoom
         m_Mode: 1
         m_Arguments:
@@ -2766,7 +2768,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e693c65c4b58747b88ad5aa731cba0e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  nameInput: {fileID: 685843082}
 --- !u!1 &1951243417
 GameObject:
   m_ObjectHideFlags: 0

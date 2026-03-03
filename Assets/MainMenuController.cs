@@ -14,6 +14,6 @@ public class MainMenuController : MonoBehaviour
 
     public void GoToJoinRoom()
     {
-        SceneManager.LoadScene("JoinRoom"); // إذا سويتيها لاحقًا
+        SceneManager.LoadScene("Enter Code"); // ← غيّر من JoinRoom لـ Enter Code
     }
-}
+    }

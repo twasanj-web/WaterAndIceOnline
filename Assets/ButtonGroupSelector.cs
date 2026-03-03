@@ -35,7 +35,7 @@ public class ButtonGroupSelector : MonoBehaviour
         currentSelected = clickedButton;
 
         // نخزن الرقم من النص داخل الزر
-selectedValue = int.Parse(clickedButton.GetComponentInChildren<TMP_Text>().text);
-        Debug.Log("Selected Value: " + selectedValue);
+//selectedValue = int.Parse(clickedButton.GetComponentInChildren<TMP_Text>().text);
+       // Debug.Log("Selected Value: " + selectedValue);
     }
 }

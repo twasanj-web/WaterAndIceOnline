@@ -6,17 +6,25 @@ public class NetworkPlayerMovement : NetworkBehaviour
 {
     public float speed = 5f;
     private Rigidbody2D rb;
+    private bool cameraSet = false;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public override void OnNetworkSpawn()
+    private void Update()
     {
-        if (IsOwner)
+        if (!IsOwner) return;
+
+        if (!cameraSet)
         {
-            Camera.main.GetComponent<CameraFollow>()?.SetTarget(transform);
+            var cam = Camera.main?.GetComponent<CameraFollow>();
+            if (cam != null)
+            {
+                cam.SetTarget(transform);
+                cameraSet = true;
+            }
         }
     }
 

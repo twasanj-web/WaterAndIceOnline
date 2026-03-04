@@ -1,0 +1,4706 @@
+fileFormatVersion: 2
+guid: 9db81a01e15ef4dd3b7b220f131b5b2e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5176409077333504483
+    second: Group 1704_0
+  - first:
+      213: -289480561213456810
+    second: Group 1704_1
+  - first:
+      213: -7942448158509071285
+    second: Group 1704_2
+  - first:
+      213: -4587467299601512913
+    second: Group 1704_3
+  - first:
+      213: 8837166477591924246
+    second: Group 1704_4
+  - first:
+      213: 6019843761456727312
+    second: Group 1704_5
+  - first:
+      213: -1101184799462494005
+    second: Group 1704_6
+  - first:
+      213: -3381506862662449122
+    second: Group 1704_7
+  - first:
+      213: -982983185219782746
+    second: Group 1704_8
+  - first:
+      213: -7546299612866971763
+    second: Group 1704_9
+  - first:
+      213: 6084461524522297622
+    second: Group 1704_10
+  - first:
+      213: 4672472870696773528
+    second: Group 1704_11
+  - first:
+      213: 5584159841081617551
+    second: Group 1704_12
+  - first:
+      213: 8405990351516080263
+    second: Group 1704_13
+  - first:
+      213: 4698266783659133318
+    second: Group 1704_14
+  - first:
+      213: 2847374093713258399
+    second: Group 1704_15
+  - first:
+      213: -1106368901068689435
+    second: Group 1704_16
+  - first:
+      213: -566141798829963915
+    second: Group 1704_17
+  - first:
+      213: -791301322157986827
+    second: Group 1704_18
+  - first:
+      213: -8582244276355879980
+    second: Group 1704_19
+  - first:
+      213: 5040955489995285799
+    second: Group 1704_20
+  - first:
+      213: -2656765973500340813
+    second: Group 1704_21
+  - first:
+      213: 1075461726029863192
+    second: Group 1704_22
+  - first:
+      213: -4175505596203840838
+    second: Group 1704_23
+  - first:
+      213: 1949614922123235904
+    second: Group 1704_24
+  - first:
+      213: -1185088809701621940
+    second: Group 1704_25
+  - first:
+      213: 7701938219296966325
+    second: Group 1704_26
+  - first:
+      213: 6600356593493344377
+    second: Group 1704_27
+  - first:
+      213: 5860955699119485726
+    second: Group 1704_28
+  - first:
+      213: -5264291101071576888
+    second: Group 1704_29
+  - first:
+      213: -3875332772497443958
+    second: Group 1704_30
+  - first:
+      213: 6020584011625280150
+    second: Group 1704_31
+  - first:
+      213: 4106387613587039809
+    second: Group 1704_32
+  - first:
+      213: 7563778349240046007
+    second: Group 1704_33
+  - first:
+      213: 6717432743994338819
+    second: Group 1704_34
+  - first:
+      213: 7762820609434150747
+    second: Group 1704_35
+  - first:
+      213: 8290861487350865645
+    second: Group 1704_36
+  - first:
+      213: 6324526703689563303
+    second: Group 1704_37
+  - first:
+      213: -8648972638621322489
+    second: Group 1704_38
+  - first:
+      213: 3178445202439403472
+    second: Group 1704_39
+  - first:
+      213: 690158957095744713
+    second: Group 1704_40
+  - first:
+      213: -2629683203510441347
+    second: Group 1704_41
+  - first:
+      213: 2592735407105084264
+    second: Group 1704_42
+  - first:
+      213: 5113133746230734006
+    second: Group 1704_43
+  - first:
+      213: 50869229317492425
+    second: Group 1704_44
+  - first:
+      213: -827689125394744793
+    second: Group 1704_45
+  - first:
+      213: -3121558589632335769
+    second: Group 1704_46
+  - first:
+      213: -5103655996565440630
+    second: Group 1704_47
+  - first:
+      213: 8151581379242150641
+    second: Group 1704_48
+  - first:
+      213: 7651665565936176075
+    second: Group 1704_49
+  - first:
+      213: 7838564695118947087
+    second: Group 1704_50
+  - first:
+      213: 8196619660647897182
+    second: Group 1704_51
+  - first:
+      213: -87606034733870630
+    second: Group 1704_52
+  - first:
+      213: -9083559827863410654
+    second: Group 1704_53
+  - first:
+      213: -6084777922501107736
+    second: Group 1704_54
+  - first:
+      213: -56882193878875671
+    second: Group 1704_55
+  - first:
+      213: -1630177834233869713
+    second: Group 1704_56
+  - first:
+      213: 2704559028050984230
+    second: Group 1704_57
+  - first:
+      213: -2972012847716500367
+    second: Group 1704_58
+  - first:
+      213: 2580307614563391290
+    second: Group 1704_59
+  - first:
+      213: 2212978386575899989
+    second: Group 1704_60
+  - first:
+      213: -2784368989857683084
+    second: Group 1704_61
+  - first:
+      213: 4661940490977765398
+    second: Group 1704_62
+  - first:
+      213: -755086619247169952
+    second: Group 1704_63
+  - first:
+      213: -873151791699855739
+    second: Group 1704_64
+  - first:
+      213: 2500474386789510150
+    second: Group 1704_65
+  - first:
+      213: -5728825511774726798
+    second: Group 1704_66
+  - first:
+      213: 9017950785877656056
+    second: Group 1704_67
+  - first:
+      213: -8172310952881383378
+    second: Group 1704_68
+  - first:
+      213: 1015645618338275881
+    second: Group 1704_69
+  - first:
+      213: 1092291226815964674
+    second: Group 1704_70
+  - first:
+      213: -5761862469806088526
+    second: Group 1704_71
+  - first:
+      213: -6232417280948545040
+    second: Group 1704_72
+  - first:
+      213: 7546301572747273538
+    second: Group 1704_73
+  - first:
+      213: -2241562267287388993
+    second: Group 1704_74
+  - first:
+      213: 2914621903145548509
+    second: Group 1704_75
+  - first:
+      213: -9211097433560130002
+    second: Group 1704_76
+  - first:
+      213: -9093567736201817717
+    second: Group 1704_77
+  - first:
+      213: -5207183959381134612
+    second: Group 1704_78
+  - first:
+      213: 8046142492955112836
+    second: Group 1704_79
+  - first:
+      213: -2158883592464421473
+    second: Group 1704_80
+  - first:
+      213: -2357975447318228002
+    second: Group 1704_81
+  - first:
+      213: 4352957883012958275
+    second: Group 1704_82
+  - first:
+      213: -3154214318892734936
+    second: Group 1704_83
+  - first:
+      213: 849017460793343207
+    second: Group 1704_84
+  - first:
+      213: -6651216365412380986
+    second: Group 1704_85
+  - first:
+      213: -9159885454702909929
+    second: Group 1704_86
+  - first:
+      213: -7464277921170473469
+    second: Group 1704_87
+  - first:
+      213: -5977596939982537472
+    second: Group 1704_88
+  - first:
+      213: 3855115315552397305
+    second: Group 1704_89
+  - first:
+      213: 1551547487812452038
+    second: Group 1704_90
+  - first:
+      213: -3611709973761418079
+    second: Group 1704_91
+  - first:
+      213: 5474769976510645685
+    second: Group 1704_92
+  - first:
+      213: -7701107643615675587
+    second: Group 1704_93
+  - first:
+      213: 988065228188968104
+    second: Group 1704_94
+  - first:
+      213: 6292531764371778809
+    second: Group 1704_95
+  - first:
+      213: 9052202600425611259
+    second: Group 1704_96
+  - first:
+      213: 7476444304105368137
+    second: Group 1704_97
+  - first:
+      213: -1941096658481075669
+    second: Group 1704_98
+  - first:
+      213: -1363369922528627616
+    second: Group 1704_99
+  - first:
+      213: -2290320506657618615
+    second: Group 1704_100
+  - first:
+      213: -1606807950205118969
+    second: Group 1704_101
+  - first:
+      213: -5529545910234832106
+    second: Group 1704_102
+  - first:
+      213: 7339282107551926644
+    second: Group 1704_103
+  - first:
+      213: 999703247722037135
+    second: Group 1704_104
+  - first:
+      213: -5266135812465659296
+    second: Group 1704_105
+  - first:
+      213: 3195349092460071863
+    second: Group 1704_106
+  - first:
+      213: -6745547962330807581
+    second: Group 1704_107
+  - first:
+      213: 1302016414315674527
+    second: Group 1704_108
+  - first:
+      213: -8616924436979326769
+    second: Group 1704_109
+  - first:
+      213: -5497492589778783077
+    second: Group 1704_110
+  - first:
+      213: -4709378497605330861
+    second: Group 1704_111
+  - first:
+      213: -8961523146718264162
+    second: Group 1704_112
+  - first:
+      213: 4397832460533300873
+    second: Group 1704_113
+  - first:
+      213: -9147020775442345702
+    second: Group 1704_114
+  - first:
+      213: 1046932930155962901
+    second: Group 1704_115
+  - first:
+      213: -6142566809852931873
+    second: Group 1704_116
+  - first:
+      213: 6866857340043439357
+    second: Group 1704_117
+  - first:
+      213: 1048246832734124248
+    second: Group 1704_118
+  - first:
+      213: 2802243038404320520
+    second: Group 1704_119
+  - first:
+      213: 7960272496276161045
+    second: Group 1704_120
+  - first:
+      213: 1924731966374274816
+    second: Group 1704_121
+  - first:
+      213: -5626325472291535490
+    second: Group 1704_122
+  - first:
+      213: 8762489338723434978
+    second: Group 1704_123
+  - first:
+      213: 7357906632464260066
+    second: Group 1704_124
+  - first:
+      213: -8828557739668175191
+    second: Group 1704_125
+  - first:
+      213: 8358968223927889316
+    second: Group 1704_126
+  - first:
+      213: 3108938155684840276
+    second: Group 1704_127
+  - first:
+      213: -8003054021855782438
+    second: Group 1704_128
+  - first:
+      213: 5881311132658934325
+    second: Group 1704_129
+  - first:
+      213: -1414833287792129953
+    second: Group 1704_130
+  - first:
+      213: 6857295774732110092
+    second: Group 1704_131
+  - first:
+      213: 1160461883767452370
+    second: Group 1704_132
+  - first:
+      213: -8775048417420829977
+    second: Group 1704_133
+  - first:
+      213: -834146009825058164
+    second: Group 1704_134
+  - first:
+      213: 8769747279421242509
+    second: Group 1704_135
+  - first:
+      213: 1829593520713207272
+    second: Group 1704_136
+  - first:
+      213: -4221560818981176304
+    second: Group 1704_137
+  - first:
+      213: 681205107503905598
+    second: Group 1704_138
+  - first:
+      213: 762156431580994911
+    second: Group 1704_139
+  - first:
+      213: 3469201658572681696
+    second: Group 1704_140
+  - first:
+      213: -8470721107997895075
+    second: Group 1704_141
+  - first:
+      213: 8210175052702953382
+    second: Group 1704_142
+  - first:
+      213: 5036055889791976856
+    second: Group 1704_143
+  - first:
+      213: 6398739089462657512
+    second: Group 1704_144
+  - first:
+      213: -7723725092325502892
+    second: Group 1704_145
+  - first:
+      213: 7323229725520370935
+    second: Group 1704_146
+  - first:
+      213: 2789401283932545
+    second: Group 1704_147
+  - first:
+      213: 6918561764197251506
+    second: Group 1704_148
+  - first:
+      213: 8068927210512402629
+    second: Group 1704_149
+  - first:
+      213: -4058412912530539372
+    second: Group 1704_150
+  - first:
+      213: 1882449700560707157
+    second: Group 1704_151
+  - first:
+      213: 6639684464999145525
+    second: Group 1704_152
+  - first:
+      213: 3662869547699983966
+    second: Group 1704_153
+  - first:
+      213: 736480009231692526
+    second: Group 1704_154
+  - first:
+      213: 4144576022527340915
+    second: Group 1704_155
+  - first:
+      213: 8118703984143910425
+    second: Group 1704_156
+  - first:
+      213: -6343000039294960010
+    second: Group 1704_157
+  - first:
+      213: -2273605557889427551
+    second: Group 1704_158
+  - first:
+      213: -2177755907093497770
+    second: Group 1704_159
+  - first:
+      213: 1381742486045617273
+    second: Group 1704_160
+  - first:
+      213: -831888264132031573
+    second: Group 1704_161
+  - first:
+      213: -816362517388669436
+    second: Group 1704_162
+  - first:
+      213: -492032382930454541
+    second: Group 1704_163
+  - first:
+      213: -3305869666895133316
+    second: Group 1704_164
+  - first:
+      213: -5050083451908327795
+    second: Group 1704_165
+  - first:
+      213: -1258533131752943769
+    second: Group 1704_166
+  - first:
+      213: 6883024173119150823
+    second: Group 1704_167
+  - first:
+      213: -3891536225710743206
+    second: Group 1704_168
+  - first:
+      213: 3929493631081359481
+    second: Group 1704_169
+  - first:
+      213: 5873209113563074070
+    second: Group 1704_170
+  - first:
+      213: -1340300055193426723
+    second: Group 1704_171
+  - first:
+      213: -7459402833840095514
+    second: Group 1704_172
+  - first:
+      213: -8222176604208800857
+    second: Group 1704_173
+  - first:
+      213: -6026706620315185283
+    second: Group 1704_174
+  - first:
+      213: 7874624343356071640
+    second: Group 1704_175
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Group 1704_0
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 440
+        width: 118
+        height: 111
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1ecd65be53b928b0800000000000000
+      internalID: -5176409077333504483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_1
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 377
+        width: 57
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65ebd7b96fe8bfbf0800000000000000
+      internalID: -289480561213456810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3
+        width: 416
+        height: 368
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b448c111b71c6c190800000000000000
+      internalID: -7942448158509071285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 279
+        width: 32
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f260884ebca0650c0800000000000000
+      internalID: -4587467299601512913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 246
+        width: 14
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61e4bdd071ce3aa70800000000000000
+      internalID: 8837166477591924246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_5
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 338
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 015cafca108ca8350800000000000000
+      internalID: 6019843761456727312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_6
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 329
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc07afb524ec7b0f0800000000000000
+      internalID: -1101184799462494005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_7
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 340
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e188575ac697211d0800000000000000
+      internalID: -3381506862662449122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_8
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 316
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a7fac8400ebb52f0800000000000000
+      internalID: -982983185219782746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_9
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 297
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d87756eeb78264790800000000000000
+      internalID: -7546299612866971763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_10
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 337
+        width: 6
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 619eeaa0589507450800000000000000
+      internalID: 6084461524522297622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_11
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 265
+        width: 7
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 897e780f155f7d040800000000000000
+      internalID: 4672472870696773528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_12
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 341
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8ceba01acbee7d40800000000000000
+      internalID: 5584159841081617551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_13
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 299
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7881a7710b318a470800000000000000
+      internalID: 8405990351516080263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_14
+      rect:
+        serializedVersion: 2
+        x: 357
+        y: 351
+        width: 24
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 689050c4fb8933140800000000000000
+      internalID: 4698266783659133318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_15
+      rect:
+        serializedVersion: 2
+        x: 358
+        y: 329
+        width: 22
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f97bd66f6a7e38720800000000000000
+      internalID: 2847374093713258399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_16
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 331
+        width: 10
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5efe245a85365a0f0800000000000000
+      internalID: -1106368901068689435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_17
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 313
+        width: 16
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5754d349809a428f0800000000000000
+      internalID: -566141798829963915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_18
+      rect:
+        serializedVersion: 2
+        x: 362
+        y: 296
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fbe976d3abb405f0800000000000000
+      internalID: -791301322157986827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_19
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 289
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dbad242d4eb5e880800000000000000
+      internalID: -8582244276355879980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_20
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 304
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72569bd5f4215f540800000000000000
+      internalID: 5040955489995285799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_21
+      rect:
+        serializedVersion: 2
+        x: 373
+        y: 266
+        width: 24
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b5da2a5c65412bd0800000000000000
+      internalID: -2656765973500340813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_22
+      rect:
+        serializedVersion: 2
+        x: 374
+        y: 299
+        width: 42
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 819d985edbeccee00800000000000000
+      internalID: 1075461726029863192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_23
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 266
+        width: 25
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aba4d9478cf9d06c0800000000000000
+      internalID: -4175505596203840838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_24
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 233
+        width: 24
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 042d4f1317c6e0b10800000000000000
+      internalID: 1949614922123235904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_25
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 331
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4fb176a108bd8fe0800000000000000
+      internalID: -1185088809701621940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_26
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 324
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b6433bf008c2ea60800000000000000
+      internalID: 7701938219296966325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_27
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 291
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97004120a5d299b50800000000000000
+      internalID: 6600356593493344377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_28
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 232
+        width: 7
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e13715ad72c465150800000000000000
+      internalID: 5860955699119485726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_29
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 266
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c0f06e822b71f6b0800000000000000
+      internalID: -5264291101071576888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_30
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 233
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a833cd4306d083ac0800000000000000
+      internalID: -3875332772497443958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_31
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 264
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 692325992496d8350800000000000000
+      internalID: 6020584011625280150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_32
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 231
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1466be927c1dcf830800000000000000
+      internalID: 4106387613587039809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_33
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 266
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b15e328550f7f860800000000000000
+      internalID: 7563778349240046007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_34
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 233
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30e2c5c7d7d193d50800000000000000
+      internalID: 6717432743994338819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_35
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 260
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b57676017341bbb60800000000000000
+      internalID: 7762820609434150747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_36
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 227
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: deed38b889e0f0370800000000000000
+      internalID: 8290861487350865645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_37
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 230
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ac73e9378b35c750800000000000000
+      internalID: 6324526703689563303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_38
+      rect:
+        serializedVersion: 2
+        x: 377
+        y: 233
+        width: 20
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70337ea953da8f780800000000000000
+      internalID: -8648972638621322489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_39
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 208
+        width: 12
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d7f17d421b1c1c20800000000000000
+      internalID: 3178445202439403472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_40
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 200
+        width: 27
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c4fe343aefe39900800000000000000
+      internalID: 690158957095744713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_41
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 258
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7ae2fe1f0d718bd0800000000000000
+      internalID: -2629683203510441347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_42
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 222
+        width: 18
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86b8319ad1f3bf320800000000000000
+      internalID: 2592735407105084264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_43
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 238
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bc25293d0085f640800000000000000
+      internalID: 5113133746230734006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_44
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 197
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ce87776b49b4b000800000000000000
+      internalID: 50869229317492425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_45
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 200
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72a746030257384f0800000000000000
+      internalID: -827689125394744793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_46
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 208
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 760356f500ffda4d0800000000000000
+      internalID: -3121558589632335769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_47
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 197
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a87bce459eb2c29b0800000000000000
+      internalID: -5103655996565440630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_48
+      rect:
+        serializedVersion: 2
+        x: 337
+        y: 197
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1faca63531c302170800000000000000
+      internalID: 8151581379242150641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_49
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 197
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcbc6bdba4d203a60800000000000000
+      internalID: 7651665565936176075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_50
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 182
+        width: 11
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f03ab794f0d28cc60800000000000000
+      internalID: 7838564695118947087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_51
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 167
+        width: 29
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5896ef572e30c170800000000000000
+      internalID: 8196619660647897182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_52
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 205
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad1d18b86c2c8cef0800000000000000
+      internalID: -87606034733870630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_53
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 200
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 228613c9676b0f180800000000000000
+      internalID: -9083559827863410654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_54
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 198
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ef9e20d7b68e8ba0800000000000000
+      internalID: -6084777922501107736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_55
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 200
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e10ecf22f9e53ff0800000000000000
+      internalID: -56882193878875671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_56
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 197
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6a46c595e17069e0800000000000000
+      internalID: -1630177834233869713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_57
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 194
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62dfd0d4b16888520800000000000000
+      internalID: 2704559028050984230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_58
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 192
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17cf5f7bf0a41c6d0800000000000000
+      internalID: -2972012847716500367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_59
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 164
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a375949ba181fc320800000000000000
+      internalID: 2580307614563391290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_60
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 167
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55d39732e1416be10800000000000000
+      internalID: 2212978386575899989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_61
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 175
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4796bebe72feb59d0800000000000000
+      internalID: -2784368989857683084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_62
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 164
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6186db03d2a82b040800000000000000
+      internalID: 4661940490977765398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_63
+      rect:
+        serializedVersion: 2
+        x: 337
+        y: 164
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06e2f1d68b46585f0800000000000000
+      internalID: -755086619247169952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_64
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 164
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 586fbb45211f1e3f0800000000000000
+      internalID: -873151791699855739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_65
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 163
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60c2d8ae43873b220800000000000000
+      internalID: 2500474386789510150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_66
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 156
+        width: 12
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 275d876bc8f1f70b0800000000000000
+      internalID: -5728825511774726798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_67
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 167
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f1413ae572362d70800000000000000
+      internalID: 9017950785877656056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_68
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 165
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e289873bc7e169e80800000000000000
+      internalID: -8172310952881383378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_69
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 167
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9222cba0f4c481e00800000000000000
+      internalID: 1015645618338275881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_70
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 162
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20624a56519982f00800000000000000
+      internalID: 1092291226815964674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_71
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 164
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2be9d828c90c900b0800000000000000
+      internalID: -5761862469806088526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_72
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 134
+        width: 26
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f95e05f0810289a0800000000000000
+      internalID: -6232417280948545040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_73
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 164
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 245a2936c49d9b860800000000000000
+      internalID: 7546301572747273538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_74
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 131
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbc7a648efe54e0e0800000000000000
+      internalID: -2241562267287388993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_75
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 134
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dda3097bd21d27820800000000000000
+      internalID: 2914621903145548509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_76
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 132
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2ed229cfab9b2080800000000000000
+      internalID: -9211097433560130002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_77
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 131
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b81dcbed2582dc180800000000000000
+      internalID: -9093567736201817717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_78
+      rect:
+        serializedVersion: 2
+        x: 337
+        y: 131
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce2b9fc17cd5cb7b0800000000000000
+      internalID: -5207183959381134612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_79
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 134
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 485f3c097f3a9af60800000000000000
+      internalID: 8046142492955112836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_80
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 129
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9d2db79fca1a02e0800000000000000
+      internalID: -2158883592464421473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_81
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 131
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed31181e2d9c64fd0800000000000000
+      internalID: -2357975447318228002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_82
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 134
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3484933b120d86c30800000000000000
+      internalID: 4352957883012958275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_83
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 129
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 826a2f8e9caf934d0800000000000000
+      internalID: -3154214318892734936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_84
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 126
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ecf0bed1e058cb00800000000000000
+      internalID: 849017460793343207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_85
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 101
+        width: 19
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ce845f84f122b3a0800000000000000
+      internalID: -6651216365412380986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_86
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 98
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7166a29c5bc81e080800000000000000
+      internalID: -9159885454702909929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_87
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 101
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30eb7d337ce896890800000000000000
+      internalID: -7464277921170473469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_88
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 99
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00df0e5f04f4b0da0800000000000000
+      internalID: -5977596939982537472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_89
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 98
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f72ba744fe108530800000000000000
+      internalID: 3855115315552397305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_90
+      rect:
+        serializedVersion: 2
+        x: 337
+        y: 98
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cef53f3834388510800000000000000
+      internalID: 1551547487812452038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_91
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 101
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ac173e1ae0a0edc0800000000000000
+      internalID: -3611709973761418079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_92
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 94
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b504ec794a4afb40800000000000000
+      internalID: 5474769976510645685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_93
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 96
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3bfd3d766b202590800000000000000
+      internalID: -7701107643615675587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_94
+      rect:
+        serializedVersion: 2
+        x: 372
+        y: 98
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a46e1d071056bd00800000000000000
+      internalID: 988065228188968104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_95
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 101
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fced39ec40935750800000000000000
+      internalID: 6292531764371778809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_96
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 95
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bff5c31fd42ef9d70800000000000000
+      internalID: 9052202600425611259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_97
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 90
+        width: 12
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94a61319b7aa1c760800000000000000
+      internalID: 7476444304105368137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_98
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 65
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2aa98c9fd6df05e0800000000000000
+      internalID: -1941096658481075669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_99
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 69
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 064ba366746541de0800000000000000
+      internalID: -1363369922528627616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_100
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 66
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94541e242a52730e0800000000000000
+      internalID: -2290320506657618615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_101
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 65
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70610c9bea873b9e0800000000000000
+      internalID: -1606807950205118969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_102
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 65
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6132d3b9a4b1343b0800000000000000
+      internalID: -5529545910234832106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_103
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 68
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 479430f013e5ad560800000000000000
+      internalID: 7339282107551926644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_104
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 73
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8fb641aec8afdd00800000000000000
+      internalID: 999703247722037135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_105
+      rect:
+        serializedVersion: 2
+        x: 372
+        y: 65
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0627507316deae6b0800000000000000
+      internalID: -5266135812465659296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_106
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 68
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bb0375e119285c20800000000000000
+      internalID: 3195349092460071863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_107
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 69
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e289e12edff262a0800000000000000
+      internalID: -6745547962330807581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_108
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 63
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9b730bc701b11210800000000000000
+      internalID: 1302016414315674527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_109
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 61
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc0e67501e88a6880800000000000000
+      internalID: -8616924436979326769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_110
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 65
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b94b4e6dd9bf4b3b0800000000000000
+      internalID: -5497492589778783077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_111
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 62
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3581f51353de4aeb0800000000000000
+      internalID: -4709378497605330861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_112
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 29
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e94ca61ad2642a380800000000000000
+      internalID: -8961523146718264162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_113
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 31
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98ef4c7725d380d30800000000000000
+      internalID: 4397832460533300873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_114
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 29
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1114a651114f0180800000000000000
+      internalID: -9147020775442345702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_115
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 31
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 512ea9df3f3778e00800000000000000
+      internalID: 1046932930155962901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_116
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 21
+        width: 17
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd09c99f70831caa0800000000000000
+      internalID: -6142566809852931873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_117
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 29
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfca29c5e5afb4f50800000000000000
+      internalID: 6866857340043439357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_118
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 21
+        width: 17
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d8bb06c0fe1c8e00800000000000000
+      internalID: 1048246832734124248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_119
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 36
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80d966e423193e620800000000000000
+      internalID: 2802243038404320520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_120
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 40
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5124ad7f8a1987e60800000000000000
+      internalID: 7960272496276161045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_121
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 31
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 007e397968506ba10800000000000000
+      internalID: 1924731966374274816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_122
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 23
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e75c451eac64be1b0800000000000000
+      internalID: -5626325472291535490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_123
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 21
+        width: 12
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e102ceb0ad9a9970800000000000000
+      internalID: 8762489338723434978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_124
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 19
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ebd58e29198c1660800000000000000
+      internalID: 7357906632464260066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_125
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 40
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a68d00f289aa7580800000000000000
+      internalID: -8828557739668175191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_126
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 23
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4adeffbdf45010470800000000000000
+      internalID: 8358968223927889316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_127
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 21
+        width: 12
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 453c04ed7ca252b20800000000000000
+      internalID: 3108938155684840276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_128
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 19
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad95605e4c07fe090800000000000000
+      internalID: -8003054021855782438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_129
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 40
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 532afab805d9e9150800000000000000
+      internalID: 5881311132658934325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_130
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 23
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5880c0fe908d5ce0800000000000000
+      internalID: -1414833287792129953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_131
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 21
+        width: 12
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c09c1b4fc220a2f50800000000000000
+      internalID: 6857295774732110092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_132
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 19
+        width: 17
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d2f6555fe9ca1010800000000000000
+      internalID: 1160461883767452370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_133
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 35
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ea17c0e4f3c83680800000000000000
+      internalID: -8775048417420829977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_134
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 27
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c826191af948c64f0800000000000000
+      internalID: -834146009825058164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_135
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 21
+        width: 13
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8cf9dfbfa664b970800000000000000
+      internalID: 8769747279421242509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_136
+      rect:
+        serializedVersion: 2
+        x: 249
+        y: 29
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ed877d0d95046910800000000000000
+      internalID: 1829593520713207272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_137
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 36
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01c7bea4dc00a65c0800000000000000
+      internalID: -4221560818981176304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_138
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 21
+        width: 16
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3bb3f3af60247900800000000000000
+      internalID: 681205107503905598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_139
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 3
+        width: 21
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5d1aa78c39b39a00800000000000000
+      internalID: 762156431580994911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_140
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 38
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e1bb612784152030800000000000000
+      internalID: 3469201658572681696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_141
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 27
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d56d1663804f17a80800000000000000
+      internalID: -8470721107997895075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_142
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 35
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6af222806b660f170800000000000000
+      internalID: 8210175052702953382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_143
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 40
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 895801c462aa3e540800000000000000
+      internalID: 5036055889791976856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_144
+      rect:
+        serializedVersion: 2
+        x: 299
+        y: 21
+        width: 16
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e104d5cc43ecc850800000000000000
+      internalID: 6398739089462657512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_145
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 19
+        width: 10
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 450da2953f0dfc490800000000000000
+      internalID: -7723725092325502892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_146
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 35
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fc193e92a651a560800000000000000
+      internalID: 7323229725520370935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_147
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 27
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1813aa812f8e90000800000000000000
+      internalID: 2789401283932545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_148
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 29
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b9b397b44ba30060800000000000000
+      internalID: 6918561764197251506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_149
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 19
+        width: 10
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c843150c869aff60800000000000000
+      internalID: 8068927210512402629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_150
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 35
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49c32cc55fe9da7c0800000000000000
+      internalID: -4058412912530539372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_151
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 19
+        width: 10
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55e167d670ecf1a10800000000000000
+      internalID: 1882449700560707157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_152
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 27
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53024f4a7d5e42c50800000000000000
+      internalID: 6639684464999145525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_153
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 32
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e56d049627025d230800000000000000
+      internalID: 3662869547699983966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_154
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 8
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee27e669aa0883a00800000000000000
+      internalID: 736480009231692526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_155
+      rect:
+        serializedVersion: 2
+        x: 253
+        y: 21
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 371f75ffeed748930800000000000000
+      internalID: 4144576022527340915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_156
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 3
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9164273424e6ba070800000000000000
+      internalID: 8118703984143910425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_157
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 3
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67ef887221329f7a0800000000000000
+      internalID: -6343000039294960010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_158
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 3
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a795aa8ac78270e0800000000000000
+      internalID: -2273605557889427551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_159
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 3
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 658fe2e6a8e07c1e0800000000000000
+      internalID: -2177755907093497770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_160
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 7
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97c60d3687fec2310800000000000000
+      internalID: 1381742486045617273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_161
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 3
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bab0893080a8474f0800000000000000
+      internalID: -831888264132031573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_162
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 7
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40eca1f9d92bba4f0800000000000000
+      internalID: -816362517388669436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_163
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 3
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f7f0759723fb29f0800000000000000
+      internalID: -492032382930454541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_164
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 7
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c750afe9d013f12d0800000000000000
+      internalID: -3305869666895133316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_165
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 3
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d86fce26bdf7ae9b0800000000000000
+      internalID: -5050083451908327795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_166
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 3
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76f4ecfd8cac88ee0800000000000000
+      internalID: -1258533131752943769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_167
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 3
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ea9133840a658f50800000000000000
+      internalID: 6883024173119150823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_168
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 3
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5162f3cb6c7ef9c0800000000000000
+      internalID: -3891536225710743206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_169
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 3
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 978a3cb53ad588630800000000000000
+      internalID: 3929493631081359481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_170
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 5
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61e83893294d18150800000000000000
+      internalID: 5873209113563074070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_171
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 3
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd462c5733c466de0800000000000000
+      internalID: -1340300055193426723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_172
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 3
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ee3b6ce4a0ea7890800000000000000
+      internalID: -7459402833840095514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_173
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 3
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ab5b9101f5f4ed80800000000000000
+      internalID: -8222176604208800857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_174
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 3
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7f4e9a7246dc5ca0800000000000000
+      internalID: -6026706620315185283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 1704_175
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 3
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ded1656e19484d60800000000000000
+      internalID: 7874624343356071640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Group 1704_0: -5176409077333504483
+      Group 1704_1: -289480561213456810
+      Group 1704_10: 6084461524522297622
+      Group 1704_100: -2290320506657618615
+      Group 1704_101: -1606807950205118969
+      Group 1704_102: -5529545910234832106
+      Group 1704_103: 7339282107551926644
+      Group 1704_104: 999703247722037135
+      Group 1704_105: -5266135812465659296
+      Group 1704_106: 3195349092460071863
+      Group 1704_107: -6745547962330807581
+      Group 1704_108: 1302016414315674527
+      Group 1704_109: -8616924436979326769
+      Group 1704_11: 4672472870696773528
+      Group 1704_110: -5497492589778783077
+      Group 1704_111: -4709378497605330861
+      Group 1704_112: -8961523146718264162
+      Group 1704_113: 4397832460533300873
+      Group 1704_114: -9147020775442345702
+      Group 1704_115: 1046932930155962901
+      Group 1704_116: -6142566809852931873
+      Group 1704_117: 6866857340043439357
+      Group 1704_118: 1048246832734124248
+      Group 1704_119: 2802243038404320520
+      Group 1704_12: 5584159841081617551
+      Group 1704_120: 7960272496276161045
+      Group 1704_121: 1924731966374274816
+      Group 1704_122: -5626325472291535490
+      Group 1704_123: 8762489338723434978
+      Group 1704_124: 7357906632464260066
+      Group 1704_125: -8828557739668175191
+      Group 1704_126: 8358968223927889316
+      Group 1704_127: 3108938155684840276
+      Group 1704_128: -8003054021855782438
+      Group 1704_129: 5881311132658934325
+      Group 1704_13: 8405990351516080263
+      Group 1704_130: -1414833287792129953
+      Group 1704_131: 6857295774732110092
+      Group 1704_132: 1160461883767452370
+      Group 1704_133: -8775048417420829977
+      Group 1704_134: -834146009825058164
+      Group 1704_135: 8769747279421242509
+      Group 1704_136: 1829593520713207272
+      Group 1704_137: -4221560818981176304
+      Group 1704_138: 681205107503905598
+      Group 1704_139: 762156431580994911
+      Group 1704_14: 4698266783659133318
+      Group 1704_140: 3469201658572681696
+      Group 1704_141: -8470721107997895075
+      Group 1704_142: 8210175052702953382
+      Group 1704_143: 5036055889791976856
+      Group 1704_144: 6398739089462657512
+      Group 1704_145: -7723725092325502892
+      Group 1704_146: 7323229725520370935
+      Group 1704_147: 2789401283932545
+      Group 1704_148: 6918561764197251506
+      Group 1704_149: 8068927210512402629
+      Group 1704_15: 2847374093713258399
+      Group 1704_150: -4058412912530539372
+      Group 1704_151: 1882449700560707157
+      Group 1704_152: 6639684464999145525
+      Group 1704_153: 3662869547699983966
+      Group 1704_154: 736480009231692526
+      Group 1704_155: 4144576022527340915
+      Group 1704_156: 8118703984143910425
+      Group 1704_157: -6343000039294960010
+      Group 1704_158: -2273605557889427551
+      Group 1704_159: -2177755907093497770
+      Group 1704_16: -1106368901068689435
+      Group 1704_160: 1381742486045617273
+      Group 1704_161: -831888264132031573
+      Group 1704_162: -816362517388669436
+      Group 1704_163: -492032382930454541
+      Group 1704_164: -3305869666895133316
+      Group 1704_165: -5050083451908327795
+      Group 1704_166: -1258533131752943769
+      Group 1704_167: 6883024173119150823
+      Group 1704_168: -3891536225710743206
+      Group 1704_169: 3929493631081359481
+      Group 1704_17: -566141798829963915
+      Group 1704_170: 5873209113563074070
+      Group 1704_171: -1340300055193426723
+      Group 1704_172: -7459402833840095514
+      Group 1704_173: -8222176604208800857
+      Group 1704_174: -6026706620315185283
+      Group 1704_175: 7874624343356071640
+      Group 1704_18: -791301322157986827
+      Group 1704_19: -8582244276355879980
+      Group 1704_2: -7942448158509071285
+      Group 1704_20: 5040955489995285799
+      Group 1704_21: -2656765973500340813
+      Group 1704_22: 1075461726029863192
+      Group 1704_23: -4175505596203840838
+      Group 1704_24: 1949614922123235904
+      Group 1704_25: -1185088809701621940
+      Group 1704_26: 7701938219296966325
+      Group 1704_27: 6600356593493344377
+      Group 1704_28: 5860955699119485726
+      Group 1704_29: -5264291101071576888
+      Group 1704_3: -4587467299601512913
+      Group 1704_30: -3875332772497443958
+      Group 1704_31: 6020584011625280150
+      Group 1704_32: 4106387613587039809
+      Group 1704_33: 7563778349240046007
+      Group 1704_34: 6717432743994338819
+      Group 1704_35: 7762820609434150747
+      Group 1704_36: 8290861487350865645
+      Group 1704_37: 6324526703689563303
+      Group 1704_38: -8648972638621322489
+      Group 1704_39: 3178445202439403472
+      Group 1704_4: 8837166477591924246
+      Group 1704_40: 690158957095744713
+      Group 1704_41: -2629683203510441347
+      Group 1704_42: 2592735407105084264
+      Group 1704_43: 5113133746230734006
+      Group 1704_44: 50869229317492425
+      Group 1704_45: -827689125394744793
+      Group 1704_46: -3121558589632335769
+      Group 1704_47: -5103655996565440630
+      Group 1704_48: 8151581379242150641
+      Group 1704_49: 7651665565936176075
+      Group 1704_5: 6019843761456727312
+      Group 1704_50: 7838564695118947087
+      Group 1704_51: 8196619660647897182
+      Group 1704_52: -87606034733870630
+      Group 1704_53: -9083559827863410654
+      Group 1704_54: -6084777922501107736
+      Group 1704_55: -56882193878875671
+      Group 1704_56: -1630177834233869713
+      Group 1704_57: 2704559028050984230
+      Group 1704_58: -2972012847716500367
+      Group 1704_59: 2580307614563391290
+      Group 1704_6: -1101184799462494005
+      Group 1704_60: 2212978386575899989
+      Group 1704_61: -2784368989857683084
+      Group 1704_62: 4661940490977765398
+      Group 1704_63: -755086619247169952
+      Group 1704_64: -873151791699855739
+      Group 1704_65: 2500474386789510150
+      Group 1704_66: -5728825511774726798
+      Group 1704_67: 9017950785877656056
+      Group 1704_68: -8172310952881383378
+      Group 1704_69: 1015645618338275881
+      Group 1704_7: -3381506862662449122
+      Group 1704_70: 1092291226815964674
+      Group 1704_71: -5761862469806088526
+      Group 1704_72: -6232417280948545040
+      Group 1704_73: 7546301572747273538
+      Group 1704_74: -2241562267287388993
+      Group 1704_75: 2914621903145548509
+      Group 1704_76: -9211097433560130002
+      Group 1704_77: -9093567736201817717
+      Group 1704_78: -5207183959381134612
+      Group 1704_79: 8046142492955112836
+      Group 1704_8: -982983185219782746
+      Group 1704_80: -2158883592464421473
+      Group 1704_81: -2357975447318228002
+      Group 1704_82: 4352957883012958275
+      Group 1704_83: -3154214318892734936
+      Group 1704_84: 849017460793343207
+      Group 1704_85: -6651216365412380986
+      Group 1704_86: -9159885454702909929
+      Group 1704_87: -7464277921170473469
+      Group 1704_88: -5977596939982537472
+      Group 1704_89: 3855115315552397305
+      Group 1704_9: -7546299612866971763
+      Group 1704_90: 1551547487812452038
+      Group 1704_91: -3611709973761418079
+      Group 1704_92: 5474769976510645685
+      Group 1704_93: -7701107643615675587
+      Group 1704_94: 988065228188968104
+      Group 1704_95: 6292531764371778809
+      Group 1704_96: 9052202600425611259
+      Group 1704_97: 7476444304105368137
+      Group 1704_98: -1941096658481075669
+      Group 1704_99: -1363369922528627616
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -20,6 +20,9 @@ public class WaitingRoomUI : MonoBehaviour
     public TMP_Text statusText;
     public TMP_Text[] nameSlots;
 
+    [Header("Player Images")]
+    public GameObject[] imageSlots;   // اسحبي هنا 9 صور أو Slots للاعبين
+
     [Header("Refresh")]
     public float refreshSeconds = 2.5f;
 
@@ -51,9 +54,17 @@ public class WaitingRoomUI : MonoBehaviour
 
     private void ClearSlots()
     {
-        if (nameSlots == null) return;
-        for (int i = 0; i < nameSlots.Length; i++)
-            if (nameSlots[i] != null) nameSlots[i].text = "";
+        if (nameSlots != null)
+        {
+            for (int i = 0; i < nameSlots.Length; i++)
+                if (nameSlots[i] != null) nameSlots[i].text = "";
+        }
+
+        if (imageSlots != null)
+        {
+            for (int i = 0; i < imageSlots.Length; i++)
+                if (imageSlots[i] != null) imageSlots[i].SetActive(false);
+        }
     }
 
     private async Task InitServices()
@@ -105,10 +116,17 @@ public class WaitingRoomUI : MonoBehaviour
             if (lobby.Players != null && nameSlots != null)
             {
                 int slotsCount = Mathf.Min(nameSlots.Length, lobby.Players.Count);
+
                 for (int i = 0; i < slotsCount; i++)
                 {
                     string name = GetPlayerName(lobby.Players[i], i);
-                    if (nameSlots[i] != null) nameSlots[i].text = name;
+
+                    if (nameSlots[i] != null)
+                        nameSlots[i].text = name;
+
+                    // 🔥 تفعيل الصورة المقابلة للاعب
+                    if (imageSlots != null && i < imageSlots.Length && imageSlots[i] != null)
+                        imageSlots[i].SetActive(true);
                 }
             }
 

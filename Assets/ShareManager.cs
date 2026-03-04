@@ -1,6 +1,6 @@
 using UnityEngine;
 using TMPro;
-using Sych.ShareAssets;
+using Sych.ShareAssets.Runtime; 
 
 public class ShareManager : MonoBehaviour
 {

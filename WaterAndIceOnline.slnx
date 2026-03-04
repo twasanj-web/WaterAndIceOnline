@@ -1,3 +1,7 @@
 ﻿<Solution>
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Sych.ShareAssets.Runtime.csproj" />
+  <Project Path="Sych.ShareAssets.Editor.csproj" />
+  <Project Path="Sych.ShareAssets.Runtime.iOS.csproj" />
+  <Project Path="Sych.ShareAssets.Runtime.Android.csproj" />
 </Solution>

@@ -35,14 +35,20 @@ public class FreezeAbility : NetworkBehaviour
 
         if (IsOwner)
         {
-            // البحث داخل الـ Canvas حتى لو البانلين مخفيين
+            // Debug
+            Debug.Log("FreezeAbility: IsOwner = true");
+            Debug.Log("Role = " + (AppSession.Instance != null ? AppSession.Instance.role.ToString() : "NULL"));
+
             Canvas[] canvases = FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            Debug.Log("Canvases found: " + canvases.Length);
+
             foreach (var canvas in canvases)
             {
+                Debug.Log("Canvas: " + canvas.name);
                 Transform ice = canvas.transform.Find("IceButtons");
                 Transform water = canvas.transform.Find("WaterButtons");
-                if (ice != null) iceButtonsPanel = ice.gameObject;
-                if (water != null) waterButtonsPanel = water.gameObject;
+                if (ice != null) { iceButtonsPanel = ice.gameObject; Debug.Log("IceButtons found!"); }
+                if (water != null) { waterButtonsPanel = water.gameObject; Debug.Log("WaterButtons found!"); }
             }
 
             if (iceButtonsPanel != null)
@@ -52,6 +58,7 @@ public class FreezeAbility : NetworkBehaviour
                 waterButton = waterButtonsPanel.GetComponentInChildren<Button>(true);
 
             int role = AppSession.Instance != null ? (int)AppSession.Instance.role : 1;
+            Debug.Log("role int = " + role);
 
             if (iceButtonsPanel != null) iceButtonsPanel.SetActive(role == 2);
             if (waterButtonsPanel != null) waterButtonsPanel.SetActive(role == 1);
@@ -62,6 +69,7 @@ public class FreezeAbility : NetworkBehaviour
                 waterButton.onClick.AddListener(OnWaterButtonPressed);
         }
     }
+
 
     private void Update()
     {

@@ -35,33 +35,26 @@ public class FreezeAbility : NetworkBehaviour
 
         if (IsOwner)
         {
-            Debug.Log("FreezeAbility: IsOwner = true");
-            Debug.Log("Role = " + (AppSession.Instance != null ? AppSession.Instance.role.ToString() : "NULL"));
-
-            Canvas[] canvases = FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-            Debug.Log("Canvases found: " + canvases.Length);
-
-            foreach (var canvas in canvases)
+            // ابحث في كل الـ GameObjects في الـ Scene بما فيها المخفيين
+            GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+            foreach (var obj in allObjects)
             {
-                Debug.Log("Canvas: " + canvas.name);
-                Transform[] allChildren = canvas.GetComponentsInChildren<Transform>(true);
-                foreach (var child in allChildren)
-                {
-                    if (child.name == "IceButtons") { iceButtonsPanel = child.gameObject; Debug.Log("IceButtons found!"); }
-                    if (child.name == "WaterButtons") { waterButtonsPanel = child.gameObject; Debug.Log("WaterButtons found!"); }
-                }
+                // تجاهل الـ Prefab Assets (فقط الـ Scene objects)
+                if (!obj.scene.IsValid()) continue;
+
+                if (obj.name == "IceButtons") iceButtonsPanel = obj;
+                else if (obj.name == "WaterButtons") waterButtonsPanel = obj;
+                else if (obj.name == "IceButton") iceButton = obj.GetComponent<Button>();
+                else if (obj.name == "WaterButton") waterButton = obj.GetComponent<Button>();
             }
 
-            if (iceButtonsPanel != null)
-                iceButton = iceButtonsPanel.GetComponentInChildren<Button>(true);
-
-            if (waterButtonsPanel != null)
-                waterButton = waterButtonsPanel.GetComponentInChildren<Button>(true);
+            Debug.Log($"[FreezeAbility] iceButtonsPanel={iceButtonsPanel?.name ?? "NULL"}");
+            Debug.Log($"[FreezeAbility] waterButtonsPanel={waterButtonsPanel?.name ?? "NULL"}");
+            Debug.Log($"[FreezeAbility] iceButton={iceButton?.name ?? "NULL"}");
+            Debug.Log($"[FreezeAbility] waterButton={waterButton?.name ?? "NULL"}");
 
             int role = AppSession.Instance != null ? (int)AppSession.Instance.role : 1;
-            Debug.Log("role int = " + role);
-            Debug.Log("iceButtonsPanel = " + (iceButtonsPanel != null ? iceButtonsPanel.name : "NULL"));
-            Debug.Log("waterButtonsPanel = " + (waterButtonsPanel != null ? waterButtonsPanel.name : "NULL"));
+            Debug.Log($"[FreezeAbility] role={role}");
 
             if (iceButtonsPanel != null) iceButtonsPanel.SetActive(role == 2);
             if (waterButtonsPanel != null) waterButtonsPanel.SetActive(role == 1);

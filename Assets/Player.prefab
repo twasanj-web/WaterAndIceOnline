@@ -176,8 +176,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3036491293
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 782258355
+  InScenePlacedSourceGlobalObjectIdHash: 3737387921
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -298,6 +298,10 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   detectionRange: 2.5
   frozenSprite: {fileID: 21300000, guid: 884741e6e11e74688a24caecd5a42436, type: 3}
+  iceButtonsPanel: {fileID: 0}
+  waterButtonsPanel: {fileID: 0}
+  iceButton: {fileID: 0}
+  waterButton: {fileID: 0}
   isFrozen:
     m_InternalValue: 0
 --- !u!1 &2801350739091873190

@@ -35,8 +35,15 @@ public class FreezeAbility : NetworkBehaviour
 
         if (IsOwner)
         {
-            iceButtonsPanel = GameObject.Find("IceButtons");
-            waterButtonsPanel = GameObject.Find("WaterButtons");
+            // البحث داخل الـ Canvas حتى لو البانلين مخفيين
+            Canvas[] canvases = FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var canvas in canvases)
+            {
+                Transform ice = canvas.transform.Find("IceButtons");
+                Transform water = canvas.transform.Find("WaterButtons");
+                if (ice != null) iceButtonsPanel = ice.gameObject;
+                if (water != null) waterButtonsPanel = water.gameObject;
+            }
 
             if (iceButtonsPanel != null)
                 iceButton = iceButtonsPanel.GetComponentInChildren<Button>(true);

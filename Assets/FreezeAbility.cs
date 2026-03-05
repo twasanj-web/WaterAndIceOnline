@@ -35,18 +35,21 @@ public class FreezeAbility : NetworkBehaviour
 
         if (IsOwner)
         {
-            // ابحث في كل الـ GameObjects في الـ Scene بما فيها المخفيين
+            // ابحث عن الأزرار فقط (الأزرار تُوجد حتى لو البانل مخفي)
             GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
             foreach (var obj in allObjects)
             {
-                // تجاهل الـ Prefab Assets (فقط الـ Scene objects)
                 if (!obj.scene.IsValid()) continue;
 
-                if (obj.name == "IceButtons") iceButtonsPanel = obj;
-                else if (obj.name == "WaterButtons") waterButtonsPanel = obj;
-                else if (obj.name == "IceButton") iceButton = obj.GetComponent<Button>();
+                if (obj.name == "IceButton") iceButton = obj.GetComponent<Button>();
                 else if (obj.name == "WaterButton") waterButton = obj.GetComponent<Button>();
             }
+
+            // استخرج البانل من أبو الزر مباشرة
+            if (iceButton != null)
+                iceButtonsPanel = iceButton.transform.parent.gameObject;
+            if (waterButton != null)
+                waterButtonsPanel = waterButton.transform.parent.gameObject;
 
             Debug.Log($"[FreezeAbility] iceButtonsPanel={iceButtonsPanel?.name ?? "NULL"}");
             Debug.Log($"[FreezeAbility] waterButtonsPanel={waterButtonsPanel?.name ?? "NULL"}");

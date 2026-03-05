@@ -35,7 +35,6 @@ public class FreezeAbility : NetworkBehaviour
 
         if (IsOwner)
         {
-            // Debug
             Debug.Log("FreezeAbility: IsOwner = true");
             Debug.Log("Role = " + (AppSession.Instance != null ? AppSession.Instance.role.ToString() : "NULL"));
 
@@ -45,10 +44,12 @@ public class FreezeAbility : NetworkBehaviour
             foreach (var canvas in canvases)
             {
                 Debug.Log("Canvas: " + canvas.name);
-                Transform ice = canvas.transform.Find("IceButtons");
-                Transform water = canvas.transform.Find("WaterButtons");
-                if (ice != null) { iceButtonsPanel = ice.gameObject; Debug.Log("IceButtons found!"); }
-                if (water != null) { waterButtonsPanel = water.gameObject; Debug.Log("WaterButtons found!"); }
+                Transform[] allChildren = canvas.GetComponentsInChildren<Transform>(true);
+                foreach (var child in allChildren)
+                {
+                    if (child.name == "IceButtons") { iceButtonsPanel = child.gameObject; Debug.Log("IceButtons found!"); }
+                    if (child.name == "WaterButtons") { waterButtonsPanel = child.gameObject; Debug.Log("WaterButtons found!"); }
+                }
             }
 
             if (iceButtonsPanel != null)
@@ -59,6 +60,8 @@ public class FreezeAbility : NetworkBehaviour
 
             int role = AppSession.Instance != null ? (int)AppSession.Instance.role : 1;
             Debug.Log("role int = " + role);
+            Debug.Log("iceButtonsPanel = " + (iceButtonsPanel != null ? iceButtonsPanel.name : "NULL"));
+            Debug.Log("waterButtonsPanel = " + (waterButtonsPanel != null ? waterButtonsPanel.name : "NULL"));
 
             if (iceButtonsPanel != null) iceButtonsPanel.SetActive(role == 2);
             if (waterButtonsPanel != null) waterButtonsPanel.SetActive(role == 1);
@@ -69,7 +72,6 @@ public class FreezeAbility : NetworkBehaviour
                 waterButton.onClick.AddListener(OnWaterButtonPressed);
         }
     }
-
 
     private void Update()
     {

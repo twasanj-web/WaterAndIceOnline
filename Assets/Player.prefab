@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3288088697354626632}
   - component: {fileID: 1765386641037691867}
   - component: {fileID: -813551162223553772}
+  - component: {fileID: 6781539658736620341}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -282,6 +283,23 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &6781539658736620341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225815217076110307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2582f20e828bc4cdbb90d5e6a9d28874, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  ShowTopMostFoldoutHeaderGroup: 1
+  detectionRange: 2.5
+  frozenSprite: {fileID: 21300000, guid: 884741e6e11e74688a24caecd5a42436, type: 3}
+  isFrozen:
+    m_InternalValue: 0
 --- !u!1 &2801350739091873190
 GameObject:
   m_ObjectHideFlags: 0

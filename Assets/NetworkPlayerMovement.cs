@@ -8,6 +8,7 @@ public class NetworkPlayerMovement : NetworkBehaviour
     public float speed = 5f;
     private Rigidbody2D rb;
     private JoystickController joystick;
+    private bool frozen = false;
 
     private void Awake()
     {
@@ -24,20 +25,26 @@ public class NetworkPlayerMovement : NetworkBehaviour
 
         if (IsOwner)
         {
-            joystick = FindObjectOfType<JoystickController>(true);
+            joystick = FindFirstObjectByType<JoystickController>();
         }
+    }
+
+    public void SetFrozen(bool value)
+    {
+        frozen = value;
+        if (frozen && rb != null)
+            rb.linearVelocity = Vector2.zero;
     }
 
     private void FixedUpdate()
     {
         if (!IsOwner) return;
+        if (frozen) return;
 
         Vector2 move = Vector2.zero;
 
         if (joystick != null)
-        {
             move = joystick.InputDirection;
-        }
         else
         {
             float h = Input.GetAxisRaw("Horizontal");

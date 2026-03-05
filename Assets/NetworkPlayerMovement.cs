@@ -1,11 +1,13 @@
 using Unity.Netcode;
 using UnityEngine;
+using PinePie.SimpleJoystick;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class NetworkPlayerMovement : NetworkBehaviour
 {
     public float speed = 5f;
     private Rigidbody2D rb;
+    private JoystickController joystick;
 
     private void Awake()
     {
@@ -19,16 +21,35 @@ public class NetworkPlayerMovement : NetworkBehaviour
 
         if (cam != null) cam.enabled = IsOwner;
         if (listener != null) listener.enabled = IsOwner;
+
+        if (IsOwner)
+        {
+            // البحث عن الجويستك (حتى لو مخفي)
+            joystick = FindObjectOfType<JoystickController>(true);
+
+            // تشغيل الـ Canvas
+            Canvas gameCanvas = FindObjectOfType<Canvas>(true);
+            if (gameCanvas != null) gameCanvas.gameObject.SetActive(true);
+        }
     }
 
     private void FixedUpdate()
     {
         if (!IsOwner) return;
 
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
+        Vector2 move = Vector2.zero;
 
-        Vector2 move = new Vector2(h, v).normalized;
+        if (joystick != null)
+        {
+            move = joystick.InputDirection;
+        }
+        else
+        {
+            float h = Input.GetAxisRaw("Horizontal");
+            float v = Input.GetAxisRaw("Vertical");
+            move = new Vector2(h, v).normalized;
+        }
+
         rb.linearVelocity = move * speed;
     }
 }

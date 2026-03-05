@@ -24,12 +24,7 @@ public class NetworkPlayerMovement : NetworkBehaviour
 
         if (IsOwner)
         {
-            // البحث عن الجويستك (حتى لو مخفي)
             joystick = FindObjectOfType<JoystickController>(true);
-
-            // تشغيل الـ Canvas
-            Canvas gameCanvas = FindObjectOfType<Canvas>(true);
-            if (gameCanvas != null) gameCanvas.gameObject.SetActive(true);
         }
     }
 

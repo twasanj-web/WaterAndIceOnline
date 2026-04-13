@@ -59,8 +59,8 @@ public class WaitingRoomStartGame : MonoBehaviour
             }
 
             int count = session.currentPlayerCount;
-
-            if (count < 2)
+// اعدل هنا الى ٢
+            if (count < 1)
             {
                 Debug.LogWarning($"StartGame: need at least 2 players, current = {count}");
                 isStarting = false;

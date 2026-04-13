@@ -1,224 +1,94 @@
 using UnityEngine;
 using TMPro;
-using Unity.Services.Core;
-using Unity.Services.Core.Environments;
-using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
-using Unity.Services.Relay;
-using Unity.Services.Relay.Models;
-using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class WaitingRoomUI : MonoBehaviour
 {
-    [Header("UI")]
+    [Header("UI Elements")]
     public TMP_Text statusText;
+    public GameObject[] imageSlots;
     public TMP_Text[] nameSlots;
+    public GameObject startButton;
 
-    [Header("Player Images")]
-    public GameObject[] imageSlots;   // اسحبي هنا 9 صور أو Slots للاعبين
+    [Header("Settings")]
+    public float refreshSeconds = 5f;
 
-    [Header("Refresh")]
-    public float refreshSeconds = 2.5f;
+    private bool hasMovedToGame = false;
 
-    private Coroutine pollRoutine;
-    private bool hasMovedToGame;
-
-    private async void Start()
+    private void Start()
     {
-        ClearSlots();
-        if (statusText != null) statusText.text = "(0/0)";
-
-        await InitServices();
-
-        var session = AppSession.Instance;
-        if (session == null || string.IsNullOrWhiteSpace(session.lobbyId))
+        if (imageSlots != null) foreach (var slot in imageSlots) if (slot != null) slot.SetActive(false);
+        if (nameSlots != null) foreach (var n in nameSlots) if (n != null) n.text = "";
+        
+        if (startButton != null)
         {
-            Debug.LogError("WaitingRoomUI: no AppSession or lobbyId is empty!");
-            return;
+            bool isHost = AppSession.Instance != null && AppSession.Instance.isHost;
+            startButton.SetActive(isHost);
         }
 
-        pollRoutine = StartCoroutine(PollLobby(session.lobbyId));
-    }
-
-    private void OnDestroy()
-    {
-        if (pollRoutine != null)
-            StopCoroutine(pollRoutine);
-    }
-
-    private void ClearSlots()
-    {
-        if (nameSlots != null)
+        if (AppSession.Instance != null && !string.IsNullOrEmpty(AppSession.Instance.lobbyId))
         {
-            for (int i = 0; i < nameSlots.Length; i++)
-                if (nameSlots[i] != null) nameSlots[i].text = "";
-        }
-
-        if (imageSlots != null)
-        {
-            for (int i = 0; i < imageSlots.Length; i++)
-                if (imageSlots[i] != null) imageSlots[i].SetActive(false);
+            StartCoroutine(RefreshLobbyLoop());
         }
     }
 
-    private async Task InitServices()
+    private IEnumerator RefreshLobbyLoop()
     {
-        if (UnityServices.State != ServicesInitializationState.Initialized)
+        while (!hasMovedToGame)
         {
-            var options = new InitializationOptions().SetEnvironmentName("production");
-            await UnityServices.InitializeAsync(options);
-        }
-
-        if (!AuthenticationService.Instance.IsSignedIn)
-        {
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        }
-
-        if (AppSession.Instance != null)
-            AppSession.Instance.playerId = AuthenticationService.Instance.PlayerId;
-    }
-
-    private IEnumerator PollLobby(string lobbyId)
-    {
-        while (true)
-        {
-            var task = RefreshLobbyUI(lobbyId);
-            while (!task.IsCompleted) yield return null;
-
+            RefreshLobbyData();
             yield return new WaitForSeconds(refreshSeconds);
         }
     }
 
-    private async Task RefreshLobbyUI(string lobbyId)
+    private async void RefreshLobbyData()
     {
+        if (AppSession.Instance == null || string.IsNullOrEmpty(AppSession.Instance.lobbyId) || hasMovedToGame) return;
+
         try
         {
-            Lobby lobby = await LobbyService.Instance.GetLobbyAsync(lobbyId);
+            Lobby lobby = await LobbyService.Instance.GetLobbyAsync(AppSession.Instance.lobbyId);
+            if (lobby == null || lobby.Players == null) return;
 
-            int current = lobby.Players != null ? lobby.Players.Count : 0;
-            int max = lobby.MaxPlayers;
+            if (statusText != null) statusText.text = $"({lobby.Players.Count}/{lobby.MaxPlayers})";
 
-            // حدّث عدد اللاعبين في AppSession
-            if (AppSession.Instance != null)
-                AppSession.Instance.currentPlayerCount = current;
 
-            if (statusText != null)
-                statusText.text = $"({current}/{max})";
+            int playersCount = lobby.Players.Count;
 
-            ClearSlots();
-
-            if (lobby.Players != null && nameSlots != null)
+            for (int i = 0; i < imageSlots.Length; i++)
             {
-                int slotsCount = Mathf.Min(nameSlots.Length, lobby.Players.Count);
+                if (imageSlots[i] == null) continue;
 
-                for (int i = 0; i < slotsCount; i++)
+                if (i < playersCount)
                 {
-                    string name = GetPlayerName(lobby.Players[i], i);
-
-                    if (nameSlots[i] != null)
-                        nameSlots[i].text = name;
-
-                    // 🔥 تفعيل الصورة المقابلة للاعب
-                    if (imageSlots != null && i < imageSlots.Length && imageSlots[i] != null)
-                        imageSlots[i].SetActive(true);
+                    imageSlots[i].SetActive(true);
+                    if (i < nameSlots.Length && nameSlots[i] != null)
+                    {
+                        var p = lobby.Players[i];
+                        string pName = "Player";
+                        if (p.Data != null && p.Data.ContainsKey("name")) pName = p.Data["name"].Value;
+                        nameSlots[i].text = pName;
+                    }
+                }
+                else
+                {
+                    imageSlots[i].SetActive(false);
                 }
             }
 
-            if (!hasMovedToGame && lobby.Data != null && lobby.Data.ContainsKey("state"))
+            if (!AppSession.Instance.isHost && lobby.Data != null && lobby.Data.ContainsKey("state"))
             {
-                string state = lobby.Data["state"].Value;
-                if (state == "started")
+                if (lobby.Data["state"].Value == "started")
                 {
                     hasMovedToGame = true;
-                    if (pollRoutine != null) StopCoroutine(pollRoutine);
-                    ApplyRoleAndGoToGame(lobby);
+                    SceneManager.LoadScene("GameMap");
                 }
             }
         }
-        catch (LobbyServiceException e)
-        {
-            Debug.LogError("GetLobbyAsync failed: " + e);
-        }
-    }
-
-    private void ApplyRoleAndGoToGame(Lobby lobby)
-    {
-        var session = AppSession.Instance;
-        if (session == null)
-        {
-            Debug.LogError("ApplyRoleAndGoToGame: AppSession is null");
-            return;
-        }
-
-        HashSet<string> iceSet = new HashSet<string>();
-        if (lobby.Data != null && lobby.Data.ContainsKey("iceIds"))
-        {
-            string csv = lobby.Data["iceIds"].Value ?? "";
-            foreach (var p in csv.Split(','))
-            {
-                string id = p.Trim();
-                if (!string.IsNullOrWhiteSpace(id))
-                    iceSet.Add(id);
-            }
-        }
-
-        session.role = (!string.IsNullOrWhiteSpace(session.playerId) && iceSet.Contains(session.playerId))
-            ? PlayerRole.Ice
-            : PlayerRole.Water;
-
-        Debug.Log($"Role decided => {session.role} | myId={session.playerId}");
-
-        if (!session.isHost)
-        {
-            if (lobby.Data == null || !lobby.Data.ContainsKey("relayCode"))
-            {
-                Debug.LogError("ApplyRoleAndGoToGame: relayCode missing from lobby data!");
-                return;
-            }
-            session.relayJoinCode = lobby.Data["relayCode"].Value;
-            Debug.Log($"Client: relayCode saved = {session.relayJoinCode}");
-        }
-
-        Debug.Log("Moving to GameMap...");
-        SceneManager.sceneLoaded += OnGameMapLoaded;
-        SceneManager.LoadScene("GameMap");
-    }
-
-    private async void OnGameMapLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name != "GameMap") return;
-        SceneManager.sceneLoaded -= OnGameMapLoaded;
-
-        var session = AppSession.Instance;
-        Debug.Log($"GameMap loaded! Starting CLIENT via Relay code={session.relayJoinCode}");
-
-        try
-        {
-            var joinAllocation = await RelayService.Instance.JoinAllocationAsync(session.relayJoinCode);
-            var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
-            NetworkManager.Singleton.StartClient();
-            Debug.Log("CLIENT started in GameMap!");
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError("OnGameMapLoaded CLIENT failed: " + e);
-        }
-    }
-
-    private string GetPlayerName(Player p, int index)
-    {
-        if (p != null && p.Data != null && p.Data.ContainsKey("name"))
-        {
-            string v = p.Data["name"].Value;
-            if (!string.IsNullOrWhiteSpace(v)) return v.Trim();
-        }
-        return $"Player {index + 1}";
+        catch (System.Exception e) { Debug.LogWarning(e.Message); }
     }
 }

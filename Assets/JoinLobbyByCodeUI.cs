@@ -94,7 +94,7 @@ public class JoinLobbyByCodeUI : MonoBehaviour
                 }
             }
 
-            SceneManager.LoadScene("WaitingRoom");
+            SceneManager.LoadScene("WaitingRoom-New");
         }
         catch (LobbyServiceException e)
         {

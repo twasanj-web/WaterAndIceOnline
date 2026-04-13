@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/ShareCode.unity
     guid: c8e195811753341f3b722bc37af63483
   - enabled: 1
+    path: Assets/Scenes/WaitingRoom-New.unity
+    guid: 4188835fa1ed74a42b278f00e8fa6bec
+  - enabled: 1
     path: Assets/Scenes/WaitingRoom.unity
     guid: 7db08fe46c3f1447b9b05c2f8b425630
   - enabled: 1

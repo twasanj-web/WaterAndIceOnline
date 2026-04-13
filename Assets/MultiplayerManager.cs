@@ -167,7 +167,7 @@ public class MultiplayerManager : MonoBehaviour
             }
         }
 
-        SceneManager.LoadScene("WaitingRoom");
+        SceneManager.LoadScene("WaitingRoom-New");
     }
 
     // لو تبين تستدعينها من CreateRoomSettings قبل ShareCode (اختياري)

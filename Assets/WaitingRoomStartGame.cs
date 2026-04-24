@@ -58,9 +58,12 @@ public class WaitingRoomStartGame : MonoBehaviour
                 return;
             }
 
-            int count = session.currentPlayerCount;
-// اعدل هنا الى ٢
-            if (count < 1)
+            // جلب بيانات اللوبي مباشرة للتأكد من عدد اللاعبين
+            Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
+            int count = lobby.Players.Count;
+
+            // الشرط الآن هو لاعبين اثنين أو أكثر
+            if (count < 3)
             {
                 Debug.LogWarning($"StartGame: need at least 2 players, current = {count}");
                 isStarting = false;
@@ -68,20 +71,21 @@ public class WaitingRoomStartGame : MonoBehaviour
             }
 
             // 1. اختر الثلج عشوائياً
-            int iceCount = Mathf.Max(1, count / 3);
-            Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
+            // هذا الجزء من الكود يختار الثلج بناءً على عدد اللاعبين في اللوبي
+            int iceCount = Mathf.Max(1, count / 3); // يضمن وجود لاعب ثلج واحد على الأقل
             List<string> ids = lobby.Players.Select(p => p.Id).ToList();
             List<string> iceIds = PickRandom(ids, iceCount);
             string iceCsv = string.Join(",", iceIds);
 
             // 2. أنشئ Relay Allocation وخزّنه في AppSession
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(count - 1);
+            // نستخدم maxPlayers لضمان وجود مساحة كافية للـ Relay
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(session.maxPlayers);
             string relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             session.hostAllocation = allocation;
 
             Debug.Log($"StartGame: count={count}, iceCount={iceCount}, iceIds={iceCsv}, relayCode={relayJoinCode}");
 
-            // 3. حدّث اللوبي
+            // 3. حدّث اللوبي لإعلام جميع اللاعبين (Clients) ببداية اللعبة وتزويدهم بكود الـ Relay والدور
             await LobbyService.Instance.UpdateLobbyAsync(session.lobbyId, new UpdateLobbyOptions
             {
                 Data = new Dictionary<string, DataObject>
@@ -92,13 +96,15 @@ public class WaitingRoomStartGame : MonoBehaviour
                 }
             });
 
-            // 4. عيّن دور الهوست وخزّن كود Relay
+
+
+            // 4. عيّن دور الهوست وخزّن كود Relay في الـ AppSession
             session.role = iceCsv.Contains(session.playerId) ? PlayerRole.Ice : PlayerRole.Water;
             session.relayJoinCode = relayJoinCode;
 
             Debug.Log($"StartGame: Host role={session.role}, loading GameMap...");
 
-            // 5. سجّل event قبل تحميل السين
+            // 5. سجّل event قبل تحميل السين للانتقال إلى GameMap
             SceneManager.sceneLoaded += OnGameMapLoaded;
             SceneManager.LoadScene("GameMap");
         }

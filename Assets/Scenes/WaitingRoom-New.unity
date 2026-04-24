@@ -1828,7 +1828,6 @@ GameObject:
   - component: {fileID: 999823424}
   - component: {fileID: 999823427}
   - component: {fileID: 999823426}
-  - component: {fileID: 999823425}
   m_Layer: 5
   m_Name: ExitPopup
   m_TagString: Untagged
@@ -1859,18 +1858,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20.233398, y: 11.810547}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &999823425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 999823423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e693c65c4b58747b88ad5aa731cba0e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!114 &999823426
 MonoBehaviour:
   m_ObjectHideFlags: 0

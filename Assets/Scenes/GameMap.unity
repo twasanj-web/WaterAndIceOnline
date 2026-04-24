@@ -9091,7 +9091,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ae838cbdb344d14a7b3c6ba16bf353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  appSessionPrefab: {fileID: 0}
+  appSessionPrefab: {fileID: 3673057101045150912, guid: a6336d986773a47e4a90cb318c521ddf, type: 3}
 --- !u!4 &1030793046
 Transform:
   m_ObjectHideFlags: 0

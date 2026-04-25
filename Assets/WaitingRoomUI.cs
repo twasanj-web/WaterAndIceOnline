@@ -93,7 +93,6 @@ public class WaitingRoomUI : MonoBehaviour
             int current = lobby.Players != null ? lobby.Players.Count : 0;
             int max = lobby.MaxPlayers;
 
-            // حدّث عدد اللاعبين في AppSession
             if (AppSession.Instance != null)
                 AppSession.Instance.currentPlayerCount = current;
 
@@ -171,35 +170,36 @@ public class WaitingRoomUI : MonoBehaviour
         SceneManager.sceneLoaded += OnGameMapLoaded;
         SceneManager.LoadScene("GameMap");
     }
+
     private void OnGameMapLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name != "GameMap") return;
         SceneManager.sceneLoaded -= OnGameMapLoaded;
 
-        StartCoroutine(StartClientWithDelay());
-    }
-
-    private IEnumerator StartClientWithDelay()
-    {
         var session = AppSession.Instance;
-        Debug.Log($"GameMap loaded! Waiting 1.5s for HOST... Relay code={session.relayJoinCode}");
+        Debug.Log($"GameMap loaded! Starting CLIENT via Relay code={session.relayJoinCode}");
 
-        yield return new WaitForSeconds(1.5f);
-
-        var task = JoinRelayAndStartClient(session.relayJoinCode);
-        while (!task.IsCompleted) yield return null;
-
-        if (task.Exception != null)
-            Debug.LogError("CLIENT failed to start: " + task.Exception);
+        // استخدام Task.Delay بدل Coroutine لأن WaitingRoomUI يُدمر عند تحميل GameMap
+        StartClientDelayed(session.relayJoinCode);
     }
 
-    private async Task JoinRelayAndStartClient(string relayJoinCode)
+    private async void StartClientDelayed(string relayJoinCode)
     {
-        var joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayJoinCode);
-        var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
-        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
-        NetworkManager.Singleton.StartClient();
-        Debug.Log("CLIENT started in GameMap successfully!");
+        try
+        {
+            // انتظر 1.5 ثانية للهوست
+            await Task.Delay(1500);
+
+            var joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayJoinCode);
+            var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
+            NetworkManager.Singleton.StartClient();
+            Debug.Log("CLIENT started in GameMap successfully!");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("OnGameMapLoaded CLIENT failed: " + e);
+        }
     }
 
     private string GetPlayerName(Player p, int index)

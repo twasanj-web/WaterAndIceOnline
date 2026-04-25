@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class WinManager : NetworkBehaviour
+public class WinManager : MonoBehaviour
 {
     [Header("Panels")]
     public GameObject winPanel;
@@ -11,7 +11,7 @@ public class WinManager : NetworkBehaviour
 
     private bool gameEnded = false;
 
-    public override void OnNetworkSpawn()
+    private void Start()
     {
         if (winPanel != null) winPanel.SetActive(false);
         if (iceWinPanel != null) iceWinPanel.SetActive(false);
@@ -20,15 +20,16 @@ public class WinManager : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsServer) return;
         if (gameEnded) return;
 
+        // كل الأجهزة تفحص بنفسها
         CheckAllWaterFrozen();
     }
 
     private void CheckAllWaterFrozen()
     {
         var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
+        if (allPlayers.Length == 0) return;
 
         int waterCount = 0;
         int frozenWaterCount = 0;
@@ -49,17 +50,13 @@ public class WinManager : NetworkBehaviour
         if (waterCount > 0 && waterCount == frozenWaterCount)
         {
             gameEnded = true;
-            ShowIceWinClientRpc();
+            ShowIceWin();
         }
     }
 
-    [ClientRpc]
-    private void ShowIceWinClientRpc()
+    private void ShowIceWin()
     {
-        Debug.Log("ShowIceWinClientRpc وصل! الجهاز: " + (IsHost ? "Host" : "Client"));
-
-        if (winPanel == null) Debug.LogError("winPanel = null!");
-        if (iceWinPanel == null) Debug.LogError("iceWinPanel = null!");
+        Debug.Log("الثلج فاز على: " + (NetworkManager.Singleton.IsHost ? "Host" : "Client"));
 
         var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
         foreach (var player in allPlayers)
@@ -73,10 +70,9 @@ public class WinManager : NetworkBehaviour
         if (waterWinPanel != null) waterWinPanel.SetActive(false);
     }
 
-    [ClientRpc]
-    public void ShowWaterWinClientRpc()
+    public void ShowWaterWin()
     {
-        Debug.Log("ShowWaterWinClientRpc وصل! الجهاز: " + (IsHost ? "Host" : "Client"));
+        gameEnded = true;
 
         var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
         foreach (var player in allPlayers)

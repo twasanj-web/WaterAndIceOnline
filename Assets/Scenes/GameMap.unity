@@ -1426,7 +1426,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 692846586}
-  - component: {fileID: 692846585}
   - component: {fileID: 692846587}
   m_Layer: 0
   m_Name: ' WinManager '
@@ -1435,31 +1434,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &692846585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 692846584}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 556720697
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!4 &692846586
 Transform:
   m_ObjectHideFlags: 0
@@ -1487,7 +1461,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8773f4774f2d4ba3b4c318aafd15aee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  ShowTopMostFoldoutHeaderGroup: 1
   winPanel: {fileID: 713217037}
   iceWinPanel: {fileID: 83507278}
   waterWinPanel: {fileID: 1165548754}
@@ -9845,9 +9818,7 @@ Tilemap:
   m_TileAssetArray:
   - m_RefCount: 769
     m_Data: {fileID: 11400000, guid: 7a0cd810ce8fc4761a67a5e6cc0ed58d, type: 2}
-  m_TileSpriteArray:
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  m_TileSpriteArray: []
   m_TileMatrixArray:
   - m_RefCount: 769
     m_Data:

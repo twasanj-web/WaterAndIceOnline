@@ -9,13 +9,26 @@ public class WinManager : NetworkBehaviour
     public GameObject iceWinPanel;
     public GameObject waterWinPanel;
 
-    private NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false);
+    private NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    private NetworkVariable<int> winnerRole = new NetworkVariable<int>(
+        0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    ); // 1 = ثلج فاز, 2 = ماء فاز
 
     public override void OnNetworkSpawn()
     {
         if (winPanel != null) winPanel.SetActive(false);
         if (iceWinPanel != null) iceWinPanel.SetActive(false);
         if (waterWinPanel != null) waterWinPanel.SetActive(false);
+
+        // كل الأجهزة تستمع للتغيير
+        gameEnded.OnValueChanged += OnGameEndedChanged;
     }
 
     private void Update()
@@ -48,29 +61,39 @@ public class WinManager : NetworkBehaviour
 
         if (waterCount > 0 && waterCount == frozenWaterCount)
         {
-            gameEnded.Value = true; // ✅ يتم من الـ Server فقط
-            IceWinsClientRpc();
+            winnerRole.Value = 1; // ثلج فاز
+            gameEnded.Value = true;
         }
     }
 
-    [ClientRpc]
-    private void IceWinsClientRpc()
+    private void OnGameEndedChanged(bool oldVal, bool newVal)
     {
+        if (!newVal) return;
+
         // إيقاف حركة جميع اللاعبين
         var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
         foreach (var player in allPlayers)
         {
-            player.enabled = false; // يوقف الحركة
+            player.enabled = false;
         }
 
-        // إخفاء واجهة اللعبة (الجويستيك والأزرار)
+        // إخفاء واجهة اللعبة
         var gameUI = GameObject.Find("GameUI");
         if (gameUI != null) gameUI.SetActive(false);
 
-        // إظهار بانل الفوز
+        // إظهار البانل المناسب
         if (winPanel != null) winPanel.SetActive(true);
-        if (iceWinPanel != null) iceWinPanel.SetActive(true);
-        if (waterWinPanel != null) waterWinPanel.SetActive(false);
+
+        if (winnerRole.Value == 1) // ثلج فاز
+        {
+            if (iceWinPanel != null) iceWinPanel.SetActive(true);
+            if (waterWinPanel != null) waterWinPanel.SetActive(false);
+        }
+        else // ماء فاز
+        {
+            if (iceWinPanel != null) iceWinPanel.SetActive(false);
+            if (waterWinPanel != null) waterWinPanel.SetActive(true);
+        }
     }
 
     public void GoToMainMenu()

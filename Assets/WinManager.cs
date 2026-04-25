@@ -9,36 +9,19 @@ public class WinManager : NetworkBehaviour
     public GameObject iceWinPanel;
     public GameObject waterWinPanel;
 
-    private NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(
-        false,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
-
-    private NetworkVariable<int> winnerRole = new NetworkVariable<int>(
-        0,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
+    private bool gameEnded = false;
 
     public override void OnNetworkSpawn()
     {
-        // إخفاء البانلات (الـ references محفوظة مسبقاً من Inspector)
         if (winPanel != null) winPanel.SetActive(false);
         if (iceWinPanel != null) iceWinPanel.SetActive(false);
         if (waterWinPanel != null) waterWinPanel.SetActive(false);
-
-        gameEnded.OnValueChanged += OnGameEndedChanged;
-
-        // لو الـ Client انضم بعد ما انتهت اللعبة
-        if (gameEnded.Value)
-            OnGameEndedChanged(false, true);
     }
 
     private void Update()
     {
         if (!IsServer) return;
-        if (gameEnded.Value) return;
+        if (gameEnded) return;
 
         CheckAllWaterFrozen();
     }
@@ -65,39 +48,46 @@ public class WinManager : NetworkBehaviour
 
         if (waterCount > 0 && waterCount == frozenWaterCount)
         {
-            winnerRole.Value = 1;
-            gameEnded.Value = true;
+            gameEnded = true;
+            ShowIceWinClientRpc();
         }
     }
 
-    private void OnGameEndedChanged(bool oldVal, bool newVal)
+    [ClientRpc]
+    private void ShowIceWinClientRpc()
     {
-        if (!newVal) return;
+        Debug.Log("ShowIceWinClientRpc وصل! الجهاز: " + (IsHost ? "Host" : "Client"));
 
-        Debug.Log("انتهت اللعبة! الفائز: " + (winnerRole.Value == 1 ? "ثلج" : "ماء"));
+        if (winPanel == null) Debug.LogError("winPanel = null!");
+        if (iceWinPanel == null) Debug.LogError("iceWinPanel = null!");
 
-        // إيقاف حركة جميع اللاعبين
         var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
         foreach (var player in allPlayers)
             player.enabled = false;
 
-        // إخفاء واجهة اللعبة
         var gameUI = GameObject.Find("GameUI");
         if (gameUI != null) gameUI.SetActive(false);
 
-        // إظهار البانل (الـ references من Inspector مباشرة)
         if (winPanel != null) winPanel.SetActive(true);
+        if (iceWinPanel != null) iceWinPanel.SetActive(true);
+        if (waterWinPanel != null) waterWinPanel.SetActive(false);
+    }
 
-        if (winnerRole.Value == 1)
-        {
-            if (iceWinPanel != null) iceWinPanel.SetActive(true);
-            if (waterWinPanel != null) waterWinPanel.SetActive(false);
-        }
-        else
-        {
-            if (iceWinPanel != null) iceWinPanel.SetActive(false);
-            if (waterWinPanel != null) waterWinPanel.SetActive(true);
-        }
+    [ClientRpc]
+    public void ShowWaterWinClientRpc()
+    {
+        Debug.Log("ShowWaterWinClientRpc وصل! الجهاز: " + (IsHost ? "Host" : "Client"));
+
+        var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
+        foreach (var player in allPlayers)
+            player.enabled = false;
+
+        var gameUI = GameObject.Find("GameUI");
+        if (gameUI != null) gameUI.SetActive(false);
+
+        if (winPanel != null) winPanel.SetActive(true);
+        if (iceWinPanel != null) iceWinPanel.SetActive(false);
+        if (waterWinPanel != null) waterWinPanel.SetActive(true);
     }
 
     public void GoToMainMenu()

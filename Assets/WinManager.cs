@@ -19,16 +19,20 @@ public class WinManager : NetworkBehaviour
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
-    ); // 1 = ثلج فاز, 2 = ماء فاز
+    );
 
     public override void OnNetworkSpawn()
     {
+        // إخفاء البانلات (الـ references محفوظة مسبقاً من Inspector)
         if (winPanel != null) winPanel.SetActive(false);
         if (iceWinPanel != null) iceWinPanel.SetActive(false);
         if (waterWinPanel != null) waterWinPanel.SetActive(false);
 
-        // كل الأجهزة تستمع للتغيير
         gameEnded.OnValueChanged += OnGameEndedChanged;
+
+        // لو الـ Client انضم بعد ما انتهت اللعبة
+        if (gameEnded.Value)
+            OnGameEndedChanged(false, true);
     }
 
     private void Update()
@@ -51,7 +55,7 @@ public class WinManager : NetworkBehaviour
             var visual = player.GetComponent<NetworkPlayerVisual>();
             if (visual == null) continue;
 
-            if (visual.roleIndex.Value == 1) // ماء
+            if (visual.roleIndex.Value == 1)
             {
                 waterCount++;
                 if (player.isFrozen.Value)
@@ -61,7 +65,7 @@ public class WinManager : NetworkBehaviour
 
         if (waterCount > 0 && waterCount == frozenWaterCount)
         {
-            winnerRole.Value = 1; // ثلج فاز
+            winnerRole.Value = 1;
             gameEnded.Value = true;
         }
     }
@@ -70,26 +74,26 @@ public class WinManager : NetworkBehaviour
     {
         if (!newVal) return;
 
+        Debug.Log("انتهت اللعبة! الفائز: " + (winnerRole.Value == 1 ? "ثلج" : "ماء"));
+
         // إيقاف حركة جميع اللاعبين
         var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
         foreach (var player in allPlayers)
-        {
             player.enabled = false;
-        }
 
         // إخفاء واجهة اللعبة
         var gameUI = GameObject.Find("GameUI");
         if (gameUI != null) gameUI.SetActive(false);
 
-        // إظهار البانل المناسب
+        // إظهار البانل (الـ references من Inspector مباشرة)
         if (winPanel != null) winPanel.SetActive(true);
 
-        if (winnerRole.Value == 1) // ثلج فاز
+        if (winnerRole.Value == 1)
         {
             if (iceWinPanel != null) iceWinPanel.SetActive(true);
             if (waterWinPanel != null) waterWinPanel.SetActive(false);
         }
-        else // ماء فاز
+        else
         {
             if (iceWinPanel != null) iceWinPanel.SetActive(false);
             if (waterWinPanel != null) waterWinPanel.SetActive(true);

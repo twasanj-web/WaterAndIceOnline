@@ -171,27 +171,35 @@ public class WaitingRoomUI : MonoBehaviour
         SceneManager.sceneLoaded += OnGameMapLoaded;
         SceneManager.LoadScene("GameMap");
     }
-
-    private async void OnGameMapLoaded(Scene scene, LoadSceneMode mode)
+    private void OnGameMapLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name != "GameMap") return;
         SceneManager.sceneLoaded -= OnGameMapLoaded;
 
-        var session = AppSession.Instance;
-        Debug.Log($"GameMap loaded! Starting CLIENT via Relay code={session.relayJoinCode}");
+        StartCoroutine(StartClientWithDelay());
+    }
 
-        try
-        {
-            var joinAllocation = await RelayService.Instance.JoinAllocationAsync(session.relayJoinCode);
-            var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
-            NetworkManager.Singleton.StartClient();
-            Debug.Log("CLIENT started in GameMap!");
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError("OnGameMapLoaded CLIENT failed: " + e);
-        }
+    private IEnumerator StartClientWithDelay()
+    {
+        var session = AppSession.Instance;
+        Debug.Log($"GameMap loaded! Waiting 1.5s for HOST... Relay code={session.relayJoinCode}");
+
+        yield return new WaitForSeconds(1.5f);
+
+        var task = JoinRelayAndStartClient(session.relayJoinCode);
+        while (!task.IsCompleted) yield return null;
+
+        if (task.Exception != null)
+            Debug.LogError("CLIENT failed to start: " + task.Exception);
+    }
+
+    private async Task JoinRelayAndStartClient(string relayJoinCode)
+    {
+        var joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayJoinCode);
+        var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
+        NetworkManager.Singleton.StartClient();
+        Debug.Log("CLIENT started in GameMap successfully!");
     }
 
     private string GetPlayerName(Player p, int index)

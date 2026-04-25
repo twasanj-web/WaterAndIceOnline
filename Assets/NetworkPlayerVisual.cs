@@ -27,7 +27,6 @@ public class NetworkPlayerVisual : NetworkBehaviour
             if (AppSession.Instance != null)
                 value = (int)AppSession.Instance.role;
 
-            // لو ما عنده دور، خلّيه Water مؤقتاً عشان يبان (للاختبار)
             if (value == 0) value = 1;
 
             SetRoleServerRpc(value);
@@ -35,7 +34,7 @@ public class NetworkPlayerVisual : NetworkBehaviour
     }
 
     [ServerRpc]
-    void SetRoleServerRpc(int value)
+    public void SetRoleServerRpc(int value)
     {
         roleIndex.Value = value;
     }
@@ -48,7 +47,6 @@ public class NetworkPlayerVisual : NetworkBehaviour
         else if (newValue == 2) sr.sprite = iceSprite;
         else
         {
-            // fallback عشان يبان
             sr.sprite = waterSprite != null ? waterSprite : sr.sprite;
         }
     }

@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3036491293
+  GlobalObjectIdHash: 3737387921
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -267,7 +267,10 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   waterSprite: {fileID: -101875567937836288, guid: 7ddc32dfa5cd64e418e295640487e143, type: 3}
   iceSprite: {fileID: -7210873807887048775, guid: 59928984a340a4b6f836cec2b22a0ab2, type: 3}
+  frozenWaterSprite: {fileID: 3615328463816350014, guid: 3a993e0316a9946bc84b7eb20f24c386, type: 3}
   roleIndex:
+    m_InternalValue: 0
+  isFrozenVisual:
     m_InternalValue: 0
 --- !u!114 &-813551162223553772
 MonoBehaviour:

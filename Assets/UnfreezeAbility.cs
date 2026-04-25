@@ -66,7 +66,8 @@ public class UnfreezeAbility : NetworkBehaviour
         if (collision.CompareTag("Player"))
         {
             var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
-            if (otherPlayer != null && otherPlayer != GetComponent<NetworkPlayerMovement>() && otherPlayer.isFrozen.Value)
+            if (otherPlayer != null && otherPlayer != GetComponent<NetworkPlayerMovement>() &&
+                otherPlayer.isFrozen.Value)
             {
                 targetToUnfreeze = otherPlayer;
                 canUnfreeze = true;
@@ -117,9 +118,10 @@ public class UnfreezeAbility : NetworkBehaviour
 
             var targetVisual = targetToUnfreeze.GetComponent<NetworkPlayerVisual>();
             if (targetVisual != null)
-                targetVisual.SetRoleServerRpc(1);
+                targetVisual.SetFrozenVisualServerRpc(false);
 
             Debug.Log("تم فك تجميد لاعب الماء!");
         }
     }
 }
+

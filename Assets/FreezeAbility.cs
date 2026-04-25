@@ -62,7 +62,8 @@ public class FreezeAbility : NetworkBehaviour
 
             var targetVisual = targetToFreeze.GetComponent<NetworkPlayerVisual>();
             if (targetVisual != null)
-                targetVisual.SetRoleServerRpc(2);
+                targetVisual.SetFrozenVisualServerRpc(true);
+
 
             Debug.Log("تم تجميد لاعب الماء!");
         }

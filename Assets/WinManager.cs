@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro; // ضروري للتعامل مع النصوص
 
 public class WinManager : MonoBehaviour
 {
@@ -9,21 +10,71 @@ public class WinManager : MonoBehaviour
     public GameObject iceWinPanel;
     public GameObject waterWinPanel;
 
+    [Header("Timer UI")]
+    public TextMeshProUGUI timerText; // اسحبي نص التايمر هنا من الـ Inspector
+
     private bool gameEnded = false;
+    private float timeRemaining;
+    private bool isTimerRunning = false;
 
     private void Start()
     {
         if (winPanel != null) winPanel.SetActive(false);
         if (iceWinPanel != null) iceWinPanel.SetActive(false);
         if (waterWinPanel != null) waterWinPanel.SetActive(false);
+
+        // قراءة الوقت من AppSession وتحويله لثواني
+        if (AppSession.Instance != null)
+        {
+            timeRemaining = AppSession.Instance.roundTimeMinutes * 60f;
+        }
+        else
+        {
+            timeRemaining = 300f; // 5 دقائق كقيمة افتراضية إذا لم يوجد AppSession
+        }
+
+        isTimerRunning = true;
+        UpdateTimerDisplay();
     }
 
     private void Update()
     {
         if (gameEnded) return;
 
-        // كل الأجهزة تفحص بنفسها
+        // تحديث التايمر
+        if (isTimerRunning)
+        {
+            if (timeRemaining > 0)
+            {
+                timeRemaining -= Time.deltaTime;
+                UpdateTimerDisplay();
+            }
+            else
+            {
+                // انتهى الوقت!
+                timeRemaining = 0;
+                isTimerRunning = false;
+                UpdateTimerDisplay();
+                
+                // فوز الماء
+                gameEnded = true;
+                ShowWaterWin();
+                return;
+            }
+        }
+
+        // فحص فوز الثلج
         CheckAllWaterFrozen();
+    }
+
+    private void UpdateTimerDisplay()
+    {
+        if (timerText != null)
+        {
+            int minutes = Mathf.FloorToInt(timeRemaining / 60);
+            int seconds = Mathf.FloorToInt(timeRemaining % 60);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
     }
 
     private void CheckAllWaterFrozen()
@@ -39,7 +90,7 @@ public class WinManager : MonoBehaviour
             var visual = player.GetComponent<NetworkPlayerVisual>();
             if (visual == null) continue;
 
-            if (visual.roleIndex.Value == 1)
+            if (visual.roleIndex.Value == 1) // ماء
             {
                 waterCount++;
                 if (player.isFrozen.Value)
@@ -47,16 +98,18 @@ public class WinManager : MonoBehaviour
             }
         }
 
+        // إذا كان هناك لاعبو ماء وكلهم مجمدين -> فوز الثلج
         if (waterCount > 0 && waterCount == frozenWaterCount)
         {
             gameEnded = true;
+            isTimerRunning = false;
             ShowIceWin();
         }
     }
 
     private void ShowIceWin()
     {
-        Debug.Log("الثلج فاز على: " + (NetworkManager.Singleton.IsHost ? "Host" : "Client"));
+        Debug.Log("الثلج فاز!");
 
         var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
         foreach (var player in allPlayers)
@@ -72,7 +125,7 @@ public class WinManager : MonoBehaviour
 
     public void ShowWaterWin()
     {
-        gameEnded = true;
+        Debug.Log("الماء فاز (انتهى الوقت)!");
 
         var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
         foreach (var player in allPlayers)

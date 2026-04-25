@@ -5,20 +5,17 @@ using UnityEngine.SceneManagement;
 public class WinManager : NetworkBehaviour
 {
     [Header("Panels")]
-    public GameObject winPanel;       // WinPanel (الأب)
-    public GameObject iceWinPanel;    // IceWinPanel
-    public GameObject waterWinPanel;  // WaterWinPanel
+    public GameObject winPanel;
+    public GameObject iceWinPanel;
+    public GameObject waterWinPanel;
 
     private NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false);
 
     public override void OnNetworkSpawn()
     {
-        // إخفاء البانلين في البداية
         if (winPanel != null) winPanel.SetActive(false);
         if (iceWinPanel != null) iceWinPanel.SetActive(false);
         if (waterWinPanel != null) waterWinPanel.SetActive(false);
-
-        gameEnded.OnValueChanged += OnGameEnded;
     }
 
     private void Update()
@@ -49,24 +46,33 @@ public class WinManager : NetworkBehaviour
             }
         }
 
-        // لو كل لاعبي الماء مجمدين → الثلج يفوز
         if (waterCount > 0 && waterCount == frozenWaterCount)
+        {
+            gameEnded.Value = true; // ✅ يتم من الـ Server فقط
             IceWinsClientRpc();
+        }
     }
 
     [ClientRpc]
     private void IceWinsClientRpc()
     {
-        gameEnded.Value = true;
+        // إيقاف حركة جميع اللاعبين
+        var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
+        foreach (var player in allPlayers)
+        {
+            player.enabled = false; // يوقف الحركة
+        }
 
+        // إخفاء واجهة اللعبة (الجويستيك والأزرار)
+        var gameUI = GameObject.Find("GameUI");
+        if (gameUI != null) gameUI.SetActive(false);
+
+        // إظهار بانل الفوز
         if (winPanel != null) winPanel.SetActive(true);
         if (iceWinPanel != null) iceWinPanel.SetActive(true);
         if (waterWinPanel != null) waterWinPanel.SetActive(false);
     }
 
-    private void OnGameEnded(bool oldVal, bool newVal) { }
-
-    // زر الصفحة الرئيسية
     public void GoToMainMenu()
     {
         if (NetworkManager.Singleton != null)
@@ -74,7 +80,6 @@ public class WinManager : NetworkBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    // زر العب مرة ثانية
     public void PlayAgain()
     {
         if (NetworkManager.Singleton != null)

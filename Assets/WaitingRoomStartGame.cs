@@ -68,7 +68,8 @@ public class WaitingRoomStartGame : MonoBehaviour
             }
 
             // 1. اختر الثلج عشوائياً
-            int iceCount = Mathf.Max(1, count / 3);
+            // 1. اختر الثلج عشوائياً بناءً على عدد اللاعبين المختار
+            int iceCount = session.maxPlayers / 3;
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(session.lobbyId);
             List<string> ids = lobby.Players.Select(p => p.Id).ToList();
             List<string> iceIds = PickRandom(ids, iceCount);

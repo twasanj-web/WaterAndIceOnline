@@ -23,19 +23,21 @@ public class WinManager : MonoBehaviour
         if (iceWinPanel != null) iceWinPanel.SetActive(false);
         if (waterWinPanel != null) waterWinPanel.SetActive(false);
 
-        // قراءة الوقت من AppSession وتحويله لثواني
         if (AppSession.Instance != null)
-        {
             timeRemaining = AppSession.Instance.roundTimeMinutes * 60f;
-        }
         else
-        {
-            timeRemaining = 300f; // 5 دقائق كقيمة افتراضية إذا لم يوجد AppSession
-        }
+            timeRemaining = 300f;
 
-        isTimerRunning = true;
+        // انتظر 3 ثواني قبل بدء التايمر (حتى يتصل الجميع)
+        Invoke(nameof(StartTimer), 3f);
         UpdateTimerDisplay();
     }
+
+    private void StartTimer()
+    {
+        isTimerRunning = true;
+    }
+
 
     private void Update()
     {

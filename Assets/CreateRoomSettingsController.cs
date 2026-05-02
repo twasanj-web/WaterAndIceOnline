@@ -22,8 +22,13 @@ public class CreateRoomSettingsController : MonoBehaviour
 
     public void StartGame()
     {
+        if (AppSession.Instance != null)
+        {
+            AppSession.Instance.maxPlayers = PlayerPrefs.GetInt("room_players", selectedPlayers);
+            AppSession.Instance.roundTimeMinutes = PlayerPrefs.GetInt("room_time", selectedTime);
+        }
         PlayerPrefs.Save();
-        SceneManager.LoadScene("ShareCode"); // اسم السين الجاية
+        SceneManager.LoadScene("ShareCode");
     }
 
     public void GoBack()

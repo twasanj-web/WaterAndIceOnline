@@ -60,7 +60,7 @@ public class WaitingRoomStartGame : MonoBehaviour
 
             int count = session.currentPlayerCount;
 
-            if (count < 2)
+            if (count < 1)
             {
                 Debug.LogWarning($"StartGame: need at least 2 players, current = {count}");
                 isStarting = false;
@@ -76,7 +76,8 @@ public class WaitingRoomStartGame : MonoBehaviour
             string iceCsv = string.Join(",", iceIds);
 
             // 2. أنشئ Relay Allocation وخزّنه في AppSession
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(count - 1);
+            //Allocation allocation = await RelayService.Instance.CreateAllocationAsync(count - 1); بجرب الان ارجع دا الاصلي 
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(Mathf.Max(1, count - 1));
             string relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             session.hostAllocation = allocation;
 

@@ -8,6 +8,11 @@ public class NetworkPlayerMovement : NetworkBehaviour
     private Rigidbody2D rb;
     private Joystick joystick;
 
+    [Header("Audio (Assign in Prefab)")]
+    public AudioSource audioSource;
+    public AudioClip freezeSound;
+    public AudioClip unfreezeSound;
+
     public NetworkVariable<bool> isFrozen = new NetworkVariable<bool>(false);
 
     private void Awake()
@@ -29,6 +34,32 @@ public class NetworkPlayerMovement : NetworkBehaviour
             if (joystick == null)
                 Debug.LogWarning("لم يتم العثور على Joystick في الـ Scene!");
         }
+
+        // مراقبة تغير حالة التجميد لتشغيل الصوت للشخص المعني
+        isFrozen.OnValueChanged += OnFrozenStateChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        isFrozen.OnValueChanged -= OnFrozenStateChanged;
+    }
+
+    private void OnFrozenStateChanged(bool previous, bool current)
+    {
+        // الشخص الذي يتم تجميده أو فك تجميده هو فقط من يسمع الصوت محلياً
+        if (IsOwner)
+        {
+            if (current) // أصبح مجمد
+                PlayLocalSound(freezeSound);
+            else // تم فك تجميده
+                PlayLocalSound(unfreezeSound);
+        }
+    }
+
+    private void PlayLocalSound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+            audioSource.PlayOneShot(clip);
     }
 
     private void FixedUpdate()
@@ -41,19 +72,9 @@ public class NetworkPlayerMovement : NetworkBehaviour
             return;
         }
 
-        float h = 0f;
-        float v = 0f;
-
-        if (joystick != null)
-        {
-            h = joystick.Horizontal;
-            v = joystick.Vertical;
-        }
-        else
-        {
-            h = Input.GetAxisRaw("Horizontal");
-            v = Input.GetAxisRaw("Vertical");
-        }
+        float h = 0f; float v = 0f;
+        if (joystick != null) { h = joystick.Horizontal; v = joystick.Vertical; }
+        else { h = Input.GetAxisRaw("Horizontal"); v = Input.GetAxisRaw("Vertical"); }
 
         Vector2 move = new Vector2(h, v).normalized;
         rb.linearVelocity = move * speed;

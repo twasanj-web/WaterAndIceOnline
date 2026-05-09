@@ -19,15 +19,13 @@ public class GameUIManager : MonoBehaviour
         if (freezeButton != null)
         {
             freezeButton.gameObject.SetActive(false);
-            // تشغيل الصوت فور الضغط على زر التجميد
-            freezeButton.onClick.AddListener(PlayFreezeSoundLocal);
+            // تم حذف سطر الصوت من هنا
         }
 
         if (unfreezeButton != null)
         {
             unfreezeButton.gameObject.SetActive(false);
-            // تشغيل الصوت فور الضغط على زر فك التجميد
-            unfreezeButton.onClick.AddListener(PlayUnfreezeSoundLocal);
+            // تم حذف سطر الصوت من هنا
         }
 
         var session = AppSession.Instance;
@@ -50,13 +48,14 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    private void PlayFreezeSoundLocal()
+    // اترك هذه الدوال كما هي لكي نستدعيها من سكربتات التجميد
+    public void PlayFreezeSoundLocal()
     {
         if (audioSource != null && freezeSound != null)
             audioSource.PlayOneShot(freezeSound);
     }
 
-    private void PlayUnfreezeSoundLocal()
+    public void PlayUnfreezeSoundLocal()
     {
         if (audioSource != null && unfreezeSound != null)
             audioSource.PlayOneShot(unfreezeSound);

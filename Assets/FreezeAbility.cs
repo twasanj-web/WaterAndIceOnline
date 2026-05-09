@@ -64,6 +64,12 @@ public class FreezeAbility : NetworkBehaviour
             if (targetVisual != null)
                 targetVisual.SetFrozenVisualServerRpc(true);
 
+            // --- إضافة تشغيل الصوت هنا عند النجاح فقط ---
+            var uiManager = FindObjectOfType<GameUIManager>();
+            if (uiManager != null)
+            {
+                uiManager.PlayFreezeSoundLocal();
+            }
 
             Debug.Log("تم تجميد لاعب الماء!");
         }

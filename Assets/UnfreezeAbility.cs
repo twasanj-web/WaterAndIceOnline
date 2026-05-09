@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI; // نحتاج هذا للتعامل مع الصور
+using UnityEngine.UI;
 
 public class UnfreezeAbility : NetworkBehaviour
 {
@@ -12,7 +12,6 @@ public class UnfreezeAbility : NetworkBehaviour
     private float holdTimer = 0f;
     public float requiredHoldTime = 3f;
 
-    // صورة التحميل (التي ستمتلئ)
     private Image loadingImage;
 
     public override void OnNetworkSpawn()
@@ -29,7 +28,6 @@ public class UnfreezeAbility : NetworkBehaviour
         var uiManager = FindObjectOfType<GameUIManager>();
         if (uiManager != null && uiManager.unfreezeButton != null)
         {
-            // الحصول على الصورة التي ستمتلئ (نفترض أنها موجودة داخل الزر)
             loadingImage = uiManager.unfreezeButton.image;
 
             EventTrigger trigger = uiManager.unfreezeButton.gameObject.AddComponent<EventTrigger>();
@@ -50,11 +48,11 @@ public class UnfreezeAbility : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        if (isHolding && canUnfreeze && targetToUnfreeze != null)
+        // التحميل يبدأ بمجرد الضغط (isHolding) دائماً
+        if (isHolding)
         {
             holdTimer += Time.deltaTime;
 
-            // تحديث شريط التحميل في الزر
             if (loadingImage != null)
             {
                 loadingImage.fillAmount = holdTimer / requiredHoldTime;
@@ -62,13 +60,17 @@ public class UnfreezeAbility : NetworkBehaviour
 
             if (holdTimer >= requiredHoldTime)
             {
-                UnfreezeTarget();
+                // عند اكتمال الوقت، نتحقق: هل يوجد هدف متجمد قريب؟
+                if (canUnfreeze && targetToUnfreeze != null)
+                {
+                    UnfreezeTarget();
+                }
+                else
+                {
+                    Debug.Log("اكتمل التحميل ولكن لا يوجد لاعب متجمد قريب.");
+                }
                 ResetLoading();
             }
-        }
-        else
-        {
-            ResetLoading();
         }
     }
 
@@ -78,7 +80,7 @@ public class UnfreezeAbility : NetworkBehaviour
         holdTimer = 0f;
         if (loadingImage != null)
         {
-            loadingImage.fillAmount = 0f; // إعادة تصفير التحميل
+            loadingImage.fillAmount = 0f;
         }
     }
 
@@ -109,7 +111,7 @@ public class UnfreezeAbility : NetworkBehaviour
             {
                 targetToUnfreeze = null;
                 canUnfreeze = false;
-                ResetLoading();
+                // ملاحظة: لا نصفر التحميل هنا لكي يستطيع اللاعب إكمال التحميل حتى لو تحرك الهدف
             }
         }
     }
@@ -117,12 +119,11 @@ public class UnfreezeAbility : NetworkBehaviour
     private void OnPointerDown()
     {
         if (!IsOwner) return;
-        if (canUnfreeze && targetToUnfreeze != null)
-        {
-            isHolding = true;
-            holdTimer = 0f;
-            Debug.Log("بدأ فك التجميد... استمر بالضغط 3 ثواني");
-        }
+        
+        // يبدأ التحميل دائماً عند الضغط
+        isHolding = true;
+        holdTimer = 0f;
+        Debug.Log("بدأ التحميل لفك التجميد...");
     }
 
     private void OnPointerUp()
@@ -141,14 +142,13 @@ public class UnfreezeAbility : NetworkBehaviour
             if (targetVisual != null)
                 targetVisual.SetFrozenVisualServerRpc(false);
 
-            // تشغيل الصوت عند النجاح فقط
             var uiManager = FindObjectOfType<GameUIManager>();
             if (uiManager != null)
             {
                 uiManager.PlayUnfreezeSoundLocal();
             }
 
-            Debug.Log("تم فك تجميد لاعب الماء!");
+            Debug.Log("تم فك تجميد لاعب الماء بنجاح!");
         }
     }
 }

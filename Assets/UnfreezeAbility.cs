@@ -12,6 +12,7 @@ public class UnfreezeAbility : NetworkBehaviour
     private float holdTimer = 0f;
     public float requiredHoldTime = 3f;
 
+    // صورة التحميل (الطبقة العلوية التي ستمتلئ)
     private Image loadingImage;
 
     public override void OnNetworkSpawn()
@@ -28,7 +29,19 @@ public class UnfreezeAbility : NetworkBehaviour
         var uiManager = FindObjectOfType<GameUIManager>();
         if (uiManager != null && uiManager.unfreezeButton != null)
         {
-            loadingImage = uiManager.unfreezeButton.image;
+            // --- التعديل هنا: البحث عن الطبقة الجديدة داخل الزر ---
+            Transform barTransform = uiManager.unfreezeButton.transform.Find("LoadingBar");
+            if (barTransform != null)
+            {
+                loadingImage = barTransform.GetComponent<Image>();
+            }
+            else
+            {
+                // إذا لم تجد الطبقة الجديدة، استخدم صورة الزر نفسه كخطة بديلة
+                loadingImage = uiManager.unfreezeButton.image;
+            }
+
+            if (loadingImage != null) loadingImage.fillAmount = 0f;
 
             EventTrigger trigger = uiManager.unfreezeButton.gameObject.AddComponent<EventTrigger>();
 
@@ -48,7 +61,6 @@ public class UnfreezeAbility : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        // التحميل يبدأ بمجرد الضغط (isHolding) دائماً
         if (isHolding)
         {
             holdTimer += Time.deltaTime;
@@ -60,7 +72,6 @@ public class UnfreezeAbility : NetworkBehaviour
 
             if (holdTimer >= requiredHoldTime)
             {
-                // عند اكتمال الوقت، نتحقق: هل يوجد هدف متجمد قريب؟
                 if (canUnfreeze && targetToUnfreeze != null)
                 {
                     UnfreezeTarget();
@@ -111,7 +122,6 @@ public class UnfreezeAbility : NetworkBehaviour
             {
                 targetToUnfreeze = null;
                 canUnfreeze = false;
-                // ملاحظة: لا نصفر التحميل هنا لكي يستطيع اللاعب إكمال التحميل حتى لو تحرك الهدف
             }
         }
     }
@@ -119,11 +129,8 @@ public class UnfreezeAbility : NetworkBehaviour
     private void OnPointerDown()
     {
         if (!IsOwner) return;
-        
-        // يبدأ التحميل دائماً عند الضغط
         isHolding = true;
         holdTimer = 0f;
-        Debug.Log("بدأ التحميل لفك التجميد...");
     }
 
     private void OnPointerUp()

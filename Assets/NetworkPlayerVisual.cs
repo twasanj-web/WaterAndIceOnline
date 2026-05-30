@@ -1,30 +1,25 @@
 using Unity.Netcode;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class NetworkPlayerVisual : NetworkBehaviour
 {
-    public Sprite waterSprite;
-    public Sprite iceSprite;
-    public Sprite frozenWaterSprite; // صورة الماء المجمد (fw.png)
+    [Header("Visual Objects")]
+    public GameObject waterVisual;
+    public GameObject iceVisual;
 
-    private SpriteRenderer sr;
+    [Header("Frozen Sprites (Legacy Support)")]
+    public Sprite frozenWaterSprite;
 
     public NetworkVariable<int> roleIndex = new NetworkVariable<int>(0);
     public NetworkVariable<bool> isFrozenVisual = new NetworkVariable<bool>(false);
-
-    private void Awake()
-    {
-        sr = GetComponent<SpriteRenderer>();
-    }
 
     public override void OnNetworkSpawn()
     {
         roleIndex.OnValueChanged += OnRoleChanged;
         isFrozenVisual.OnValueChanged += OnFrozenChanged;
 
-        OnRoleChanged(0, roleIndex.Value);
-        OnFrozenChanged(false, isFrozenVisual.Value);
+        // تحديث الحالة الأولية
+        UpdateVisuals(roleIndex.Value, isFrozenVisual.Value);
 
         if (IsOwner)
         {
@@ -32,7 +27,7 @@ public class NetworkPlayerVisual : NetworkBehaviour
             if (AppSession.Instance != null)
                 value = (int)AppSession.Instance.role;
 
-            if (value == 0) value = 1;
+            if (value == 0) value = 2; // مؤقتاً نجعل الافتراضي ثلج للتجربة
 
             SetRoleServerRpc(value);
         }
@@ -50,33 +45,32 @@ public class NetworkPlayerVisual : NetworkBehaviour
         isFrozenVisual.Value = frozen;
     }
 
-    void OnRoleChanged(int oldValue, int newValue)
+    void OnRoleChanged(int oldValue, int newValue) => UpdateVisuals(newValue, isFrozenVisual.Value);
+    void OnFrozenChanged(bool oldValue, bool newValue) => UpdateVisuals(roleIndex.Value, newValue);
+
+    void UpdateVisuals(int role, bool frozen)
     {
-        if (sr == null) return;
+        // تفعيل الكائن المناسب حسب الدور
+        if (waterVisual != null) waterVisual.SetActive(role == 1);
+        if (iceVisual != null) iceVisual.SetActive(role == 2);
 
-        // لو مجمد، ما نغير الصورة
-        if (isFrozenVisual.Value) return;
-
-        if (newValue == 1) sr.sprite = waterSprite;
-        else if (newValue == 2) sr.sprite = iceSprite;
-        else sr.sprite = waterSprite != null ? waterSprite : sr.sprite;
+        // إذا كان مجمد، يمكننا إضافة تأثير هنا (مثل تغيير اللون للأزرق)
+        // حالياً سنترك الأنميشن يتوقف من كود الحركة
     }
 
-    void OnFrozenChanged(bool oldValue, bool newValue)
+    // دالة مساعدة للحصول على الـ Animator النشط حالياً
+    public Animator GetActiveAnimator()
     {
-        if (sr == null) return;
+        if (roleIndex.Value == 1 && waterVisual != null) return waterVisual.GetComponent<Animator>();
+        if (roleIndex.Value == 2 && iceVisual != null) return iceVisual.GetComponent<Animator>();
+        return null;
+    }
 
-        if (newValue)
-        {
-            // مجمد → غير الصورة للماء المجمد
-            if (frozenWaterSprite != null)
-                sr.sprite = frozenWaterSprite;
-        }
-        else
-        {
-            // فك التجميد → رجّع صورة الماء الأصلية
-            if (roleIndex.Value == 1 && waterSprite != null)
-                sr.sprite = waterSprite;
-        }
+    // دالة مساعدة للحصول على الـ SpriteRenderer النشط حالياً (لعمل Flip)
+    public SpriteRenderer GetActiveSpriteRenderer()
+    {
+        if (roleIndex.Value == 1 && waterVisual != null) return waterVisual.GetComponent<SpriteRenderer>();
+        if (roleIndex.Value == 2 && iceVisual != null) return iceVisual.GetComponent<SpriteRenderer>();
+        return null;
     }
 }

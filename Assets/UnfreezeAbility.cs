@@ -5,18 +5,23 @@ using UnityEngine.UI;
 
 public class UnfreezeAbility : NetworkBehaviour
 {
-    private bool canUnfreeze = false;
+    [Header("Unfreeze Settings")]
+    public float unfreezeDistance = 2.0f;
+    public float requiredHoldTime = 3f;
+
     private NetworkPlayerMovement targetToUnfreeze;
 
     private bool isHolding = false;
     private float holdTimer = 0f;
-    public float requiredHoldTime = 3f;
 
     private Image loadingImage;
+    private NetworkPlayerMovement myPlayer;
 
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
+
+        myPlayer = GetComponent<NetworkPlayerMovement>();
 
         var session = AppSession.Instance;
         if (session != null && session.role != PlayerRole.Water)
@@ -69,19 +74,56 @@ public class UnfreezeAbility : NetworkBehaviour
 
             if (holdTimer >= requiredHoldTime)
             {
-                if (canUnfreeze && targetToUnfreeze != null)
+                targetToUnfreeze = FindClosestFrozenWaterInRange();
+
+                if (targetToUnfreeze != null)
                 {
                     PlayUnfreezeSoundImmediately();
                     UnfreezeTarget();
                 }
                 else
                 {
-                    Debug.Log("اكتمل التحميل ولكن لا يوجد لاعب متجمد قريب.");
+                    Debug.Log("اكتمل التحميل ولكن لا يوجد لاعب ماء متجمد قريب.");
                 }
 
                 ResetLoading();
             }
         }
+    }
+
+    private NetworkPlayerMovement FindClosestFrozenWaterInRange()
+    {
+        NetworkPlayerMovement closest = null;
+        float closestDistance = unfreezeDistance;
+
+        var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
+
+        foreach (var player in allPlayers)
+        {
+            if (!IsValidFrozenWaterTarget(player)) continue;
+
+            float distance = Vector2.Distance(transform.position, player.transform.position);
+
+            if (distance <= closestDistance)
+            {
+                closest = player;
+                closestDistance = distance;
+            }
+        }
+
+        return closest;
+    }
+
+    private bool IsValidFrozenWaterTarget(NetworkPlayerMovement otherPlayer)
+    {
+        if (otherPlayer == null) return false;
+        if (myPlayer != null && otherPlayer == myPlayer) return false;
+        if (!otherPlayer.isFrozen.Value) return false;
+
+        var otherVisual = otherPlayer.GetComponent<NetworkPlayerVisual>();
+        if (otherVisual == null) return false;
+
+        return otherVisual.roleIndex.Value == 1;
     }
 
     private void PlayUnfreezeSoundImmediately()
@@ -99,40 +141,6 @@ public class UnfreezeAbility : NetworkBehaviour
 
         if (loadingImage != null)
             loadingImage.fillAmount = 0f;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!IsOwner) return;
-
-        if (collision.CompareTag("Player"))
-        {
-            var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
-
-            if (otherPlayer != null &&
-                otherPlayer != GetComponent<NetworkPlayerMovement>() &&
-                otherPlayer.isFrozen.Value)
-            {
-                targetToUnfreeze = otherPlayer;
-                canUnfreeze = true;
-            }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (!IsOwner) return;
-
-        if (collision.CompareTag("Player"))
-        {
-            var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
-
-            if (otherPlayer != null && otherPlayer == targetToUnfreeze)
-            {
-                targetToUnfreeze = null;
-                canUnfreeze = false;
-            }
-        }
     }
 
     private void OnPointerDown()
@@ -159,6 +167,8 @@ public class UnfreezeAbility : NetworkBehaviour
         var targetVisual = targetToUnfreeze.GetComponent<NetworkPlayerVisual>();
         if (targetVisual != null)
             targetVisual.SetFrozenVisualServerRpc(false);
+
+        targetToUnfreeze = null;
 
         Debug.Log("تم فك تجميد لاعب الماء بنجاح!");
     }

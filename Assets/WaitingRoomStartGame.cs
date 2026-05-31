@@ -58,11 +58,17 @@ public class WaitingRoomStartGame : MonoBehaviour
                 return;
             }
 
-            int count = session.currentPlayerCount;
+            
 
-            if (count < 1)
+            int count = session.currentPlayerCount;
+            int requiredPlayers = session.maxPlayers;
+
+            if (count < requiredPlayers)
             {
-                Debug.LogWarning($"StartGame: need at least 2 players, current = {count}");
+                Debug.LogWarning(
+                    $"StartGame: Waiting for players. Current = {count}, Required = {requiredPlayers}"
+                );
+
                 isStarting = false;
                 return;
             }

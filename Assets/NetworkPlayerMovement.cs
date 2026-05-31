@@ -5,6 +5,7 @@ using UnityEngine;
 public class NetworkPlayerMovement : NetworkBehaviour
 {
     public float speed = 5f;
+
     private Rigidbody2D rb;
     private Joystick joystick;
     private NetworkPlayerVisual playerVisual;
@@ -15,7 +16,6 @@ public class NetworkPlayerMovement : NetworkBehaviour
     public AudioClip unfreezeSound;
 
     public NetworkVariable<bool> isFrozen = new NetworkVariable<bool>(false);
-    // متغير لمزامنة الاتجاه (يمين/يسار) عبر الشبكة
     public NetworkVariable<bool> isFacingRight = new NetworkVariable<bool>(true);
 
     private void Awake()
@@ -29,8 +29,6 @@ public class NetworkPlayerMovement : NetworkBehaviour
         if (IsOwner)
         {
             joystick = FindObjectOfType<Joystick>();
-            Camera cam = GetComponentInChildren<Camera>();
-            if (cam != null) cam.enabled = true;
         }
 
         isFrozen.OnValueChanged += OnFrozenStateChanged;
@@ -39,25 +37,6 @@ public class NetworkPlayerMovement : NetworkBehaviour
     private void Update()
     {
         HandleAnimations();
-    }
-
-    private void HandleAnimations()
-    {
-        Animator anim = playerVisual.GetActiveAnimator();
-        SpriteRenderer sr = playerVisual.GetActiveSpriteRenderer();
-
-        if (anim != null)
-        {
-            // إذا كان اللاعب يتحرك وسرعته أكبر من الصفر، فعل أنميشن المشي
-            bool moving = rb.linearVelocity.magnitude > 0.1f && !isFrozen.Value;
-            anim.SetBool("isMoving", moving);
-        }
-
-        if (sr != null)
-        {
-            // تحديث الـ Flip بناءً على المتغير المتزامن
-            sr.flipX = !isFacingRight.Value;
-        }
     }
 
     private void FixedUpdate()
@@ -70,31 +49,62 @@ public class NetworkPlayerMovement : NetworkBehaviour
             return;
         }
 
-        float h = 0f; float v = 0f;
-        if (joystick != null) { h = joystick.Horizontal; v = joystick.Vertical; }
-        else { h = Input.GetAxisRaw("Horizontal"); v = Input.GetAxisRaw("Vertical"); }
+        float h = 0f;
+        float v = 0f;
+
+        if (joystick != null)
+        {
+            h = joystick.Horizontal;
+            v = joystick.Vertical;
+        }
+        else
+        {
+            h = Input.GetAxisRaw("Horizontal");
+            v = Input.GetAxisRaw("Vertical");
+        }
 
         Vector2 move = new Vector2(h, v).normalized;
         rb.linearVelocity = move * speed;
 
-        // تحديث اتجاه الوجه وإرساله للسيرفر
-        if (h > 0.1f) SetFacingRightServerRpc(true);
-        else if (h < -0.1f) SetFacingRightServerRpc(false);
+        if (h > 0.1f)
+            SetFacingRightServerRpc(true);
+        else if (h < -0.1f)
+            SetFacingRightServerRpc(false);
+    }
+
+    private void HandleAnimations()
+    {
+        if (playerVisual == null) return;
+
+        Animator anim = playerVisual.GetActiveAnimator();
+        SpriteRenderer sr = playerVisual.GetActiveSpriteRenderer();
+
+        if (anim != null)
+        {
+            bool moving = rb.linearVelocity.magnitude > 0.1f && !isFrozen.Value;
+            anim.SetBool("isMoving", moving);
+        }
+
+        if (sr != null)
+        {
+            sr.flipX = !isFacingRight.Value;
+        }
     }
 
     [ServerRpc]
-    void SetFacingRightServerRpc(bool facingRight)
+    private void SetFacingRightServerRpc(bool facingRight)
     {
         isFacingRight.Value = facingRight;
     }
 
     private void OnFrozenStateChanged(bool previous, bool current)
     {
-        if (IsOwner)
-        {
-            if (current) PlayLocalSound(freezeSound);
-            else PlayLocalSound(unfreezeSound);
-        }
+        if (!IsOwner) return;
+
+        if (current)
+            PlayLocalSound(freezeSound);
+        else
+            PlayLocalSound(unfreezeSound);
     }
 
     private void PlayLocalSound(AudioClip clip)
@@ -107,5 +117,10 @@ public class NetworkPlayerMovement : NetworkBehaviour
     public void SetFrozenServerRpc(bool frozenState)
     {
         isFrozen.Value = frozenState;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        isFrozen.OnValueChanged -= OnFrozenStateChanged;
     }
 }

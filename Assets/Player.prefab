@@ -390,7 +390,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   waterVisual: {fileID: 1116263345464775813}
   iceVisual: {fileID: 3285266283656266725}
-  frozenWaterSprite: {fileID: 3615328463816350014, guid: 3a993e0316a9946bc84b7eb20f24c386, type: 3}
   roleIndex:
     m_InternalValue: 0
   isFrozenVisual:

@@ -2,6 +2,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Unity.Services.Lobbies;
+using Unity.Services.Lobbies.Models;
+using System.Collections.Generic;
 
 public class WinManager : MonoBehaviour
 {
@@ -133,7 +136,7 @@ public class WinManager : MonoBehaviour
 
     public void ShowWaterWin()
     {
-        Debug.Log("الماء فاز (انتهى الوقت)!");
+        Debug.Log("الماء فاز!");
 
         var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
         foreach (var player in allPlayers)
@@ -155,11 +158,45 @@ public class WinManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void PlayAgain()
+    public async void PlayAgain()
     {
+        var session = AppSession.Instance;
+
+        if (session != null)
+        {
+            session.role = PlayerRole.None;
+            session.relayJoinCode = "";
+            session.hostAllocation = null;
+            session.gameStartUnixMs = 0;
+
+            if (session.isHost && !string.IsNullOrWhiteSpace(session.lobbyId))
+            {
+                try
+                {
+                    await LobbyService.Instance.UpdateLobbyAsync(
+                        session.lobbyId,
+                        new UpdateLobbyOptions
+                        {
+                            Data = new Dictionary<string, DataObject>
+                            {
+                                { "state", new DataObject(DataObject.VisibilityOptions.Public, "waiting") },
+                                { "iceIds", new DataObject(DataObject.VisibilityOptions.Public, "") },
+                                { "relayCode", new DataObject(DataObject.VisibilityOptions.Public, "") },
+                                { "startAt", new DataObject(DataObject.VisibilityOptions.Public, "0") }
+                            }
+                        }
+                    );
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError("Failed to reset lobby for play again: " + e);
+                }
+            }
+        }
+
         if (NetworkManager.Singleton != null)
             NetworkManager.Singleton.Shutdown();
 
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("WaitingRoom");
     }
 }

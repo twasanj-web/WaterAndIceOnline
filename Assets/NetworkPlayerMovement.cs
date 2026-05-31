@@ -102,9 +102,12 @@ public class NetworkPlayerMovement : NetworkBehaviour
         if (!IsOwner) return;
 
         if (current)
+        {
             PlayLocalSound(freezeSound);
-        else
-            PlayLocalSound(unfreezeSound);
+        }
+
+        // لا نشغل صوت فك التجميد هنا
+        // لأن UnfreezeAbility يشغله فور اكتمال التحميل
     }
 
     private void PlayLocalSound(AudioClip clip)

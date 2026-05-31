@@ -106,8 +106,9 @@ public class NetworkPlayerMovement : NetworkBehaviour
             PlayLocalSound(freezeSound);
         }
 
-        // لا نشغل صوت فك التجميد هنا
-        // لأن UnfreezeAbility يشغله فور اكتمال التحميل
+        // صوت فك التجميد لا يعمل هنا
+        // الشخص الذي يفك التجميد يسمعه من UnfreezeAbility
+        // والشخص المجمد يسمعه من ClientRpc عند فك التجميد
     }
 
     private void PlayLocalSound(AudioClip clip)
@@ -119,7 +120,22 @@ public class NetworkPlayerMovement : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SetFrozenServerRpc(bool frozenState)
     {
+        bool wasFrozen = isFrozen.Value;
+
         isFrozen.Value = frozenState;
+
+        if (wasFrozen && !frozenState)
+        {
+            PlayUnfreezeSoundForOwnerClientRpc();
+        }
+    }
+
+    [ClientRpc]
+    private void PlayUnfreezeSoundForOwnerClientRpc()
+    {
+        if (!IsOwner) return;
+
+        PlayLocalSound(unfreezeSound);
     }
 
     public override void OnNetworkDespawn()

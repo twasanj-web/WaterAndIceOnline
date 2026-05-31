@@ -1,9 +1,9 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
+using TMPro; // ضروري للتعامل مع النصوص
 
-public class WinManager : NetworkBehaviour
+public class WinManager : MonoBehaviour
 {
     [Header("Panels")]
     public GameObject winPanel;
@@ -11,90 +11,74 @@ public class WinManager : NetworkBehaviour
     public GameObject waterWinPanel;
 
     [Header("Timer UI")]
-    public TextMeshProUGUI timerText;
+    public TextMeshProUGUI timerText; // اسحبي نص التايمر هنا من الـ Inspector
 
-    private bool localGameEnded = false;
+    private bool gameEnded = false;
+    private float timeRemaining;
+    private bool isTimerRunning = false;
 
-    private NetworkVariable<float> networkTimeRemaining = new NetworkVariable<float>(
-        300f,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
-
-    private NetworkVariable<bool> networkTimerRunning = new NetworkVariable<bool>(
-        false,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
-
-    private NetworkVariable<int> winnerTeam = new NetworkVariable<int>(
-        0,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
-
-    private void Awake()
+    private void Start()
     {
         if (winPanel != null) winPanel.SetActive(false);
         if (iceWinPanel != null) iceWinPanel.SetActive(false);
         if (waterWinPanel != null) waterWinPanel.SetActive(false);
+
+        if (AppSession.Instance != null)
+            timeRemaining = AppSession.Instance.roundTimeMinutes * 60f;
+        else
+            timeRemaining = 300f;
+
+        // انتظر 3 ثواني قبل بدء التايمر (حتى يتصل الجميع)
+        Invoke(nameof(StartTimer), 3f);
+        UpdateTimerDisplay();
     }
 
-    public override void OnNetworkSpawn()
+    private void StartTimer()
     {
-        networkTimeRemaining.OnValueChanged += OnTimeChanged;
-        winnerTeam.OnValueChanged += OnWinnerChanged;
-
-        if (IsServer)
-        {
-            float startTime = 300f;
-
-            if (AppSession.Instance != null)
-                startTime = AppSession.Instance.roundTimeMinutes * 60f;
-
-            networkTimeRemaining.Value = startTime;
-            networkTimerRunning.Value = false;
-            winnerTeam.Value = 0;
-
-            Invoke(nameof(StartTimerServer), 3f);
-        }
-
-        UpdateTimerDisplay(networkTimeRemaining.Value);
+        isTimerRunning = true;
     }
 
     private void Update()
     {
-        if (!IsServer) return;
-        if (localGameEnded) return;
+        if (gameEnded) return;
 
-        if (networkTimerRunning.Value)
+        // تحديث التايمر
+        if (isTimerRunning)
         {
-            if (networkTimeRemaining.Value > 0)
+            if (timeRemaining > 0)
             {
-                networkTimeRemaining.Value -= Time.deltaTime;
+                timeRemaining -= Time.deltaTime;
+                UpdateTimerDisplay();
+            }
+            else
+            {
+                // انتهى الوقت!
+                timeRemaining = 0;
+                isTimerRunning = false;
+                UpdateTimerDisplay();
 
-                if (networkTimeRemaining.Value <= 0)
-                {
-                    networkTimeRemaining.Value = 0;
-                    networkTimerRunning.Value = false;
-                    EndGameServer(1); // 1 = Water Win
-                    return;
-                }
+                // فوز الماء
+                gameEnded = true;
+                ShowWaterWin();
+                return;
             }
         }
 
-        CheckAllWaterFrozenServer();
+        // فحص فوز الثلج
+        CheckAllWaterFrozen();
     }
 
-    private void StartTimerServer()
+    private void UpdateTimerDisplay()
     {
-        if (!IsServer) return;
-        if (localGameEnded) return;
-
-        networkTimerRunning.Value = true;
+        if (timerText != null)
+        {
+            int minutes = Mathf.FloorToInt(timeRemaining / 60);
+            int seconds = Mathf.FloorToInt(timeRemaining % 60);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
     }
 
-    private void CheckAllWaterFrozenServer()
+    private void CheckAllWaterFrozen()
     {
         var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
         if (allPlayers.Length == 0) return;
@@ -107,63 +91,30 @@ public class WinManager : NetworkBehaviour
             var visual = player.GetComponent<NetworkPlayerVisual>();
             if (visual == null) continue;
 
-            if (visual.roleIndex.Value == 1)
+            if (visual.roleIndex.Value == 1) // ماء
             {
                 waterCount++;
-
                 if (player.isFrozen.Value)
                     frozenWaterCount++;
             }
         }
 
+        // إذا كان هناك لاعبو ماء وكلهم مجمدين -> فوز الثلج
         if (waterCount > 0 && waterCount == frozenWaterCount)
         {
-            EndGameServer(2); // 2 = Ice Win
-        }
-    }
-
-    private void EndGameServer(int winner)
-    {
-        if (!IsServer) return;
-        if (localGameEnded) return;
-
-        localGameEnded = true;
-        networkTimerRunning.Value = false;
-        winnerTeam.Value = winner;
-    }
-
-    private void OnTimeChanged(float oldValue, float newValue)
-    {
-        UpdateTimerDisplay(newValue);
-    }
-
-    private void OnWinnerChanged(int oldValue, int newValue)
-    {
-        if (newValue == 1)
-        {
-            ShowWaterWin();
-        }
-        else if (newValue == 2)
-        {
+            gameEnded = true;
+            isTimerRunning = false;
             ShowIceWin();
         }
-    }
-
-    private void UpdateTimerDisplay(float time)
-    {
-        if (timerText == null) return;
-
-        int minutes = Mathf.FloorToInt(time / 60f);
-        int seconds = Mathf.FloorToInt(time % 60f);
-
-        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
     private void ShowIceWin()
     {
         Debug.Log("الثلج فاز!");
 
-        StopPlayers();
+        var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
+        foreach (var player in allPlayers)
+            player.enabled = false;
 
         var gameUI = GameObject.Find("GameUI");
         if (gameUI != null) gameUI.SetActive(false);
@@ -175,9 +126,11 @@ public class WinManager : NetworkBehaviour
 
     public void ShowWaterWin()
     {
-        Debug.Log("الماء فاز!");
+        Debug.Log("الماء فاز (انتهى الوقت)!");
 
-        StopPlayers();
+        var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
+        foreach (var player in allPlayers)
+            player.enabled = false;
 
         var gameUI = GameObject.Find("GameUI");
         if (gameUI != null) gameUI.SetActive(false);
@@ -185,14 +138,6 @@ public class WinManager : NetworkBehaviour
         if (winPanel != null) winPanel.SetActive(true);
         if (iceWinPanel != null) iceWinPanel.SetActive(false);
         if (waterWinPanel != null) waterWinPanel.SetActive(true);
-    }
-
-    private void StopPlayers()
-    {
-        var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
-
-        foreach (var player in allPlayers)
-            player.enabled = false;
     }
 
     public void GoToMainMenu()
@@ -209,11 +154,5 @@ public class WinManager : NetworkBehaviour
             NetworkManager.Singleton.Shutdown();
 
         SceneManager.LoadScene("MainMenu");
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        networkTimeRemaining.OnValueChanged -= OnTimeChanged;
-        winnerTeam.OnValueChanged -= OnWinnerChanged;
     }
 }

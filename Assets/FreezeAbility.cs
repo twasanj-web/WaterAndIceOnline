@@ -4,10 +4,8 @@ using UnityEngine;
 public class FreezeAbility : NetworkBehaviour
 {
     [Header("Freeze Settings")]
-    public float freezeDistance = 1.2f;
+    public float freezeDistance = 2.0f;
 
-    private bool canFreeze = false;
-    private NetworkPlayerMovement targetToFreeze;
     private NetworkPlayerMovement myPlayer;
 
     public override void OnNetworkSpawn()
@@ -28,75 +26,56 @@ public class FreezeAbility : NetworkBehaviour
             uiManager.freezeButton.onClick.AddListener(OnFreezeButtonClicked);
     }
 
-    private void Update()
+    private void OnFreezeButtonClicked()
     {
         if (!IsOwner) return;
 
-        if (targetToFreeze != null)
-        {
-            float distance = Vector2.Distance(transform.position, targetToFreeze.transform.position);
+        NetworkPlayerMovement target = FindClosestWaterInRange();
 
-            if (distance > freezeDistance || targetToFreeze.isFrozen.Value)
+        if (target == null)
+        {
+            Debug.Log("لا يوجد لاعب ماء قريب لتجميده.");
+            return;
+        }
+
+        var targetVisual = target.GetComponent<NetworkPlayerVisual>();
+        if (targetVisual == null)
+        {
+            Debug.Log("لا يوجد NetworkPlayerVisual على الهدف.");
+            return;
+        }
+
+        target.SetFrozenServerRpc(true);
+        targetVisual.SetFrozenVisualServerRpc(true);
+
+        var uiManager = FindObjectOfType<GameUIManager>();
+        if (uiManager != null)
+            uiManager.PlayFreezeSoundLocal();
+
+        Debug.Log("تم تجميد لاعب الماء!");
+    }
+
+    private NetworkPlayerMovement FindClosestWaterInRange()
+    {
+        NetworkPlayerMovement closest = null;
+        float closestDistance = freezeDistance;
+
+        var allPlayers = FindObjectsOfType<NetworkPlayerMovement>();
+
+        foreach (var player in allPlayers)
+        {
+            if (!IsValidWaterTarget(player)) continue;
+
+            float distance = Vector2.Distance(transform.position, player.transform.position);
+
+            if (distance <= closestDistance)
             {
-                targetToFreeze = null;
-                canFreeze = false;
+                closest = player;
+                closestDistance = distance;
             }
         }
-    }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!IsOwner) return;
-        if (!collision.CompareTag("Player")) return;
-
-        var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
-
-        if (!IsValidWaterTarget(otherPlayer)) return;
-
-        float distance = Vector2.Distance(transform.position, otherPlayer.transform.position);
-
-        if (distance <= freezeDistance)
-        {
-            targetToFreeze = otherPlayer;
-            canFreeze = true;
-        }
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (!IsOwner) return;
-        if (!collision.CompareTag("Player")) return;
-
-        var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
-
-        if (!IsValidWaterTarget(otherPlayer)) return;
-
-        float distance = Vector2.Distance(transform.position, otherPlayer.transform.position);
-
-        if (distance <= freezeDistance)
-        {
-            targetToFreeze = otherPlayer;
-            canFreeze = true;
-        }
-        else if (otherPlayer == targetToFreeze)
-        {
-            targetToFreeze = null;
-            canFreeze = false;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (!IsOwner) return;
-        if (!collision.CompareTag("Player")) return;
-
-        var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
-
-        if (otherPlayer != null && otherPlayer == targetToFreeze)
-        {
-            targetToFreeze = null;
-            canFreeze = false;
-        }
+        return closest;
     }
 
     private bool IsValidWaterTarget(NetworkPlayerMovement otherPlayer)
@@ -106,56 +85,8 @@ public class FreezeAbility : NetworkBehaviour
         if (otherPlayer.isFrozen.Value) return false;
 
         var otherVisual = otherPlayer.GetComponent<NetworkPlayerVisual>();
-
         if (otherVisual == null) return false;
 
-        // roleIndex 1 = Water فقط
-        if (otherVisual.roleIndex.Value != 1) return false;
-
-        return true;
-    }
-
-    private void OnFreezeButtonClicked()
-    {
-        if (!IsOwner) return;
-
-        if (targetToFreeze == null)
-        {
-            Debug.Log("لا يوجد لاعب ماء قريب لتجميده.");
-            canFreeze = false;
-            return;
-        }
-
-        if (!IsValidWaterTarget(targetToFreeze))
-        {
-            Debug.Log("الهدف غير صالح للتجميد.");
-            targetToFreeze = null;
-            canFreeze = false;
-            return;
-        }
-
-        float distance = Vector2.Distance(transform.position, targetToFreeze.transform.position);
-
-        if (distance > freezeDistance)
-        {
-            Debug.Log("لاعب الماء بعيد جدًا عن التجميد.");
-            targetToFreeze = null;
-            canFreeze = false;
-            return;
-        }
-
-        var targetVisual = targetToFreeze.GetComponent<NetworkPlayerVisual>();
-
-        targetToFreeze.SetFrozenServerRpc(true);
-        targetVisual.SetFrozenVisualServerRpc(true);
-
-        var uiManager = FindObjectOfType<GameUIManager>();
-        if (uiManager != null)
-            uiManager.PlayFreezeSoundLocal();
-
-        targetToFreeze = null;
-        canFreeze = false;
-
-        Debug.Log("تم تجميد لاعب الماء!");
+        return otherVisual.roleIndex.Value == 1;
     }
 }

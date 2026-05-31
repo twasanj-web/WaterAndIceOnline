@@ -371,7 +371,7 @@ MonoBehaviour:
   speed: 5
   audioSource: {fileID: 3688309404494355981}
   freezeSound: {fileID: 8300000, guid: 3abfdacab24c84692b34a1f42df8f896, type: 3}
-  unfreezeSound: {fileID: 8300000, guid: 7ad6e280addab4e18a3deb02c1fd2a5f, type: 3}
+  unfreezeSound: {fileID: 8300000, guid: 6c86baeb0f28747b2b67de1cec67668b, type: 3}
   isFrozen:
     m_InternalValue: 0
   isFacingRight:

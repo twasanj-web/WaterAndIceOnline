@@ -84,16 +84,19 @@ public class WaitingRoomStartGame : MonoBehaviour
             Debug.Log($"StartGame: count={count}, iceCount={iceCount}, iceIds={iceCsv}, relayCode={relayJoinCode}");
 
             // 3. حدّث اللوبي
+            long startAt = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 5000;
+            session.gameStartUnixMs = startAt;
+
             await LobbyService.Instance.UpdateLobbyAsync(session.lobbyId, new UpdateLobbyOptions
             {
                 Data = new Dictionary<string, DataObject>
                 {
                     { "state",     new DataObject(DataObject.VisibilityOptions.Public, "started") },
                     { "iceIds",    new DataObject(DataObject.VisibilityOptions.Public, iceCsv) },
-                    { "relayCode", new DataObject(DataObject.VisibilityOptions.Public, relayJoinCode) }
+                    { "relayCode", new DataObject(DataObject.VisibilityOptions.Public, relayJoinCode) },
+                    { "startAt",   new DataObject(DataObject.VisibilityOptions.Public, startAt.ToString()) }
                 }
             });
-
             // 4. عيّن دور الهوست وخزّن كود Relay
             session.role = iceCsv.Contains(session.playerId) ? PlayerRole.Ice : PlayerRole.Water;
             session.relayJoinCode = relayJoinCode;

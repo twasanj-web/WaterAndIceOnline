@@ -33,6 +33,9 @@ public class AppSession : MonoBehaviour
     [Header("Runtime")]
     public int currentPlayerCount = 0;
 
+    [Header("Game Time")]
+    public long gameStartUnixMs = 0;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

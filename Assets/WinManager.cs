@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro; // ضروري للتعامل مع النصوص
+using TMPro;
 
 public class WinManager : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class WinManager : MonoBehaviour
     public GameObject waterWinPanel;
 
     [Header("Timer UI")]
-    public TextMeshProUGUI timerText; // اسحبي نص التايمر هنا من الـ Inspector
+    public TextMeshProUGUI timerText;
 
     private bool gameEnded = false;
     private float timeRemaining;
@@ -28,44 +28,52 @@ public class WinManager : MonoBehaviour
         else
             timeRemaining = 300f;
 
-        // انتظر 3 ثواني قبل بدء التايمر (حتى يتصل الجميع)
-        Invoke(nameof(StartTimer), 3f);
-        UpdateTimerDisplay();
-    }
-
-    private void StartTimer()
-    {
         isTimerRunning = true;
+        UpdateTimerDisplay();
     }
 
     private void Update()
     {
         if (gameEnded) return;
 
-        // تحديث التايمر
         if (isTimerRunning)
         {
-            if (timeRemaining > 0)
+            UpdateSyncedTimer();
+
+            if (timeRemaining <= 0)
             {
-                timeRemaining -= Time.deltaTime;
-                UpdateTimerDisplay();
-            }
-            else
-            {
-                // انتهى الوقت!
                 timeRemaining = 0;
                 isTimerRunning = false;
                 UpdateTimerDisplay();
 
-                // فوز الماء
                 gameEnded = true;
                 ShowWaterWin();
                 return;
             }
         }
 
-        // فحص فوز الثلج
         CheckAllWaterFrozen();
+    }
+
+    private void UpdateSyncedTimer()
+    {
+        var session = AppSession.Instance;
+
+        if (session != null && session.gameStartUnixMs > 0)
+        {
+            long now = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            float totalTime = session.roundTimeMinutes * 60f;
+            float elapsed = (now - session.gameStartUnixMs) / 1000f;
+
+            timeRemaining = Mathf.Max(0f, totalTime - elapsed);
+        }
+        else
+        {
+            timeRemaining -= Time.deltaTime;
+        }
+
+        UpdateTimerDisplay();
     }
 
     private void UpdateTimerDisplay()
@@ -91,7 +99,7 @@ public class WinManager : MonoBehaviour
             var visual = player.GetComponent<NetworkPlayerVisual>();
             if (visual == null) continue;
 
-            if (visual.roleIndex.Value == 1) // ماء
+            if (visual.roleIndex.Value == 1)
             {
                 waterCount++;
                 if (player.isFrozen.Value)
@@ -99,7 +107,6 @@ public class WinManager : MonoBehaviour
             }
         }
 
-        // إذا كان هناك لاعبو ماء وكلهم مجمدين -> فوز الثلج
         if (waterCount > 0 && waterCount == frozenWaterCount)
         {
             gameEnded = true;

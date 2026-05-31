@@ -162,10 +162,22 @@ public class WaitingRoomUI : MonoBehaviour
                 Debug.LogError("ApplyRoleAndGoToGame: relayCode missing from lobby data!");
                 return;
             }
+
             session.relayJoinCode = lobby.Data["relayCode"].Value;
+
+            if (lobby.Data.ContainsKey("startAt"))
+            {
+                long.TryParse(lobby.Data["startAt"].Value, out session.gameStartUnixMs);
+            }
+
             Debug.Log($"Client: relayCode saved = {session.relayJoinCode}");
         }
 
+        if (session.isHost && lobby.Data.ContainsKey("startAt"))
+        {
+            long.TryParse(lobby.Data["startAt"].Value, out session.gameStartUnixMs);
+        }
+        
         Debug.Log("Moving to GameMap...");
         SceneManager.sceneLoaded += OnGameMapLoaded;
         SceneManager.LoadScene("GameMap");

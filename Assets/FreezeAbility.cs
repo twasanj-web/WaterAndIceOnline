@@ -3,12 +3,18 @@ using UnityEngine;
 
 public class FreezeAbility : NetworkBehaviour
 {
+    [Header("Freeze Settings")]
+    public float freezeDistance = 1.2f;
+
     private bool canFreeze = false;
     private NetworkPlayerMovement targetToFreeze;
+    private NetworkPlayerMovement myPlayer;
 
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
+
+        myPlayer = GetComponent<NetworkPlayerMovement>();
 
         var session = AppSession.Instance;
         if (session != null && session.role != PlayerRole.Ice)
@@ -22,38 +28,66 @@ public class FreezeAbility : NetworkBehaviour
             uiManager.freezeButton.onClick.AddListener(OnFreezeButtonClicked);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void Update()
     {
         if (!IsOwner) return;
 
+        if (targetToFreeze != null)
+        {
+            float distance = Vector2.Distance(transform.position, targetToFreeze.transform.position);
+
+            if (distance > freezeDistance || targetToFreeze.isFrozen.Value)
+            {
+                targetToFreeze = null;
+                canFreeze = false;
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!IsOwner) return;
         if (!collision.CompareTag("Player")) return;
 
         var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
 
-        if (otherPlayer == null) return;
-        if (otherPlayer == GetComponent<NetworkPlayerMovement>()) return;
-        if (otherPlayer.isFrozen.Value) return;
+        if (!IsValidWaterTarget(otherPlayer)) return;
 
-        var otherVisual = otherPlayer.GetComponent<NetworkPlayerVisual>();
+        float distance = Vector2.Distance(transform.position, otherPlayer.transform.position);
 
-        // القاعدة: الثلج يجمد الماء فقط
-        // roleIndex 1 = Water
-        // roleIndex 2 = Ice
-        if (otherVisual == null || otherVisual.roleIndex.Value != 1)
+        if (distance <= freezeDistance)
+        {
+            targetToFreeze = otherPlayer;
+            canFreeze = true;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!IsOwner) return;
+        if (!collision.CompareTag("Player")) return;
+
+        var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
+
+        if (!IsValidWaterTarget(otherPlayer)) return;
+
+        float distance = Vector2.Distance(transform.position, otherPlayer.transform.position);
+
+        if (distance <= freezeDistance)
+        {
+            targetToFreeze = otherPlayer;
+            canFreeze = true;
+        }
+        else if (otherPlayer == targetToFreeze)
         {
             targetToFreeze = null;
             canFreeze = false;
-            return;
         }
-
-        targetToFreeze = otherPlayer;
-        canFreeze = true;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (!IsOwner) return;
-
         if (!collision.CompareTag("Player")) return;
 
         var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
@@ -65,35 +99,63 @@ public class FreezeAbility : NetworkBehaviour
         }
     }
 
+    private bool IsValidWaterTarget(NetworkPlayerMovement otherPlayer)
+    {
+        if (otherPlayer == null) return false;
+        if (myPlayer != null && otherPlayer == myPlayer) return false;
+        if (otherPlayer.isFrozen.Value) return false;
+
+        var otherVisual = otherPlayer.GetComponent<NetworkPlayerVisual>();
+
+        if (otherVisual == null) return false;
+
+        // roleIndex 1 = Water فقط
+        if (otherVisual.roleIndex.Value != 1) return false;
+
+        return true;
+    }
+
     private void OnFreezeButtonClicked()
     {
         if (!IsOwner) return;
 
-        if (canFreeze && targetToFreeze != null)
-        {
-            var targetVisual = targetToFreeze.GetComponent<NetworkPlayerVisual>();
-
-            // تأكيد إضافي: لا تجمد إلا الماء
-            if (targetVisual == null || targetVisual.roleIndex.Value != 1)
-            {
-                Debug.Log("لا يمكن تجميد لاعب الثلج.");
-                targetToFreeze = null;
-                canFreeze = false;
-                return;
-            }
-
-            targetToFreeze.SetFrozenServerRpc(true);
-            targetVisual.SetFrozenVisualServerRpc(true);
-
-            var uiManager = FindObjectOfType<GameUIManager>();
-            if (uiManager != null)
-                uiManager.PlayFreezeSoundLocal();
-
-            Debug.Log("تم تجميد لاعب الماء!");
-        }
-        else
+        if (targetToFreeze == null)
         {
             Debug.Log("لا يوجد لاعب ماء قريب لتجميده.");
+            canFreeze = false;
+            return;
         }
+
+        if (!IsValidWaterTarget(targetToFreeze))
+        {
+            Debug.Log("الهدف غير صالح للتجميد.");
+            targetToFreeze = null;
+            canFreeze = false;
+            return;
+        }
+
+        float distance = Vector2.Distance(transform.position, targetToFreeze.transform.position);
+
+        if (distance > freezeDistance)
+        {
+            Debug.Log("لاعب الماء بعيد جدًا عن التجميد.");
+            targetToFreeze = null;
+            canFreeze = false;
+            return;
+        }
+
+        var targetVisual = targetToFreeze.GetComponent<NetworkPlayerVisual>();
+
+        targetToFreeze.SetFrozenServerRpc(true);
+        targetVisual.SetFrozenVisualServerRpc(true);
+
+        var uiManager = FindObjectOfType<GameUIManager>();
+        if (uiManager != null)
+            uiManager.PlayFreezeSoundLocal();
+
+        targetToFreeze = null;
+        canFreeze = false;
+
+        Debug.Log("تم تجميد لاعب الماء!");
     }
 }

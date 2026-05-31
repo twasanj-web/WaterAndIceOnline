@@ -65,7 +65,6 @@ public class WinManager : MonoBehaviour
         if (session != null && session.gameStartUnixMs > 0)
         {
             long now = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
             float totalTime = session.roundTimeMinutes * 60f;
             float elapsed = (now - session.gameStartUnixMs) / 1000f;
 
@@ -105,6 +104,7 @@ public class WinManager : MonoBehaviour
             if (visual.roleIndex.Value == 1)
             {
                 waterCount++;
+
                 if (player.isFrozen.Value)
                     frozenWaterCount++;
             }
@@ -168,6 +168,7 @@ public class WinManager : MonoBehaviour
             session.relayJoinCode = "";
             session.hostAllocation = null;
             session.gameStartUnixMs = 0;
+            session.returningToWaitingRoom = true;
 
             if (session.isHost && !string.IsNullOrWhiteSpace(session.lobbyId))
             {

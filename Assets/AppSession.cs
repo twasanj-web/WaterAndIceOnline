@@ -11,6 +11,7 @@ public enum PlayerRole
 public class AppSession : MonoBehaviour
 {
     public static AppSession Instance { get; private set; }
+  
 
     [Header("Player")]
     public string playerName = "Player";
@@ -32,6 +33,7 @@ public class AppSession : MonoBehaviour
 
     [Header("Runtime")]
     public int currentPlayerCount = 0;
+    public bool returningToWaitingRoom = false;
 
     [Header("Game Time")]
     public long gameStartUnixMs = 0;

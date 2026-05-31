@@ -114,8 +114,17 @@ public class WaitingRoomUI : MonoBehaviour
             if (!hasMovedToGame && lobby.Data != null && lobby.Data.ContainsKey("state"))
             {
                 string state = lobby.Data["state"].Value;
+                if (state == "waiting")
+                {
+                    if (AppSession.Instance != null)
+                        AppSession.Instance.returningToWaitingRoom = false;
+                }
+
                 if (state == "started")
                 {
+                    if (AppSession.Instance != null && AppSession.Instance.returningToWaitingRoom)
+                        return;
+
                     hasMovedToGame = true;
                     if (pollRoutine != null) StopCoroutine(pollRoutine);
                     ApplyRoleAndGoToGame(lobby);

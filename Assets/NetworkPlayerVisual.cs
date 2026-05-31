@@ -5,6 +5,7 @@ public class NetworkPlayerVisual : NetworkBehaviour
 {
     [Header("Visual Objects")]
     public GameObject waterVisual;
+    public GameObject frozenWaterVisual;
     public GameObject iceVisual;
 
     public NetworkVariable<int> roleIndex = new NetworkVariable<int>(0);
@@ -15,19 +16,6 @@ public class NetworkPlayerVisual : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        Debug.Log("Player Spawned");
-        Debug.Log("IsOwner = " + IsOwner);
-
-        Camera cam = GetComponentInChildren<Camera>(true);
-
-        if (cam == null)
-        {
-            Debug.LogError("CAMERA NOT FOUND");
-        }
-        else
-        {
-            Debug.Log("CAMERA FOUND");
-        }
         Debug.Log($"[PlayerVisual] Spawned! IsOwner: {IsOwner}, Role: {roleIndex.Value}");
 
         SetupCameraForLocalPlayer();
@@ -116,16 +104,22 @@ public class NetworkPlayerVisual : NetworkBehaviour
 
     public void UpdateVisuals(int role, bool frozen)
     {
+        bool isWater = role == 1;
+        bool isIce = role == 2;
+
         if (waterVisual != null)
-            waterVisual.SetActive(role == 1);
+            waterVisual.SetActive(isWater && !frozen);
+
+        if (frozenWaterVisual != null)
+            frozenWaterVisual.SetActive(isWater && frozen);
 
         if (iceVisual != null)
-            iceVisual.SetActive(role == 2);
+            iceVisual.SetActive(isIce);
     }
 
     public Animator GetActiveAnimator()
     {
-        if (roleIndex.Value == 1 && waterVisual != null)
+        if (roleIndex.Value == 1 && !isFrozenVisual.Value && waterVisual != null)
             return waterVisual.GetComponent<Animator>();
 
         if (roleIndex.Value == 2 && iceVisual != null)
@@ -136,8 +130,11 @@ public class NetworkPlayerVisual : NetworkBehaviour
 
     public SpriteRenderer GetActiveSpriteRenderer()
     {
-        if (roleIndex.Value == 1 && waterVisual != null)
+        if (roleIndex.Value == 1 && !isFrozenVisual.Value && waterVisual != null)
             return waterVisual.GetComponent<SpriteRenderer>();
+
+        if (roleIndex.Value == 1 && isFrozenVisual.Value && frozenWaterVisual != null)
+            return frozenWaterVisual.GetComponent<SpriteRenderer>();
 
         if (roleIndex.Value == 2 && iceVisual != null)
             return iceVisual.GetComponent<SpriteRenderer>();

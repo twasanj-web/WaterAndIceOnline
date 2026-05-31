@@ -15,6 +15,19 @@ public class NetworkPlayerVisual : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log("Player Spawned");
+        Debug.Log("IsOwner = " + IsOwner);
+
+        Camera cam = GetComponentInChildren<Camera>(true);
+
+        if (cam == null)
+        {
+            Debug.LogError("CAMERA NOT FOUND");
+        }
+        else
+        {
+            Debug.Log("CAMERA FOUND");
+        }
         Debug.Log($"[PlayerVisual] Spawned! IsOwner: {IsOwner}, Role: {roleIndex.Value}");
 
         SetupCameraForLocalPlayer();

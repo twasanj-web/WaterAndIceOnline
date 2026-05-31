@@ -7,53 +7,69 @@ public class NetworkPlayerVisual : NetworkBehaviour
     public GameObject waterVisual;
     public GameObject iceVisual;
 
-    [Header("Frozen Sprites (Legacy Support)")]
-    public Sprite frozenWaterSprite;
-
     public NetworkVariable<int> roleIndex = new NetworkVariable<int>(0);
     public NetworkVariable<bool> isFrozenVisual = new NetworkVariable<bool>(false);
+
     public override void OnNetworkSpawn()
     {
-        // البحث عن الكاميرا حتى لو كانت معطلة (true تعني ابحث في المعطل أيضاً)
-        Camera cam = GetComponentInChildren<Camera>(true);
-        AudioListener listener = GetComponentInChildren<AudioListener>(true);
+        Debug.Log($"[PlayerVisual] Spawned! IsOwner: {IsOwner}, Role: {roleIndex.Value}");
 
-        if (cam != null) 
+        // 1. البحث عن الكاميرا وتفعيلها فوراً وبقوة
+        Camera cam = GetComponentInChildren<Camera>(true);
+        if (cam != null)
         {
-            // تفعيل الكائن نفسه أولاً ثم السكريبت للمالك فقط
+            // تفعيل الكاميرا للمالك فقط
             cam.gameObject.SetActive(IsOwner);
             cam.enabled = IsOwner;
-        
-            // إذا كان المالك، نضمن أن الكاميرا هي الأساسية
-            if (IsOwner) cam.tag = "MainCamera";
+            if (IsOwner) 
+            {
+                cam.tag = "MainCamera";
+                Debug.Log("[PlayerVisual] Camera enabled for Owner");
+            }
+        }
+        else
+        {
+            Debug.LogError("[PlayerVisual] لم يتم العثور على كاميرا داخل البريفاب!");
         }
 
-        if (listener != null) 
+        // 2. تفعيل الـ AudioListener للمالك فقط
+        AudioListener listener = GetComponentInChildren<AudioListener>(true);
+        if (listener != null)
         {
-            listener.gameObject.SetActive(IsOwner);
             listener.enabled = IsOwner;
         }
 
-        // ربط الأحداث وتحديث الشكل
+        // 3. ربط الأحداث وتحديث الشكل
         roleIndex.OnValueChanged += OnRoleChanged;
         isFrozenVisual.OnValueChanged += OnFrozenChanged;
+        
+        // تحديث الشكل بناءً على الدور الحالي
         UpdateVisuals(roleIndex.Value, isFrozenVisual.Value);
 
+        // 4. إذا كنت المالك، اطلب تحديد الدور
         if (IsOwner)
         {
-            int value = 0;
-            if (AppSession.Instance != null) value = (int)AppSession.Instance.role;
-            if (value == 0) value = 2; 
-            SetRoleServerRpc(value);
+            DetermineRole();
         }
     }
 
-
-    public override void OnNetworkDespawn()
+    private void DetermineRole()
     {
-        // فك الارتباط عند حذف اللاعب لتجنب الأخطاء
-        roleIndex.OnValueChanged -= OnRoleChanged;
-        isFrozenVisual.OnValueChanged -= OnFrozenChanged;
+        int myRole = 0;
+        if (AppSession.Instance != null)
+        {
+            myRole = (int)AppSession.Instance.role;
+        }
+
+        // إذا لم يجد دوراً (مثل حالة الدخول المباشر)، اجعله ماء (1) أو ثلج (2)
+        if (myRole == 0) 
+        {
+            // الهوست عادة يكون ثلج، والداخلين ماء (مؤقتاً للتجربة)
+            myRole = IsServer ? 2 : 1;
+        }
+
+        Debug.Log($"[PlayerVisual] Setting Role to: {myRole}");
+        SetRoleServerRpc(myRole);
     }
 
     [ServerRpc]
@@ -73,15 +89,10 @@ public class NetworkPlayerVisual : NetworkBehaviour
 
     public void UpdateVisuals(int role, bool frozen)
     {
-        // تفعيل الكائن المناسب حسب الدور (1=ماء، 2=ثلج)
         if (waterVisual != null) waterVisual.SetActive(role == 1);
         if (iceVisual != null) iceVisual.SetActive(role == 2);
-
-        // هنا يمكنك إضافة كود لتغيير لون الشخصية إذا كانت مجمدة
-        // مثلاً جعل لونها مائلاً للأزرق
     }
 
-    // دالة مساعدة للحصول على الـ Animator النشط حالياً (يستخدمها سكريبت الحركة)
     public Animator GetActiveAnimator()
     {
         if (roleIndex.Value == 1 && waterVisual != null) return waterVisual.GetComponent<Animator>();
@@ -89,11 +100,16 @@ public class NetworkPlayerVisual : NetworkBehaviour
         return null;
     }
 
-    // دالة مساعدة للحصول على الـ SpriteRenderer النشط حالياً (لعمل Flip)
     public SpriteRenderer GetActiveSpriteRenderer()
     {
         if (roleIndex.Value == 1 && waterVisual != null) return waterVisual.GetComponent<SpriteRenderer>();
         if (roleIndex.Value == 2 && iceVisual != null) return iceVisual.GetComponent<SpriteRenderer>();
         return null;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        roleIndex.OnValueChanged -= OnRoleChanged;
+        isFrozenVisual.OnValueChanged -= OnFrozenChanged;
     }
 }

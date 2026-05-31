@@ -12,7 +12,6 @@ public class UnfreezeAbility : NetworkBehaviour
     private float holdTimer = 0f;
     public float requiredHoldTime = 3f;
 
-    // صورة التحميل (الطبقة العلوية التي ستمتلئ)
     private Image loadingImage;
 
     public override void OnNetworkSpawn()
@@ -29,21 +28,21 @@ public class UnfreezeAbility : NetworkBehaviour
         var uiManager = FindObjectOfType<GameUIManager>();
         if (uiManager != null && uiManager.unfreezeButton != null)
         {
-            // --- التعديل هنا: البحث عن الطبقة الجديدة داخل الزر ---
             Transform barTransform = uiManager.unfreezeButton.transform.Find("LoadingBar");
+
             if (barTransform != null)
-            {
                 loadingImage = barTransform.GetComponent<Image>();
-            }
             else
-            {
-                // إذا لم تجد الطبقة الجديدة، استخدم صورة الزر نفسه كخطة بديلة
                 loadingImage = uiManager.unfreezeButton.image;
-            }
 
-            if (loadingImage != null) loadingImage.fillAmount = 0f;
+            if (loadingImage != null)
+                loadingImage.fillAmount = 0f;
 
-            EventTrigger trigger = uiManager.unfreezeButton.gameObject.AddComponent<EventTrigger>();
+            EventTrigger trigger = uiManager.unfreezeButton.gameObject.GetComponent<EventTrigger>();
+            if (trigger == null)
+                trigger = uiManager.unfreezeButton.gameObject.AddComponent<EventTrigger>();
+
+            trigger.triggers.Clear();
 
             EventTrigger.Entry pointerDownEntry = new EventTrigger.Entry();
             pointerDownEntry.eventID = EventTriggerType.PointerDown;
@@ -66,33 +65,40 @@ public class UnfreezeAbility : NetworkBehaviour
             holdTimer += Time.deltaTime;
 
             if (loadingImage != null)
-            {
                 loadingImage.fillAmount = holdTimer / requiredHoldTime;
-            }
 
             if (holdTimer >= requiredHoldTime)
             {
                 if (canUnfreeze && targetToUnfreeze != null)
                 {
+                    PlayUnfreezeSoundImmediately();
                     UnfreezeTarget();
                 }
                 else
                 {
                     Debug.Log("اكتمل التحميل ولكن لا يوجد لاعب متجمد قريب.");
                 }
+
                 ResetLoading();
             }
         }
+    }
+
+    private void PlayUnfreezeSoundImmediately()
+    {
+        var uiManager = FindObjectOfType<GameUIManager>();
+
+        if (uiManager != null)
+            uiManager.PlayUnfreezeSoundLocal();
     }
 
     private void ResetLoading()
     {
         isHolding = false;
         holdTimer = 0f;
+
         if (loadingImage != null)
-        {
             loadingImage.fillAmount = 0f;
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -102,7 +108,9 @@ public class UnfreezeAbility : NetworkBehaviour
         if (collision.CompareTag("Player"))
         {
             var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
-            if (otherPlayer != null && otherPlayer != GetComponent<NetworkPlayerMovement>() &&
+
+            if (otherPlayer != null &&
+                otherPlayer != GetComponent<NetworkPlayerMovement>() &&
                 otherPlayer.isFrozen.Value)
             {
                 targetToUnfreeze = otherPlayer;
@@ -118,6 +126,7 @@ public class UnfreezeAbility : NetworkBehaviour
         if (collision.CompareTag("Player"))
         {
             var otherPlayer = collision.GetComponent<NetworkPlayerMovement>();
+
             if (otherPlayer != null && otherPlayer == targetToUnfreeze)
             {
                 targetToUnfreeze = null;
@@ -129,6 +138,7 @@ public class UnfreezeAbility : NetworkBehaviour
     private void OnPointerDown()
     {
         if (!IsOwner) return;
+
         isHolding = true;
         holdTimer = 0f;
     }
@@ -136,26 +146,20 @@ public class UnfreezeAbility : NetworkBehaviour
     private void OnPointerUp()
     {
         if (!IsOwner) return;
+
         ResetLoading();
     }
 
     private void UnfreezeTarget()
     {
-        if (targetToUnfreeze != null)
-        {
-            targetToUnfreeze.SetFrozenServerRpc(false);
+        if (targetToUnfreeze == null) return;
 
-            var targetVisual = targetToUnfreeze.GetComponent<NetworkPlayerVisual>();
-            if (targetVisual != null)
-                targetVisual.SetFrozenVisualServerRpc(false);
+        targetToUnfreeze.SetFrozenServerRpc(false);
 
-            var uiManager = FindObjectOfType<GameUIManager>();
-            if (uiManager != null)
-            {
-                uiManager.PlayUnfreezeSoundLocal();
-            }
+        var targetVisual = targetToUnfreeze.GetComponent<NetworkPlayerVisual>();
+        if (targetVisual != null)
+            targetVisual.SetFrozenVisualServerRpc(false);
 
-            Debug.Log("تم فك تجميد لاعب الماء بنجاح!");
-        }
+        Debug.Log("تم فك تجميد لاعب الماء بنجاح!");
     }
 }

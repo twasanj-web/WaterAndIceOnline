@@ -440,6 +440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   ShowTopMostFoldoutHeaderGroup: 1
+  unfreezeDistance: 2
   requiredHoldTime: 3
 --- !u!58 &-6181625861835951818
 CircleCollider2D:
@@ -791,7 +792,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1504800817
   m_SortingLayer: -1
-  m_SortingOrder: 20
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 1764561339171618372, guid: 42805ddadb0dc4e5283527299a90a7d8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

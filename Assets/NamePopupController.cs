@@ -3,24 +3,33 @@ using UnityEngine;
 
 public class NamePopupController : MonoBehaviour
 {
-    public GameObject namePopup;      // NamePopup
-    public TMP_InputField nameInput;  // NameInput
-    public TMP_Text nameButtonText;   // النص داخل زر الاسم (Text TMP)
+    public GameObject namePopup;
+    public TMP_InputField nameInput;
+    public TMP_Text nameButtonText;
 
-    const string KEY = "player_name";
+    private const string KEY = "player_name";
 
     void Start()
     {
-        if (namePopup != null) namePopup.SetActive(false);
+        if (namePopup != null)
+            namePopup.SetActive(false);
 
         string saved = PlayerPrefs.GetString(KEY, "Player");
-        if (nameButtonText != null) nameButtonText.text = saved;
-        if (nameInput != null) nameInput.text = saved;
+
+        if (nameButtonText != null)
+            nameButtonText.text = saved;
+
+        if (nameInput != null)
+            nameInput.text = saved;
+
+        if (AppSession.Instance != null)
+            AppSession.Instance.playerName = saved;
     }
 
     public void OpenPopup()
     {
         if (namePopup == null) return;
+
         namePopup.SetActive(true);
 
         if (nameInput != null)
@@ -33,6 +42,7 @@ public class NamePopupController : MonoBehaviour
     public void ClosePopup()
     {
         if (namePopup == null) return;
+
         namePopup.SetActive(false);
     }
 
@@ -40,13 +50,21 @@ public class NamePopupController : MonoBehaviour
     {
         if (nameInput == null) return;
 
-        string n = nameInput.text.Trim();
-        if (string.IsNullOrEmpty(n)) return;
+        string playerName = nameInput.text.Trim();
 
-        PlayerPrefs.SetString(KEY, n);
+        if (string.IsNullOrEmpty(playerName))
+            playerName = "Player";
+
+        PlayerPrefs.SetString(KEY, playerName);
         PlayerPrefs.Save();
 
-        if (nameButtonText != null) nameButtonText.text = n;
+        if (nameButtonText != null)
+            nameButtonText.text = playerName;
+
+        if (AppSession.Instance != null)
+            AppSession.Instance.playerName = playerName;
+
+        Debug.Log("Player name saved: " + playerName);
 
         ClosePopup();
     }

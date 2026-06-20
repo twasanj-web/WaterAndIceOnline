@@ -19,6 +19,8 @@ public class WaitingRoomUI : MonoBehaviour
     [Header("UI")]
     public TMP_Text statusText;
     public TMP_Text[] nameSlots;
+    public TMP_Text lobbyCodeText;
+    public GameObject startButton; // زر السهم يظهر للهوست فقط
 
     [Header("Refresh")]
     public float refreshSeconds = 2.5f;
@@ -29,11 +31,22 @@ public class WaitingRoomUI : MonoBehaviour
     private async void Start()
     {
         ClearSlots();
-        if (statusText != null) statusText.text = "(0/0)";
+
+        if (statusText != null)
+            statusText.text = "(0/0)";
 
         await InitServices();
 
         var session = AppSession.Instance;
+
+        if (startButton != null && session != null)
+            startButton.SetActive(session.isHost);
+
+        if (lobbyCodeText != null && session != null)
+        {
+            lobbyCodeText.text = "Code: " + session.lobbyCode;
+        }
+
         if (session == null || string.IsNullOrWhiteSpace(session.lobbyId))
         {
             Debug.LogError("WaitingRoomUI: no AppSession or lobbyId is empty!");
@@ -52,8 +65,12 @@ public class WaitingRoomUI : MonoBehaviour
     private void ClearSlots()
     {
         if (nameSlots == null) return;
+
         for (int i = 0; i < nameSlots.Length; i++)
-            if (nameSlots[i] != null) nameSlots[i].text = "";
+        {
+            if (nameSlots[i] != null)
+                nameSlots[i].text = "";
+        }
     }
 
     private async Task InitServices()
@@ -78,7 +95,9 @@ public class WaitingRoomUI : MonoBehaviour
         while (true)
         {
             var task = RefreshLobbyUI(lobbyId);
-            while (!task.IsCompleted) yield return null;
+
+            while (!task.IsCompleted)
+                yield return null;
 
             yield return new WaitForSeconds(refreshSeconds);
         }
@@ -104,16 +123,20 @@ public class WaitingRoomUI : MonoBehaviour
             if (lobby.Players != null && nameSlots != null)
             {
                 int slotsCount = Mathf.Min(nameSlots.Length, lobby.Players.Count);
+
                 for (int i = 0; i < slotsCount; i++)
                 {
                     string name = GetPlayerName(lobby.Players[i], i);
-                    if (nameSlots[i] != null) nameSlots[i].text = name;
+
+                    if (nameSlots[i] != null)
+                        nameSlots[i].text = name;
                 }
             }
 
             if (!hasMovedToGame && lobby.Data != null && lobby.Data.ContainsKey("state"))
             {
                 string state = lobby.Data["state"].Value;
+
                 if (state == "waiting")
                 {
                     if (AppSession.Instance != null)
@@ -126,7 +149,10 @@ public class WaitingRoomUI : MonoBehaviour
                         return;
 
                     hasMovedToGame = true;
-                    if (pollRoutine != null) StopCoroutine(pollRoutine);
+
+                    if (pollRoutine != null)
+                        StopCoroutine(pollRoutine);
+
                     ApplyRoleAndGoToGame(lobby);
                 }
             }
@@ -140,6 +166,7 @@ public class WaitingRoomUI : MonoBehaviour
     private void ApplyRoleAndGoToGame(Lobby lobby)
     {
         var session = AppSession.Instance;
+
         if (session == null)
         {
             Debug.LogError("ApplyRoleAndGoToGame: AppSession is null");
@@ -147,12 +174,15 @@ public class WaitingRoomUI : MonoBehaviour
         }
 
         HashSet<string> iceSet = new HashSet<string>();
+
         if (lobby.Data != null && lobby.Data.ContainsKey("iceIds"))
         {
             string csv = lobby.Data["iceIds"].Value ?? "";
+
             foreach (var p in csv.Split(','))
             {
                 string id = p.Trim();
+
                 if (!string.IsNullOrWhiteSpace(id))
                     iceSet.Add(id);
             }
@@ -186,7 +216,7 @@ public class WaitingRoomUI : MonoBehaviour
         {
             long.TryParse(lobby.Data["startAt"].Value, out session.gameStartUnixMs);
         }
-        
+
         Debug.Log("Moving to GameMap...");
         SceneManager.sceneLoaded += OnGameMapLoaded;
         SceneManager.LoadScene("GameMap");
@@ -195,12 +225,25 @@ public class WaitingRoomUI : MonoBehaviour
     private void OnGameMapLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name != "GameMap") return;
+
         SceneManager.sceneLoaded -= OnGameMapLoaded;
 
         var session = AppSession.Instance;
+
+        if (session == null)
+        {
+            Debug.LogError("OnGameMapLoaded: AppSession is null");
+            return;
+        }
+
+        if (session.isHost)
+        {
+            Debug.Log("Host already starts from WaitingRoomStartGame. Skip client start.");
+            return;
+        }
+
         Debug.Log($"GameMap loaded! Starting CLIENT via Relay code={session.relayJoinCode}");
 
-        // استخدام Task.Delay بدل Coroutine لأن WaitingRoomUI يُدمر عند تحميل GameMap
         StartClientDelayed(session.relayJoinCode);
     }
 
@@ -208,13 +251,17 @@ public class WaitingRoomUI : MonoBehaviour
     {
         try
         {
-            // انتظر 1.5 ثانية للهوست
             await Task.Delay(1500);
 
             var joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayJoinCode);
             var relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayData);
+
+            NetworkManager.Singleton
+                .GetComponent<UnityTransport>()
+                .SetRelayServerData(relayData);
+
             NetworkManager.Singleton.StartClient();
+
             Debug.Log("CLIENT started in GameMap successfully!");
         }
         catch (System.Exception e)
@@ -228,8 +275,11 @@ public class WaitingRoomUI : MonoBehaviour
         if (p != null && p.Data != null && p.Data.ContainsKey("name"))
         {
             string v = p.Data["name"].Value;
-            if (!string.IsNullOrWhiteSpace(v)) return v.Trim();
+
+            if (!string.IsNullOrWhiteSpace(v))
+                return v.Trim();
         }
+
         return $"Player {index + 1}";
     }
 }

@@ -13,14 +13,18 @@ public class JoinLobbyByCodeUI : MonoBehaviour
 {
     [Header("UI")]
     public TMP_InputField codeInput;
-    public TMP_Text errorText;
+
+    [Header("Popup")]
+    public GameObject errorPopup;
 
     private bool isJoining;
 
     private async void Start()
     {
         await InitServices();
-        if (errorText != null) errorText.text = "";
+
+        if (errorPopup != null)
+            errorPopup.SetActive(false);
     }
 
     private async Task InitServices()
@@ -48,17 +52,21 @@ public class JoinLobbyByCodeUI : MonoBehaviour
 
         try
         {
-            if (errorText != null) errorText.text = "";
-            if (codeInput == null) return;
+            HideError();
+
+            if (codeInput == null)
+                return;
 
             string code = codeInput.text.Trim().ToUpper();
+
             if (string.IsNullOrWhiteSpace(code))
             {
-                ShowError("اكتب/ي الكود أولاً");
+                ShowError();
                 return;
             }
 
             var session = AppSession.Instance;
+
             string playerName = (session != null && !string.IsNullOrWhiteSpace(session.playerName))
                 ? session.playerName.Trim()
                 : "Player";
@@ -96,10 +104,14 @@ public class JoinLobbyByCodeUI : MonoBehaviour
 
             SceneManager.LoadScene("WaitingRoom");
         }
-        catch (LobbyServiceException e)
+        catch (LobbyServiceException)
         {
-            Debug.LogError("JoinLobbyByCode failed: " + e);
-            ShowError("الكود غير صحيح أو الغرفة ممتلئة/مقفلة");
+            ShowError();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("JoinWithCode unexpected error: " + e);
+            ShowError();
         }
         finally
         {
@@ -107,8 +119,15 @@ public class JoinLobbyByCodeUI : MonoBehaviour
         }
     }
 
-    private void ShowError(string msg)
+    private void ShowError()
     {
-        if (errorText != null) errorText.text = msg;
+        if (errorPopup != null)
+            errorPopup.SetActive(true);
+    }
+
+    public void HideError()
+    {
+        if (errorPopup != null)
+            errorPopup.SetActive(false);
     }
 }
